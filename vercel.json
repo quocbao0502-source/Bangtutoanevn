@@ -1,8 +1,14 @@
 {
   "version": 2,
-  "buildCommand": null,
-  "outputDirectory": ".",
   "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/hotline", "destination": "/index.html" },
@@ -10,4 +16,3 @@
     { "source": "/hotline-estimate", "destination": "/index.html" }
   ]
 }
-
