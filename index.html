@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+chỗ<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -2065,8 +2065,10 @@
           <div class="appendix-title editable-field" id="lblAppx6Title" onclick="adminQuickEdit('lblAppx6Title', 'Tiêu đề Phụ lục 6:')">Phụ lục 6: Bảng tính chi phí khảo sát</div>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số công thực hiện:</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="surveyWorkDays" value="2" min="0.5" step="0.5" onchange="renderAll()">
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
+                Số công thực hiện: <span id="lblSurveyDaysRef" style="font-weight:normal; color:#64748b; font-size:10px;">(Từ Định mức nhân công)</span>
+              </label>
+              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; font-weight:700; color:#0284c7;" id="surveyWorkDaysDisplay" value="0.5 công" readonly title="Số công thực hiện khảo sát hiện trường (Cấu hình tại Bảng định mức nhân công)">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Km khảo sát (Vị trí 1):</label>
@@ -2323,6 +2325,20 @@
           <div style="display:flex; align-items:center; gap:6px;">
             <input type="number" class="fuel-price-input" id="machineShiftPrice" value="1250000" step="50000" min="0" style="width:140px; font-weight:800; font-size:13px; text-align:right; color:#0284c7; background:#ffffff; border:1.5px solid #0284c7; border-radius:6px; padding:6px 10px;" onchange="renderAll(); saveAllAdminData();" title="Giá ca máy thi công Hotline (Admin cấu hình)">
             <span style="font-size:12px; font-weight:700; color:#0369a1;">đ/ca</span>
+          </div>
+        </div>
+
+        <!-- Số công thực hiện khảo sát hiện trường (Được chuyển vào đây theo yêu cầu) -->
+        <div style="margin-top:12px; padding:12px 14px; background:#f0fdf4; border:1.5px solid #86efac; border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <label for="surveyWorkDays" style="font-size:12px; font-weight:800; color:#166534; display:flex; align-items:center; gap:5px; margin-bottom:3px;">
+              👷 Số công thực hiện khảo sát:
+            </label>
+            <p style="font-size:11px; color:#64748b; margin:0;">Áp dụng để tính chi phí Nhân công thực hiện tại Phụ lục 6 (Khảo sát hiện trường).</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" class="fuel-price-input" id="surveyWorkDays" value="0.5" min="0.1" step="0.1" style="width:110px; font-weight:800; font-size:13px; text-align:center; color:#166534; background:#ffffff; border:1.5px solid #16a34a; border-radius:6px; padding:6px 10px;" onchange="renderAll(); saveAllAdminData();" title="Số công thực hiện khảo sát (Admin cấu hình)">
+            <span style="font-size:12px; font-weight:700; color:#166534;">công</span>
           </div>
         </div>
       </div>
@@ -3620,6 +3636,7 @@
       const btnAdminAction = document.getElementById('btnAdminAction');
       const machinePriceInp = document.getElementById('machineShiftPrice');
       const lockMachineLbl = document.getElementById('lblLockMachinePrice');
+      const surveyDaysInp = document.getElementById('surveyWorkDays');
 
       if (role === 'admin') {
         isAdminMode = true;
@@ -3645,6 +3662,11 @@
           machinePriceInp.readOnly = false;
           machinePriceInp.style.background = '#ffffff';
           machinePriceInp.style.cursor = 'text';
+        }
+        if (surveyDaysInp) {
+          surveyDaysInp.readOnly = false;
+          surveyDaysInp.style.background = '#ffffff';
+          surveyDaysInp.style.cursor = 'text';
         }
         if (lockMachineLbl) {
           lockMachineLbl.innerText = '🔓 Admin (Được sửa)';
@@ -3675,6 +3697,11 @@
           machinePriceInp.readOnly = true;
           machinePriceInp.style.background = '#f1f5f9';
           machinePriceInp.style.cursor = 'not-allowed';
+        }
+        if (surveyDaysInp) {
+          surveyDaysInp.readOnly = true;
+          surveyDaysInp.style.background = '#f1f5f9';
+          surveyDaysInp.style.cursor = 'not-allowed';
         }
         if (lockMachineLbl) {
           lockMachineLbl.innerText = '🔒 Admin';
@@ -4745,7 +4772,11 @@
       `;
 
       // Phụ lục 6: Khảo sát hiện trường
-      const surveyWorkDays = parseFloat(document.getElementById('surveyWorkDays')?.value) || 2;
+      const surveyWorkDays = parseFloat(document.getElementById('surveyWorkDays')?.value) || 0.5;
+      const surveyWorkDaysDisp = document.getElementById('surveyWorkDaysDisplay');
+      if (surveyWorkDaysDisp) {
+        surveyWorkDaysDisp.value = `${surveyWorkDays} công`;
+      }
       const surveyKmInp = document.getElementById('surveyKmText');
       if (surveyKmInp) surveyKmInp.value = `${Math.round(pos1Km)} km`;
 
@@ -5568,7 +5599,7 @@
       if (document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = '1';
       if (document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = '1250000';
       if (document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = '1';
-      if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '2';
+      if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '0.5';
       const countInpReset = document.getElementById('machineShiftCount');
       if (countInpReset && countInpReset.dataset) delete countInpReset.dataset.userEdited;
       window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
