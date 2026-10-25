@@ -813,34 +813,69 @@ chỗ<!DOCTYPE html>
       background: #f0f9ff;
     }
 
-    /* Multi condition check box list inside position */
+    /* Multi condition check box list inside position - Dàn trải dạng thẻ bấm chọn trực tiếp */
     .cond-picker-area {
       background: #fefce8; /* Màu vàng nhạt êm dịu, không gây nhầm lẫn */
       border: 1.5px solid #fde047; /* Viền vàng nhạt tươi sáng rõ ràng */
-      border-radius: 6px;
-      padding: 6px 10px;
-      max-height: 125px;
+      border-radius: 8px;
+      padding: 8px 10px;
+      max-height: 220px;
       overflow-y: auto;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      flex-wrap: wrap; /* Dàn trải các điều kiện tự động chia ô */
+      gap: 6px;
+      align-items: stretch;
       width: 100%; /* Dài bằng đúng với ô định mức bên trên */
       box-sizing: border-box;
       box-shadow: inset 0 1px 3px rgba(202, 138, 4, 0.06);
     }
     .cond-check-item {
-      display: flex;
-      align-items: flex-start;
+      display: inline-flex;
+      align-items: center;
       gap: 6px;
-      font-size: 11px;
+      font-size: 11.5px;
       color: #713f12;
       cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 4px;
-      transition: background 0.15s;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: #ffffff;
+      border: 1.5px solid #fde047;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      user-select: none;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .cond-check-item:hover {
-      background: #fef08a; /* Vàng đậm hơn khi hover */
+      background: #fef9c3; /* Vàng đậm hơn khi hover */
+      border-color: #facc15;
+      transform: translateY(-1px);
+    }
+    .cond-check-item input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: #005DBB;
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .cond-check-item.selected,
+    .cond-check-item:has(input:checked) {
+      background: #005DBB !important; /* Xanh Cavansite nổi bật khi được bấm chọn */
+      border-color: #004d9b !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 6px rgba(0, 93, 187, 0.35);
+    }
+    .cond-check-item.selected span,
+    .cond-check-item:has(input:checked) span {
+      color: #ffffff !important;
+      font-weight: 600;
+    }
+    .cond-check-item.selected .k-pill,
+    .cond-check-item:has(input:checked) .k-pill {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.5) !important;
     }
     .cond-match-badge {
       background: #dcfce7;
@@ -4891,16 +4926,14 @@ chỗ<!DOCTYPE html>
       condPickerArea.innerHTML = matched.map(c => {
         return `
           <label class="cond-check-item">
-            <input type="checkbox" name="condChk_${posId}" value="${c.id}">
-            <div>
-              <span style="color:#713f12; font-weight:600;">${c.name}</span>
-              <div class="k-pills">
-                ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
-                ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
-                ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
-                ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
-              </div>
-            </div>
+            <input type="checkbox" name="condChk_${posId}" value="${c.id}" onchange="this.closest('.cond-check-item').classList.toggle('selected', this.checked)">
+            <span>${c.name}</span>
+            <span class="k-pills" style="margin-top:0;">
+              ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
+              ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
+              ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
+              ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
+            </span>
           </label>
         `;
       }).join('');
@@ -5165,16 +5198,14 @@ chỗ<!DOCTYPE html>
                   }
                   return matched.map(c => `
                     <label class="cond-check-item">
-                      <input type="checkbox" name="condChk_${pos.id}" value="${c.id}">
-                      <div>
-                        <span style="color:#713f12; font-weight:600;">${c.name}</span>
-                        <div class="k-pills">
-                          ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
-                          ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
-                          ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
-                          ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
-                        </div>
-                      </div>
+                      <input type="checkbox" name="condChk_${pos.id}" value="${c.id}" onchange="this.closest('.cond-check-item').classList.toggle('selected', this.checked)">
+                      <span>${c.name}</span>
+                      <span class="k-pills" style="margin-top:0;">
+                        ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
+                        ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
+                        ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
+                        ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
+                      </span>
                     </label>
                   `).join('');
                 })()}
