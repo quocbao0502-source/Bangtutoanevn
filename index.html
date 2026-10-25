@@ -1356,7 +1356,9 @@ chỗ<!DOCTYPE html>
       right: 0;
       bottom: 0;
       width: 100vw;
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
       background: radial-gradient(circle at 50% 25%, #0c356a 0%, #03172c 70%, #010c17 100%);
       background-image: radial-gradient(circle at 50% 25%, rgba(12, 53, 106, 0.95) 0%, rgba(3, 23, 44, 0.98) 70%, #010c17 100%),
                         linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
@@ -1368,6 +1370,7 @@ chỗ<!DOCTYPE html>
       justify-content: center;
       padding: 16px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       backdrop-filter: blur(8px);
     }
 
@@ -1378,6 +1381,7 @@ chỗ<!DOCTYPE html>
       padding: 32px 28px;
       max-width: 620px;
       width: 100%;
+      margin: auto;
       box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 91, 170, 0.35);
       color: #ffffff;
       text-align: center;
@@ -1728,6 +1732,163 @@ chỗ<!DOCTYPE html>
       margin-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding-top: 12px;
+    }
+
+    /* Tối ưu Trang bìa trên Điện thoại (< 680px) hiển thị cân đối, đẹp mắt và trọn vẹn giống như trên Laptop */
+    @media (max-width: 680px) {
+      .cover-portal-overlay {
+        padding: 12px 10px;
+        align-items: flex-start;
+      }
+
+      .cover-portal-card {
+        padding: 18px 14px;
+        border-radius: 16px;
+        margin: auto;
+        max-width: 440px;
+        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 91, 170, 0.4);
+      }
+
+      .cover-logo-badge {
+        width: 58px;
+        height: 58px;
+        padding: 6px;
+        margin-bottom: 8px;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.45), 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .cover-corp-title {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+      }
+
+      .cover-corp-sub {
+        font-size: 10px;
+        margin-bottom: 6px;
+      }
+
+      .cover-main-title {
+        font-size: 16px;
+        line-height: 1.3;
+        margin-bottom: 6px;
+      }
+
+      .cover-desc {
+        font-size: 11px;
+        line-height: 1.4;
+        margin-bottom: 12px;
+        padding: 0 4px;
+      }
+
+      .cover-section-label {
+        font-size: 11px;
+        margin-bottom: 10px;
+      }
+
+      .cover-role-grid {
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .cover-role-card {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "icon title action"
+          "desc desc desc";
+        column-gap: 10px;
+        row-gap: 6px;
+        align-items: center;
+        padding: 12px 12px;
+        border-radius: 12px;
+      }
+
+      .role-card-icon {
+        grid-area: icon;
+        grid-column: 1;
+        grid-row: 1;
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+        border-radius: 8px;
+      }
+
+      .role-card-info {
+        display: contents !important;
+      }
+
+      .role-card-title {
+        grid-area: title;
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 13.5px;
+        font-weight: 800;
+        margin-bottom: 0;
+        white-space: nowrap;
+        text-align: left;
+      }
+
+      .role-card-action {
+        grid-area: action;
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+      }
+
+      .btn-role-select {
+        padding: 7px 11px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        border-radius: 6px;
+      }
+
+      .role-card-desc {
+        grid-area: desc;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        font-size: 11px;
+        line-height: 1.45;
+        color: #94a3b8;
+        text-align: left;
+        margin-top: 2px;
+      }
+
+      .cover-login-box {
+        padding: 16px 14px;
+        margin-bottom: 12px;
+      }
+
+      .cover-footer {
+        font-size: 9.5px;
+        margin-top: 10px;
+        padding-top: 8px;
+      }
+    }
+
+    /* Màn hình siêu nhỏ (< 360px): Chuyển nút xuống dưới cùng của thẻ */
+    @media (max-width: 360px) {
+      .cover-role-card {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+          "icon title"
+          "desc desc"
+          "action action";
+        row-gap: 8px;
+      }
+      .role-card-action {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        width: 100%;
+      }
+      .btn-role-select {
+        width: 100%;
+        text-align: center;
+        padding: 8px;
+      }
     }
   </style>
 </head>
