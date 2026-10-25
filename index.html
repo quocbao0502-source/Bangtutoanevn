@@ -2148,7 +2148,7 @@ chỗ<!DOCTYPE html>
                   <span style="font-weight:700; color:#0369a1; font-size:12px; white-space:nowrap;">Trụ sở chính:</span>
                   <input type="text" id="depotAddr1" class="depot-addr-inp" value="Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
-                         readonly onchange="saveAllAdminData()" title="Địa chỉ Trụ sở chính (Admin điền)">
+                         readonly onchange="onDepotAddrChange(1)" title="Địa chỉ Trụ sở chính (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
@@ -2166,7 +2166,7 @@ chỗ<!DOCTYPE html>
                   <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Cơ sở 2:</span>
                   <input type="text" id="depotAddr2" class="depot-addr-inp" value="Cơ sở 2 - Trạm phụ trợ (Admin điền)" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
-                         readonly onchange="saveAllAdminData()" title="Địa chỉ Cơ sở 2 (Admin điền)">
+                         readonly onchange="onDepotAddrChange(2)" title="Địa chỉ Cơ sở 2 (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
@@ -4248,8 +4248,114 @@ chỗ<!DOCTYPE html>
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const straightDist = R * c;
-      const roadDist = straightDist * 1.25; // Ước lượng cung đường bộ thực tế (hệ số uốn lượn 1.25)
+      // Đường bộ thực tế: cự ly xa liên tỉnh (như Tây Ninh đi Long An) uốn lượn ~1.265, nội tỉnh ~1.25
+      const roadFactor = straightDist > 60 ? 1.265 : 1.25;
+      const roadDist = straightDist * roadFactor;
       return Math.max(1, Math.round(roadDist)); // Làm tròn số nguyên chẵn không lấy số lẻ sau dấu phẩy
+    }
+
+    // Từ điển tọa độ thông minh khu vực Tây Ninh & các tỉnh lân cận (hoạt động offline & tức thì)
+    function lookupLocalCoords(rawAddr) {
+      if (!rawAddr) return null;
+      const s = rawAddr.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+      // Long An (Tỉnh Long An, TP Tân An, Bến Lức... cự ly thực tế ~119 - 121 km từ Tây Ninh)
+      if (s.includes('long an') || s.includes('tan an') || s.includes('ben luc') || s.includes('duc hoa')) {
+        return { lat: 10.536000, lng: 106.408000, name: "Long An (Tân An)" };
+      }
+
+      // Trụ sở chính EVN: 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, Tây Ninh
+      if (s.includes('441') || s.includes('30 thang 4') || s.includes('30/4') || s.includes('tan ninh')) {
+        return { lat: 11.324902, lng: 106.102019, name: "Trụ sở chính (441 Đ. 30/4)" };
+      }
+
+      // Huỳnh Văn Thanh, Ninh Thọ, Ninh Sơn (vị trí hiện trường / điểm check-in)
+      if (s.includes('huynh van thanh') || s.includes('ninh tho') || s.includes('ninh son')) {
+        return { lat: 11.350000, lng: 106.136000, name: "Ninh Thọ, Ninh Sơn, TP Tây Ninh" };
+      }
+
+      // Thị xã Trảng Bàng (An Tịnh, Gia Lộc, Lộc Hưng, Đôn Thuận...)
+      if (s.includes('trang bang') || s.includes('an tinh') || s.includes('gia loc') || s.includes('loc hung') || s.includes('don thuan')) {
+        return { lat: 11.033000, lng: 106.353000, name: "Thị xã Trảng Bàng" };
+      }
+
+      // Huyện Gò Dầu (Thanh Phước, Phước Đông, Phước Thạnh, Hiệp Thạnh...)
+      if (s.includes('go dau') || s.includes('thanh phuoc') || s.includes('phuoc dong') || s.includes('phuoc thanh')) {
+        return { lat: 11.139000, lng: 106.257000, name: "Huyện Gò Dầu" };
+      }
+
+      // Thị xã Hòa Thành (Long Hoa, Hiệp Tân, Trường Hòa, Long Thành...)
+      if (s.includes('hoa thanh') || s.includes('long hoa') || s.includes('hiep tan') || s.includes('truong hoa')) {
+        return { lat: 11.272000, lng: 106.130000, name: "Thị xã Hòa Thành" };
+      }
+
+      // Huyện Bến Cầu (Tiên Thuận, Mộc Bài, Long Thuận...)
+      if (s.includes('ben cau') || s.includes('tien thuan') || s.includes('moc bai')) {
+        return { lat: 11.144000, lng: 106.155000, name: "Huyện Bến Cầu" };
+      }
+
+      // Huyện Châu Thành (Thái Bình, Trí Bình, An Cơ, Thanh Điền...)
+      if (s.includes('chau thanh') || s.includes('thai binh') || s.includes('tri binh') || s.includes('an co')) {
+        return { lat: 11.325000, lng: 106.012000, name: "Huyện Châu Thành" };
+      }
+
+      // Huyện Dương Minh Châu (Suối Đá, Cầu Khởi, Phan...)
+      if (s.includes('duong minh chau') || s.includes('suoi da') || s.includes('cau khoi')) {
+        return { lat: 11.354000, lng: 106.289000, name: "Dương Minh Châu" };
+      }
+
+      // Huyện Tân Châu (Tân Hưng, Thạnh Đông, Tân Phú...)
+      if (s.includes('tan chau') || s.includes('tan hung') || s.includes('thanh dong')) {
+        return { lat: 11.602000, lng: 106.275000, name: "Huyện Tân Châu" };
+      }
+
+      // Huyện Tân Biên (Trà Vong, Thạnh Tây, Xa Mát, Mỏ Công...)
+      if (s.includes('tan bien') || s.includes('tra vong') || s.includes('thanh tay') || s.includes('xa mat')) {
+        return { lat: 11.597000, lng: 105.976000, name: "Huyện Tân Biên" };
+      }
+
+      // Trung tâm TP Tây Ninh (Phường 1, Phường 2, Phường 3, Phường IV, Hiệp Ninh...)
+      if (s.includes('tp tay ninh') || s.includes('thanh pho tay ninh') || s.includes('phuong 1') || s.includes('phuong 2') || s.includes('phuong 3') || s.includes('hiep ninh')) {
+        return { lat: 11.310000, lng: 106.098000, name: "TP Tây Ninh" };
+      }
+
+      // TP. Hồ Chí Minh (Củ Chi, Hóc Môn, Sài Gòn...)
+      if (s.includes('ho chi minh') || s.includes('hcm') || s.includes('sai gon') || s.includes('cu chi')) {
+        return { lat: 10.776000, lng: 106.700000, name: "TP. Hồ Chí Minh" };
+      }
+
+      // Tỉnh Bình Dương
+      if (s.includes('binh duong') || s.includes('thu dau mot') || s.includes('ben cat')) {
+        return { lat: 10.980000, lng: 106.650000, name: "Bình Dương" };
+      }
+
+      return null;
+    }
+
+    // Tra cứu tọa độ địa chỉ (kết hợp tra cứu từ điển nhanh và Geocoding trực tuyến)
+    async function resolveCoordsForAddress(addr) {
+      if (!addr || !addr.trim()) return null;
+      const local = lookupLocalCoords(addr);
+      if (local) return local;
+
+      try {
+        const q = encodeURIComponent(addr.trim());
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1`, {
+          headers: { 'Accept-Language': 'vi,en' }
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.length > 0) {
+            return {
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+              name: data[0].display_name
+            };
+          }
+        }
+      } catch (e) {}
+
+      return { lat: 11.310000, lng: 106.098000, name: addr };
     }
 
     function getSelectedDepotInfo() {
@@ -4266,8 +4372,8 @@ chỗ<!DOCTYPE html>
         return {
           id: 2,
           name: document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
-          lat: 11.185000,
-          lng: 106.350000,
+          lat: 10.536000,
+          lng: 106.408000,
           defaultKm: parseInt(document.getElementById('depotKm2')?.value, 10) || 25
         };
       }
@@ -4309,6 +4415,34 @@ chỗ<!DOCTYPE html>
       saveAllAdminData();
     }
 
+    // Khi thay đổi địa chỉ của Trụ sở chính hoặc Cơ sở 2 -> Tự động tính lại km nếu đã Check-in
+    async function onDepotAddrChange(choice) {
+      saveAllAdminData();
+      if (positions[0] && positions[0].checkedIn && positions[0].gps) {
+        const parts = positions[0].gps.split(',').map(s => parseFloat(s.trim()));
+        if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+          const lat = parts[0], lng = parts[1];
+          const addr = document.getElementById('depotAddr' + choice)?.value;
+          const coords = await resolveCoordsForAddress(addr);
+          if (coords) {
+            const newKm = calculateRoadDistanceKm(lat, lng, coords.lat, coords.lng);
+            const kmInp = document.getElementById('depotKm' + choice);
+            if (kmInp) kmInp.value = newKm;
+            if (choice === 1) positions[0].kmToMain = newKm;
+            if (choice === 2) positions[0].kmToBranch = newKm;
+
+            const isCurrentChoice = (choice === 1 && document.getElementById('depotRadio1')?.checked) ||
+                                    (choice === 2 && document.getElementById('depotRadio2')?.checked);
+            if (isCurrentChoice) {
+              positions[0].distanceKm = newKm;
+              renderAll();
+            }
+            showToast(`🔄 Đã cập nhật khoảng cách đến [${choice === 1 ? 'Trụ sở chính' : 'Cơ sở 2'}]: ${newKm} km.`);
+          }
+        }
+      }
+    }
+
     function updateDepotRowStyles(choice) {
       const row1 = document.getElementById('depotRow1');
       const row2 = document.getElementById('depotRow2');
@@ -4332,37 +4466,65 @@ chỗ<!DOCTYPE html>
       }
     }
 
-    function checkInPosition(posId) {
+    // Khi người dùng trực tiếp nhập số km vào ô hình chiếc xe (🚗)
+    function onPosDistanceInputChange(posId, val) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      const num = Math.max(0, Math.round(parseFloat(val) || 0));
+      pos.distanceKm = num;
+
+      // Đồng bộ số km vào ô Khoảng cách của điểm xuất phát đang chọn
+      const isChoice2 = document.getElementById('depotRadio2')?.checked ?? false;
+      const activeKmInp = document.getElementById(isChoice2 ? 'depotKm2' : 'depotKm1');
+      if (activeKmInp) {
+        activeKmInp.value = num;
+      }
+      if (isChoice2) {
+        pos.kmToBranch = num;
+      } else {
+        pos.kmToMain = num;
+      }
+
+      showToast(`🚗 ${pos.title || 'Vị trí ' + posId}: Đã đặt khoảng cách ${num} km cho Phụ lục 4 & 6.`);
+      renderAll();
+      saveAllAdminData();
+    }
+
+    async function checkInPosition(posId) {
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
 
-      const depot1 = { lat: 11.324902, lng: 106.102019, name: "Trụ sở chính" };
-      const depot2 = { lat: 11.185000, lng: 106.350000, name: "Cơ sở 2" };
+      const addr1 = document.getElementById('depotAddr1')?.value || "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
+      const addr2 = document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ";
+
+      // Xác định tọa độ thực tế theo đúng địa chỉ người dùng/admin đã nhập
+      const depot1 = await resolveCoordsForAddress(addr1) || { lat: 11.324902, lng: 106.102019 };
+      const depot2 = await resolveCoordsForAddress(addr2) || { lat: 10.536000, lng: 106.408000 };
 
       function applyCheckin(lat, lng, isSimulated = false) {
         pos.checkedIn = true;
         pos.gps = `${lat}, ${lng}`;
 
-        // Tính khoảng cách đường bộ đến Trụ sở chính và Cơ sở 2 (số nguyên chẵn, không lấy số lẻ sau dấu phẩy)
+        // Tính khoảng cách đường bộ thực tế (số nguyên chẵn, không lấy số lẻ sau dấu phẩy)
         const kmToMain = calculateRoadDistanceKm(lat, lng, depot1.lat, depot1.lng);
         const kmToBranch = calculateRoadDistanceKm(lat, lng, depot2.lat, depot2.lng);
 
         pos.kmToMain = kmToMain;
         pos.kmToBranch = kmToBranch;
 
-        // Cập nhật hiển thị km đến Trụ sở chính và Cơ sở 2 trên 2 ô Khoảng cách
+        // Cập nhật ngay số km tính được vào 2 ô Khoảng cách của Trụ sở chính và Cơ sở 2
         const kmInp1 = document.getElementById('depotKm1');
         const kmInp2 = document.getElementById('depotKm2');
         if (kmInp1) kmInp1.value = kmToMain;
         if (kmInp2) kmInp2.value = kmToBranch;
 
-        // Xác định khoảng cách áp dụng cho Phụ lục 4 & 6 theo điểm xuất phát đang được chọn
+        // Điểm xuất phát nào đang chọn (Trụ sở chính hoặc Cơ sở 2) thì gán km đó cho Vị trí
         const isChoice2 = document.getElementById('depotRadio2')?.checked ?? false;
         pos.distanceKm = isChoice2 ? kmToBranch : kmToMain;
         const currentDepotName = isChoice2 ? 'Cơ sở 2' : 'Trụ sở chính';
 
         const simText = isSimulated ? ' (Mô phỏng GPS Tây Ninh)' : '';
-        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công${simText}!\n• Đến Trụ sở chính: ${kmToMain} km\n• Đến Cơ sở 2: ${kmToBranch} km\n(Đang chọn: [${currentDepotName}] = ${pos.distanceKm} km)`);
+        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công${simText}!\n• Đến Trụ sở chính: ${kmToMain} km\n• Đến Cơ sở 2: ${kmToBranch} km\n🚗 Đang chọn [${currentDepotName}] = ${pos.distanceKm} km (áp dụng cho Phụ lục 4 & 6)`);
         renderAll();
         saveAllAdminData();
       }
@@ -4376,29 +4538,24 @@ chỗ<!DOCTYPE html>
             applyCheckin(lat, lng, false);
           },
           (error) => {
-            // Giả lập tọa độ thực tế tại khu vực Tây Ninh nếu trình duyệt chặn GPS
-            const sampleLat = parseFloat((11.3665 + (Math.random() - 0.5) * 0.04).toFixed(6));
-            const sampleLng = parseFloat((106.1362 + (Math.random() - 0.5) * 0.04).toFixed(6));
+            // Giả lập tọa độ thực tế tại khu vực Tây Ninh nếu trình duyệt chặn GPS (khu vực Huỳnh Văn Thanh, Ninh Thọ)
+            const sampleLat = parseFloat((11.3500 + (Math.random() - 0.5) * 0.02).toFixed(6));
+            const sampleLng = parseFloat((106.1360 + (Math.random() - 0.5) * 0.02).toFixed(6));
             applyCheckin(sampleLat, sampleLng, true);
           },
           { timeout: 8000 }
         );
       } else {
-        applyCheckin(11.366500, 106.136200, true);
+        applyCheckin(11.350000, 106.136000, true);
       }
     }
 
     function promptDistance(posId) {
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
-      const val = prompt(`Nhập khoảng cách di chuyển từ đơn vị đến ${pos.title || 'Vị trí ' + posId} (km số chẵn):`, pos.distanceKm || 15);
+      const val = prompt(`Nhập khoảng cách di chuyển từ điểm xuất phát đến ${pos.title || 'Vị trí ' + posId} (km số chẵn):`, pos.distanceKm || 15);
       if (val !== null) {
-        const num = parseFloat(val);
-        if (!isNaN(num) && num >= 0) {
-          pos.distanceKm = Math.round(num);
-          showToast(`${pos.title || 'Vị trí ' + posId}: Đã cập nhật ${Math.round(num)} km`);
-          renderAll();
-        }
+        onPosDistanceInputChange(posId, val);
       }
     }
 
@@ -4798,9 +4955,16 @@ chỗ<!DOCTYPE html>
                 <button class="btn-pos-action ${pos.checkedIn ? 'checked' : ''}" onclick="checkInPosition(${pos.id})">
                   ${pos.checkedIn ? '✅ Đã Check in' : '📌 Check in'}
                 </button>
-                <button class="btn-pos-action" onclick="promptDistance(${pos.id})">
-                  🚗 ${pos.distanceKm || 0} km
-                </button>
+                <div class="btn-pos-action pos-km-badge" style="display:inline-flex; align-items:center; gap:3px; padding:3px 7px; cursor:default;" title="Nhập số km dự tính di chuyển (hoặc bấm Check in để tự động tính theo GPS)">
+                  <span style="cursor:pointer;" onclick="promptDistance(${pos.id})" title="Bấm vào để nhập khoảng cách">🚗</span>
+                  <input type="number" class="pos-km-direct-inp" value="${pos.distanceKm || 0}" min="0" step="1" 
+                         onchange="onPosDistanceInputChange(${pos.id}, this.value)"
+                         onfocus="this.select()"
+                         style="width:48px; border:1px solid transparent; background:transparent; font-weight:800; font-size:12px; color:#0284c7; text-align:center; outline:none; padding:1px 0; border-radius:4px;"
+                         onmouseover="this.style.borderColor='#94a3b8'; this.style.background='#ffffff'"
+                         onmouseout="this.style.borderColor='transparent'; this.style.background='transparent'">
+                  <span style="font-size:11px; font-weight:700; color:#64748b;">km</span>
+                </div>
                 ${positions.length > 1 ? `<button class="btn-pos-action" style="color:#dc2626;" onclick="removePosition(${pos.id})" title="Xóa vị trí này">🗑</button>` : ''}
               </div>
             </div>
