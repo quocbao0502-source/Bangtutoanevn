@@ -2008,12 +2008,8 @@
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
-                Giá ca máy (đ): <span id="lblLockMachinePrice" style="color:#64748b; font-size:10px; font-weight:normal;">🔒 Admin</span>
+                Số ca máy max: <span id="lblMachineShiftMaxRef" style="font-weight:normal; color:#64748b; font-size:10px;"></span>
               </label>
-              <input type="number" class="fuel-price-input" style="width:100%; background:#f1f5f9; cursor:not-allowed;" id="machineShiftPrice" value="1250000" step="50000" readonly onchange="renderAll()" onclick="if(!isAdminMode) showToast('🔒 Chỉ Admin/Mod mới có quyền thay đổi Giá ca máy!');" title="Chỉ Admin/Mod mới được thay đổi giá ca máy">
-            </div>
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số ca máy max:</label>
               <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.000" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
             </div>
             <div>
@@ -2291,6 +2287,20 @@
           </tbody>
         </table>
         <p style="font-size:11px; color:#64748b; font-style:italic; margin-top:8px;">* Tự động liên kết và cập nhật đơn giá vào Phụ lục 5 (Cảnh giới an toàn) và Phụ lục 6 (Khảo sát hiện trường).</p>
+
+        <!-- Đơn giá ca máy thi công Hotline (Được chuyển vào đây theo yêu cầu) -->
+        <div style="margin-top:16px; padding:12px 14px; background:#eff6ff; border:1.5px solid #93c5fd; border-radius:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <label for="machineShiftPrice" style="font-size:12px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:5px; margin-bottom:3px;">
+              🚜 Giá ca máy thi công / cảnh giới (đ):
+            </label>
+            <p style="font-size:11px; color:#64748b; margin:0;">Áp dụng để tính Số ca máy max và chi phí ca máy rào chắn tại Phụ lục 5.</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" class="fuel-price-input" id="machineShiftPrice" value="1250000" step="50000" min="0" style="width:140px; font-weight:800; font-size:13px; text-align:right; color:#0284c7; background:#ffffff; border:1.5px solid #0284c7; border-radius:6px; padding:6px 10px;" onchange="renderAll(); saveAllAdminData();" title="Giá ca máy thi công Hotline (Admin cấu hình)">
+            <span style="font-size:12px; font-weight:700; color:#0369a1;">đ/ca</span>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn-pos-action" onclick="closeModal('modalNhanCong')">Đóng</button>
@@ -4666,6 +4676,11 @@
       const shiftMaxInp = document.getElementById('machineShiftMax');
       if (shiftMaxInp) {
         shiftMaxInp.value = maxMachineShifts.toFixed(3);
+        shiftMaxInp.title = `Số ca máy max = ${formatMoney(totalMachineAllPos)} đ (máy thi công) / ${formatMoney(machineShiftPrice)} đ (giá ca máy)`;
+      }
+      const lblMaxRef = document.getElementById('lblMachineShiftMaxRef');
+      if (lblMaxRef) {
+        lblMaxRef.innerText = `(${formatMoney(machineShiftPrice)} đ/ca)`;
       }
 
       // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5
