@@ -5086,6 +5086,41 @@
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
 
+      // KIỂU ON / OFF: NẾU ĐANG CHECK-IN RỒI THÌ BẤM LẦN NỮA SẼ NHẢ CHECK-IN RA (TẮT CHECK-IN)
+      if (pos.checkedIn) {
+        pos.checkedIn = false;
+        pos.gps = '';
+        delete pos.kmToMain;
+        delete pos.kmToBranch;
+
+        // Phục hồi số km về mặc định ban đầu của Điểm xuất phát đang chọn
+        const isChoice2 = document.getElementById('depotRadio2')?.checked ?? false;
+        const kmInp1 = document.getElementById('depotKm1');
+        const kmInp2 = document.getElementById('depotKm2');
+
+        if (kmInp1 && kmInp1.dataset.defaultKm) {
+          kmInp1.value = kmInp1.dataset.defaultKm;
+        }
+        if (kmInp2 && kmInp2.dataset.defaultKm) {
+          kmInp2.value = kmInp2.dataset.defaultKm;
+        }
+
+        const defaultKm = (isChoice2 ? parseFloat(kmInp2?.value) : parseFloat(kmInp1?.value)) || 15;
+        pos.distanceKm = Math.round(defaultKm);
+
+        showToast(`🔓 ${pos.title || 'Vị trí ' + posId}: Đã nhả Check-in (Tắt Check-in). Khoảng cách trở về mặc định ${pos.distanceKm} km.`);
+        renderAll();
+        saveAllAdminData();
+        return;
+      }
+
+      // NẾU CHƯA CHECK-IN -> THỰC HIỆN CHECK-IN (BẬT ON)
+      // Lưu lại giá trị km mặc định trước khi check-in để phục vụ nhả check-in sau này
+      const kmInp1 = document.getElementById('depotKm1');
+      const kmInp2 = document.getElementById('depotKm2');
+      if (kmInp1 && !kmInp1.dataset.defaultKm) kmInp1.dataset.defaultKm = kmInp1.value;
+      if (kmInp2 && !kmInp2.dataset.defaultKm) kmInp2.dataset.defaultKm = kmInp2.value;
+
       const addr1 = document.getElementById('depotAddr1')?.value || "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
       const addr2 = document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ";
 
@@ -5105,8 +5140,6 @@
         pos.kmToBranch = kmToBranch;
 
         // Cập nhật ngay số km tính được vào 2 ô Khoảng cách của Trụ sở chính và Cơ sở 2
-        const kmInp1 = document.getElementById('depotKm1');
-        const kmInp2 = document.getElementById('depotKm2');
         if (kmInp1) kmInp1.value = kmToMain;
         if (kmInp2) kmInp2.value = kmToBranch;
 
@@ -5116,7 +5149,7 @@
         const currentDepotName = isChoice2 ? 'Cơ sở 2' : 'Trụ sở chính';
 
         const simText = isSimulated ? ' (Mô phỏng GPS Tây Ninh)' : '';
-        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công${simText}!\n• Đến Trụ sở chính: ${kmToMain} km\n• Đến Cơ sở 2: ${kmToBranch} km\n🚗 Đang chọn [${currentDepotName}] = ${pos.distanceKm} km (áp dụng cho Phụ lục 4 & 6)`);
+        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công${simText}!\n• Đến Trụ sở chính: ${kmToMain} km\n• Đến Cơ sở 2: ${kmToBranch} km\n🚗 Đang chọn [${currentDepotName}] = ${pos.distanceKm} km (áp dụng cho Phụ lục 4 & 6)\n(Bấm vào nút này lần nữa để Nhả/Tắt Check-in)`);
         renderAll();
         saveAllAdminData();
       }
@@ -5622,7 +5655,7 @@
                 ${pos.checkedIn ? '<span style="color:#16a34a; font-size:10px; font-weight:700;">[Đã Check-in]</span>' : ''}
               </div>
               <div class="pos-actions">
-                <button class="btn-pos-action ${pos.checkedIn ? 'checked' : ''}" onclick="checkInPosition(${pos.id})">
+                <button class="btn-pos-action ${pos.checkedIn ? 'checked' : ''}" onclick="checkInPosition(${pos.id})" title="${pos.checkedIn ? 'Đang bật Check-in: Bấm vào đây để TẮT / Nhả check-in' : 'Bấm vào đây để BẬT Check-in'}">
                   ${pos.checkedIn ? '✅ Đã Check in' : '📌 Check in'}
                 </button>
                 <div class="btn-pos-action pos-km-badge" style="display:inline-flex; align-items:center; gap:3px; padding:3px 7px; cursor:default;" title="Nhập số km dự tính di chuyển (hoặc bấm Check in để tự động tính theo GPS)">
