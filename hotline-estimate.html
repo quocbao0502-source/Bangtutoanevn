@@ -4279,6 +4279,12 @@
       }
     }
 
+    // Hàm làm tròn chuẩn quy định EVN: Tất cả các công thức nhân, chia lấy phần nguyên, sau dấu phẩy kể cả từ số 5 trở lên cũng không làm tròn lên (tương đương ROUNDDOWN(x, 0) trong Excel)
+    function evnRound(val) {
+      if (val === undefined || val === null || isNaN(val)) return 0;
+      return Math.trunc(Number(val));
+    }
+
     // --- 9. TÍNH TOÁN CHI PHÍ (CÔNG THỨC NHÂN TÍCH CÁC HỆ SỐ ĐIỀU CHỈNH & HỆ SỐ ĐỒNG THỜI) ---
     function calculatePositionCost(pos) {
       let subMat = 0;
@@ -4320,24 +4326,19 @@
           }
         });
 
-        // Nhân với đơn giá gốc và số lượng công tác
-        subMat += (task.matSub || 0) * q * totalKvlp;
-        hotMat += (task.matHotline || 0) * q * totalKvlhl;
-        labor += (task.labor || 0) * q * totalKnc;
-        machine += (task.machine || 0) * q * totalKmtc;
+        // Nhân với đơn giá gốc và số lượng công tác (dùng hàm evnRound không làm tròn lên)
+        subMat += evnRound((task.matSub || 0) * q * totalKvlp);
+        hotMat += evnRound((task.matHotline || 0) * q * totalKvlhl);
+        labor += evnRound((task.labor || 0) * q * totalKnc);
+        machine += evnRound((task.machine || 0) * q * totalKmtc);
       });
 
-      // Áp dụng 4 Hệ số đồng thời cho 4 thành phần chi phí theo đúng quy chuẩn
-      subMat *= fSubMat;
-      hotMat *= fHotMat;
-      labor *= fLabor;
-      machine *= fMachine;
-
+      // Áp dụng 4 Hệ số đồng thời và số lượng vị trí tương tự (dùng hàm evnRound không làm tròn lên)
       const similarMultiplier = pos.similarCount || 1;
-      const finalSubMat = Math.round(subMat * similarMultiplier);
-      const finalHotMat = Math.round(hotMat * similarMultiplier);
-      const finalLabor = Math.round(labor * similarMultiplier);
-      const finalMachine = Math.round(machine * similarMultiplier);
+      const finalSubMat = evnRound(subMat * fSubMat * similarMultiplier);
+      const finalHotMat = evnRound(hotMat * fHotMat * similarMultiplier);
+      const finalLabor = evnRound(labor * fLabor * similarMultiplier);
+      const finalMachine = evnRound(machine * fMachine * similarMultiplier);
 
       return {
         subMat: finalSubMat,
@@ -4643,8 +4644,8 @@
         const isCrane = (r.name || '').toLowerCase().includes('cẩu') || r.id === 'F03';
         let isAct = isCrane ? hasCrane : true;
         if (!isAct) return '';
-        // Công thức: Định mức xe (r.rate / 100) * km Vị trí 1 * 2 * số chuyến * giá dầu thực tính
-        const cost = Math.round((r.rate / 100) * totalKmPerVeh * effectiveFuelPrice);
+        // Công thức: Định mức xe (r.rate / 100) * km Vị trí 1 * 2 * số chuyến * giá dầu thực tính (lấy phần nguyên, không làm tròn lên)
+        const cost = evnRound((r.rate / 100) * totalKmPerVeh * effectiveFuelPrice);
         totalTransportCost += cost;
         return `
           <tr>
@@ -4684,7 +4685,7 @@
       }
 
       // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5
-      const autoShiftCount = (maxMachineShifts <= 0.5) ? (Math.round(maxMachineShifts * 1000) / 1000) : 0.5;
+      const autoShiftCount = (maxMachineShifts <= 0.5) ? (Math.floor(maxMachineShifts * 1000) / 1000) : 0.5;
       const countInp = document.getElementById('machineShiftCount');
       let selectedShifts = autoShiftCount;
       if (countInp) {
@@ -4704,8 +4705,8 @@
       const guardLabor = LABOR_NORMS.find(l => (l.title || '').includes('3/7')) || LABOR_NORMS[0];
       const guardLaborRate = guardLabor ? guardLabor.wage : 298431;
 
-      // 6. Cách tính: Tổng số ca máy x đơn giá nhân công bậc 3/7 x tổng số lần thực hiện
-      const totalBarrierCost = Math.round(selectedShifts * guardLaborRate * barrierTimes);
+      // 6. Cách tính: Tổng số ca máy x đơn giá nhân công bậc 3/7 x tổng số lần thực hiện (không làm tròn lên)
+      const totalBarrierCost = evnRound(selectedShifts * guardLaborRate * barrierTimes);
 
       document.getElementById('barrierTableBody').innerHTML = `
         <tr>
@@ -4725,15 +4726,15 @@
       const surveyKmInp = document.getElementById('surveyKmText');
       if (surveyKmInp) surveyKmInp.value = `${pos1Km.toFixed(1)} km`;
 
-      // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7)
+      // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7) (không làm tròn lên)
       const surveyLabor = LABOR_NORMS.find(l => (l.title || '').includes('4/7')) || LABOR_NORMS[1] || LABOR_NORMS[0];
       const surveyLaborRate = surveyLabor ? surveyLabor.wage : 394809;
-      const costSurveyLabor = Math.round(surveyWorkDays * surveyLaborRate);
+      const costSurveyLabor = evnRound(surveyWorkDays * surveyLaborRate);
 
-      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải x km ở vị trí 1 x giá dầu
+      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải x km ở vị trí 1 x giá dầu (không làm tròn lên)
       const pickupTruck = FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) || FUEL_NORMS[0];
       const pickupRate = pickupTruck ? pickupTruck.rate : 12.5;
-      const costSurveyTransport = Math.round((pickupRate / 100) * pos1Km * effectiveFuelPrice);
+      const costSurveyTransport = evnRound((pickupRate / 100) * pos1Km * effectiveFuelPrice);
 
       const totalSurveyCost = costSurveyLabor + costSurveyTransport;
 
@@ -4781,12 +4782,12 @@
       const totalMat = totalSubMat + totalHotMat;
       const totalDirectCost = totalMat + totalLabor + totalMachine;
 
-      // II. CHI PHÍ GIÁN TIẾP: C = 65% x NC
-      const generalCost = Math.round(totalLabor * 0.65);
+      // II. CHI PHÍ GIÁN TIẾP: C = 65% x NC (lấy phần nguyên, không làm tròn lên)
+      const generalCost = evnRound(totalLabor * 0.65);
       const totalIndirectCost = generalCost;
 
-      // III. THU NHẬP CHỊU THUẾ TÍNH TRƯỚC: TL = 6% x (T + GT)
-      const taxableIncome = Math.round((totalDirectCost + totalIndirectCost) * 0.06);
+      // III. THU NHẬP CHỊU THUẾ TÍNH TRƯỚC: TL = 6% x (T + GT) (lấy phần nguyên, không làm tròn lên)
+      const taxableIncome = evnRound((totalDirectCost + totalIndirectCost) * 0.06);
 
       // IV. VẬN CHUYỂN & V. KHÁC (RÀO CHẮN) & B1. KHẢO SÁT
       const appendix = renderAppendix();
@@ -4801,14 +4802,14 @@
       const Gpa1 = surveyCost;
       const kFactor = (currentProjectType === 'cai_tao') ? 1.2 : 1.0;
       const gpa2Formula = (currentProjectType === 'cai_tao') ? '2,46% x 0,93 x Gxd x 1,2' : '2,46% x 0,93 x Gxd x 1';
-      const Gpa2 = Math.round(Gxd * 0.0246 * 0.93 * kFactor);
+      const Gpa2 = evnRound(Gxd * 0.0246 * 0.93 * kFactor);
       const Gpa = Gpa1 + Gpa2;
 
       // C. TỔNG DỰ TOÁN (trước thuế GTGT): Gtt = Gxd + Gpa
       const Gtt = Gxd + Gpa;
 
-      // D. THUẾ GIÁ TRỊ GIA TĂNG: GTGT = Gtt x vatRate%
-      const vatAmount = Math.round(Gtt * (currentVatRate / 100));
+      // D. THUẾ GIÁ TRỊ GIA TĂNG: GTGT = Gtt x vatRate% (lấy phần nguyên, không làm tròn lên)
+      const vatAmount = evnRound(Gtt * (currentVatRate / 100));
 
       // E. TỔNG DỰ TOÁN (sau thuế GTGT): Gdt = Gtt + GTGT
       const Gdt = Gtt + vatAmount;
@@ -5590,7 +5591,7 @@
 
     // --- 18. UTILITIES: MONEY & WORDS & TOAST ---
     function formatMoney(amount) {
-      return (Math.round(amount || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return (evnRound(amount || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function showToast(msg) {
@@ -5604,7 +5605,7 @@
 
     function readVietnameseNumber(n) {
       if (!n || isNaN(n) || n === 0) return 'Không';
-      n = Math.round(Math.abs(n));
+      n = evnRound(Math.abs(n));
       const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
       const units = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'];
 
