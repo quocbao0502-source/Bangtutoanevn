@@ -1387,17 +1387,23 @@
     }
 
     .cover-logo-badge {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #005baa 0%, #0284c7 100%);
-      border: 2px solid #38bdf8;
+      width: 82px;
+      height: 82px;
+      background: #ffffff;
+      border: 2.5px solid #38bdf8;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
-      margin-bottom: 12px;
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.55), 0 4px 15px rgba(0, 0, 0, 0.35);
+      margin-bottom: 14px;
+      padding: 9px;
+      box-sizing: border-box;
+    }
+    .cover-logo-badge svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     .cover-corp-title {
@@ -1729,14 +1735,22 @@
       
       <!-- Logo EVN & Tiêu đề hệ thống -->
       <div class="cover-header">
-        <div class="cover-logo-badge">
-          ⚡
+        <div class="cover-logo-badge" title="Tập đoàn Điện lực Việt Nam - EVN">
+          <svg viewBox="0 0 331 480" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+            <g>
+              <path style="fill:#1a3f95;fill-opacity:1;fill-rule:evenodd;stroke:none;" d="M 165.79759,1.3741014 A 164.08625,164.14502 0 0 0 1.7113478,165.51933 164.08625,164.14502 0 0 0 165.79759,329.6642 164.08625,164.14502 0 0 0 329.88383,165.51933 164.08625,164.14502 0 0 0 165.79759,1.3741014 Z m -0.0907,7.7203875 A 156.16668,156.3599 0 0 1 321.87339,165.45457 156.16668,156.3599 0 0 1 165.70688,321.81434 156.16668,156.3599 0 0 1 9.5400387,165.45457 156.16668,156.3599 0 0 1 165.70688,9.0944889 Z" />
+              <path style="fill:#1a3f95;fill-opacity:1;stroke:none;" d="m 165.80303,10.59179 -27.45029,127.22598 c 0,0 -118.569,25.18855 -126.65208,27.81564 l 126.41576,27.75504 27.42753,126.83266 c 0,0 6.51365,-25.93653 12.61553,-55.14882 2.79575,-13.3845 5.8072,-27.89162 8.61438,-40.65753 2.80335,-12.74825 5.40328,-23.75951 6.97589,-30.99348 0,0 27.71283,-6.21237 58.13359,-12.69797 32.65302,-6.96154 67.47528,-14.6443 68.49146,-15.12246 0,0 -18.87836,-4.71232 -42.37124,-9.68187 -29.34127,-6.20666 -65.93571,-14.25755 -84.31728,-18.10121 0,0 -4.45895,-20.50846 -9.85527,-45.469317 -7.08153,-32.755555 -15.6757,-73.189748 -18.02798,-81.756663 z" />
+              <path style="fill:#ec1c24;fill-opacity:1;stroke:none;" d="m 165.83585,71.734646 19.20793,74.852764 74.42698,19.52182 -74.63033,18.50508 -19.21684,74.732 -18.48833,-74.80196 -75.043378,-19.01614 74.937998,-18.91906 z" />
+              <path style="fill:#fef200;fill-opacity:1;stroke:none;" d="m 204.10486,165.53839 -28.54148,9.88837 -9.53465,28.37636 -9.85235,-28.34897 -28.44487,-10.07708 28.81131,-9.20682 9.34425,-29.26936 9.44414,29.32352 z" />
+              <path style="fill:#1a3f95;fill-opacity:1;fill-rule:evenodd;stroke:none;" d="m 41.242672,395.83677 v 62.7082 6.98327 12.12862 H 109.96177 V 458.54497 H 67.782971 v -12.8234 h 34.282799 v -19.3657 H 67.782971 V 414.49198 H 108.23375 V 395.83677 H 67.782971 62.837616 Z m 76.137298,0 27.90521,81.82009 h 27.39826 l 28.28597,-81.82009 h -27.0175 l -15.08792,53.79466 -14.46654,-53.79466 z m 93.6208,0 v 81.82009 h 25.73687 v -43.00663 l 28.31034,43.00663 h 25.4151 v -81.82009 h -25.4151 v 43.63927 l -28.31034,-43.63927 z" />
+            </g>
+          </svg>
         </div>
-        <div class="cover-corp-title">TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM</div>
-        <div class="cover-corp-sub">EVNSPC • DỰ TOÁN SỬA CHỮA ĐIỆN NÓNG HOTLINE</div>
-        <h1 class="cover-main-title">HỆ THỐNG DỰ TOÁN CÔNG TÁC THI CÔNG HOTLINE</h1>
+        <div class="cover-corp-title">XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH</div>
+        <div class="cover-corp-sub">ĐỘI THI CÔNG SỬA CHỮA ĐIỆN NÓNG - HOTLINE</div>
+        <h1 class="cover-main-title">DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</h1>
         <p class="cover-desc">
-          Tính toán chi tiết định mức công tác, vật liệu phụ, vật liệu hotline, nhân công, ca máy và dự toán chi phí theo công thức quy định EVN (12,7kV & 22kV).
+          Ứng dụng hỗ trợ trên các nền tảng và cập nhật theo QĐ mới nhất
         </p>
       </div>
 
@@ -1819,7 +1833,7 @@
       </div>
 
       <div class="cover-footer">
-        © 2026 TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM (EVNSPC) • PHẦN MỀM DỰ TOÁN HOTLINE
+        PHẦN MỀM DỰ TOÁN HOTLINE
       </div>
 
     </div>
@@ -1880,10 +1894,20 @@
     <!-- Header: Logo EVNSPC & Estimate -->
     <header class="app-header">
       <div class="logo-box">
-        <div class="logo-badge">⚡</div>
+        <div class="logo-badge" title="Tập đoàn Điện lực Việt Nam - EVN" style="padding: 3px;">
+          <svg viewBox="0 0 331 480" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+            <g>
+              <path style="fill:#1a3f95;fill-opacity:1;fill-rule:evenodd;stroke:none;" d="M 165.79759,1.3741014 A 164.08625,164.14502 0 0 0 1.7113478,165.51933 164.08625,164.14502 0 0 0 165.79759,329.6642 164.08625,164.14502 0 0 0 329.88383,165.51933 164.08625,164.14502 0 0 0 165.79759,1.3741014 Z m -0.0907,7.7203875 A 156.16668,156.3599 0 0 1 321.87339,165.45457 156.16668,156.3599 0 0 1 165.70688,321.81434 156.16668,156.3599 0 0 1 9.5400387,165.45457 156.16668,156.3599 0 0 1 165.70688,9.0944889 Z" />
+              <path style="fill:#1a3f95;fill-opacity:1;stroke:none;" d="m 165.80303,10.59179 -27.45029,127.22598 c 0,0 -118.569,25.18855 -126.65208,27.81564 l 126.41576,27.75504 27.42753,126.83266 c 0,0 6.51365,-25.93653 12.61553,-55.14882 2.79575,-13.3845 5.8072,-27.89162 8.61438,-40.65753 2.80335,-12.74825 5.40328,-23.75951 6.97589,-30.99348 0,0 27.71283,-6.21237 58.13359,-12.69797 32.65302,-6.96154 67.47528,-14.6443 68.49146,-15.12246 0,0 -18.87836,-4.71232 -42.37124,-9.68187 -29.34127,-6.20666 -65.93571,-14.25755 -84.31728,-18.10121 0,0 -4.45895,-20.50846 -9.85527,-45.469317 -7.08153,-32.755555 -15.6757,-73.189748 -18.02798,-81.756663 z" />
+              <path style="fill:#ec1c24;fill-opacity:1;stroke:none;" d="m 165.83585,71.734646 19.20793,74.852764 74.42698,19.52182 -74.63033,18.50508 -19.21684,74.732 -18.48833,-74.80196 -75.043378,-19.01614 74.937998,-18.91906 z" />
+              <path style="fill:#fef200;fill-opacity:1;stroke:none;" d="m 204.10486,165.53839 -28.54148,9.88837 -9.53465,28.37636 -9.85235,-28.34897 -28.44487,-10.07708 28.81131,-9.20682 9.34425,-29.26936 9.44414,29.32352 z" />
+              <path style="fill:#1a3f95;fill-opacity:1;fill-rule:evenodd;stroke:none;" d="m 41.242672,395.83677 v 62.7082 6.98327 12.12862 H 109.96177 V 458.54497 H 67.782971 v -12.8234 h 34.282799 v -19.3657 H 67.782971 V 414.49198 H 108.23375 V 395.83677 H 67.782971 62.837616 Z m 76.137298,0 27.90521,81.82009 h 27.39826 l 28.28597,-81.82009 h -27.0175 l -15.08792,53.79466 -14.46654,-53.79466 z m 93.6208,0 v 81.82009 h 25.73687 v -43.00663 l 28.31034,43.00663 h 25.4151 v -81.82009 h -25.4151 v 43.63927 l -28.31034,-43.63927 z" />
+            </g>
+          </svg>
+        </div>
         <div class="logo-text">
           <h1 class="editable-field" id="appLogoTitle" onclick="adminQuickEdit('appLogoTitle', 'Tên tập đoàn / Đơn vị:')">EVNSPC</h1>
-          <span class="editable-field" id="appLogoSub" onclick="adminQuickEdit('appLogoSub', 'Tên đơn vị chủ quản:')">TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM</span>
+          <span class="editable-field" id="appLogoSub" onclick="adminQuickEdit('appLogoSub', 'Tên đơn vị chủ quản:')">XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH</span>
         </div>
       </div>
       <div class="estimate-title">
@@ -5473,7 +5497,11 @@
         if (d.surveyWorkDays && document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = d.surveyWorkDays;
 
         if (d.appLogoTitle) document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
-        if (d.appLogoSub) document.getElementById('appLogoSub').innerText = d.appLogoSub;
+        if (d.appLogoSub && d.appLogoSub !== 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM') {
+          document.getElementById('appLogoSub').innerText = d.appLogoSub;
+        } else {
+          document.getElementById('appLogoSub').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+        }
         if (d.appBadgeText) document.getElementById('appBadgeText').innerText = d.appBadgeText;
         if (d.appSubTitleText) document.getElementById('appSubTitleText').innerText = d.appSubTitleText;
         if (d.lblCat1) document.getElementById('lblCat1').innerHTML = d.lblCat1;
@@ -5544,7 +5572,7 @@
       window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
 
       document.getElementById('appLogoTitle').innerText = 'EVNSPC';
-      document.getElementById('appLogoSub').innerText = 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM';
+      document.getElementById('appLogoSub').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
       document.getElementById('appBadgeText').innerText = 'ESTIMATE';
       document.getElementById('appSubTitleText').innerText = 'DỰ TOÁN HOTLINE';
       document.getElementById('lblCat1').innerHTML = 'Bảng định mức<br>công việc';
