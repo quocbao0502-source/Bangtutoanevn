@@ -42,6 +42,10 @@ chỗ<!DOCTYPE html>
       z-index: 1000;
       border-bottom: 2px solid #005baa;
     }
+    /* Ẩn hoàn toàn top-toolbar đối với Người dùng trên tất cả nền tảng */
+    body:not(.admin-mode) .top-toolbar {
+      display: none !important;
+    }
     .top-toolbar-left {
       display: flex;
       align-items: center;
@@ -2238,6 +2242,12 @@ chỗ<!DOCTYPE html>
               🖨 In dự toán
             </button>
           </div>
+
+          <div style="text-align:center; margin-top:16px; margin-bottom:8px;">
+            <button type="button" onclick="showCoverPortal()" style="background:transparent; border:1px solid #cbd5e1; color:#64748b; font-size:11px; font-weight:600; padding:6px 14px; border-radius:6px; cursor:pointer;" title="Đổi vai trò hoặc đăng nhập Quản trị viên">
+              🚪 Đổi vai trò / Đăng nhập Quản trị viên
+            </button>
+          </div>
         </section>
 
       </div> <!-- Kết thúc .sidebar-column -->
@@ -3689,9 +3699,12 @@ chỗ<!DOCTYPE html>
       const lockMachineLbl = document.getElementById('lblLockMachinePrice');
       const surveyDaysInp = document.getElementById('surveyWorkDays');
 
+      const topToolbar = document.querySelector('.top-toolbar');
+
       if (role === 'admin') {
         isAdminMode = true;
         document.body.classList.add('admin-mode');
+        if (topToolbar) topToolbar.style.display = 'flex';
         if (cover) cover.style.display = 'none';
         if (secBlock1) secBlock1.style.display = 'block'; // MỤC 1 HIỂN THỊ ĐẦY ĐỦ CHO ADMIN
         if (banner) {
@@ -3724,9 +3737,10 @@ chỗ<!DOCTYPE html>
         }
         showToast("👑 Chào mừng Quản trị viên (Admin/Mod)!");
       } else {
-        // NGƯỜI DÙNG
+        // NGƯỜI DÙNG: ẨN TOÀN BỘ TOP-TOOLBAR VÀ MỤC 1 TRÊN MỌI NỀN TẢNG
         isAdminMode = false;
         document.body.classList.remove('admin-mode');
+        if (topToolbar) topToolbar.style.display = 'none';
         if (cover) cover.style.display = 'none';
         if (secBlock1) secBlock1.style.display = 'none'; // MỤC 1 BỊ ẨN HOÀN TOÀN CHO NGƯỜI DÙNG!
         if (banner) {
@@ -3798,6 +3812,9 @@ chỗ<!DOCTYPE html>
         sessionStorage.removeItem('evn_current_role');
       } catch(e) {}
       currentUserRole = null;
+      document.body.classList.remove('admin-mode');
+      const topToolbar = document.querySelector('.top-toolbar');
+      if (topToolbar) topToolbar.style.display = 'none';
       const cover = document.getElementById('coverPortal');
       if (cover) {
         cover.style.display = 'flex';
