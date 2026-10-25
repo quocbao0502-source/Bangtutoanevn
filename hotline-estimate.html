@@ -1611,21 +1611,48 @@
           </div>
         </div>
 
-        <!-- BỐ CỤC 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE -->
+        <!-- BỐ CỤC 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE -->
         <section class="summary-card" id="summarySection">
           <div class="block-badge-num editable-field" id="badgeBlock5" onclick="editBlockBadge('badgeBlock5', 5)" title="Bấm vào để đổi tên đề mục 5">5</div>
           <div class="summary-header">
-            <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE</h2>
+            <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</h2>
             <p class="editable-field" id="lblSummarySub" onclick="adminQuickEdit('lblSummarySub', 'Ghi chú công thức:')">BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN</p>
+          </div>
+
+          <!-- Thanh điều khiển: Loại công trình (Gpa2) & Thuế GTGT -->
+          <div class="summary-config-box" style="margin-bottom:12px; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center;">
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Loại hình công trình (Gpa2):</label>
+              <div style="display:inline-flex; border:1.5px solid #cbd5e1; border-radius:6px; overflow:hidden; background:#fff;">
+                <button type="button" id="btnTypeNew" onclick="setProjectType('lap_moi')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#005baa; color:#fff; transition:all 0.2s;">
+                  🏗️ Lắp mới (k=1)
+                </button>
+                <button type="button" id="btnTypeUpgrade" onclick="setProjectType('cai_tao')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#f8fafc; color:#334155; transition:all 0.2s;">
+                  🔧 Cải tạo / Nâng cấp (k=1.2)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thuế suất GTGT (%):</label>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <input type="number" id="summaryVatRate" class="fuel-price-input" style="width:65px; padding:5px 6px; font-weight:700; text-align:center;" value="8" min="0" max="100" step="1" onchange="updateSummaryVat(this.value)">
+                <button type="button" onclick="updateSummaryVat(0)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;" title="Miễn thuế 0%">0%</button>
+                <button type="button" onclick="updateSummaryVat(8)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">8%</button>
+                <button type="button" onclick="updateSummaryVat(10)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">10%</button>
+              </div>
+            </div>
           </div>
 
           <div class="table-responsive-wrapper">
             <table class="summary-table">
               <thead>
                 <tr>
-                  <th style="width:10%;">STT</th>
-                  <th style="width:55%; text-align:left;">Hạng mục chi phí</th>
-                  <th style="width:35%; text-align:right;">Thành tiền (đ)</th>
+                  <th style="width:8%; text-align:center;">STT</th>
+                  <th style="width:38%; text-align:left;">KHOẢN MỤC CHI PHÍ</th>
+                  <th style="width:10%; text-align:center;">KÝ HIỆU</th>
+                  <th style="width:24%; text-align:center;">CÁCH TÍNH</th>
+                  <th style="width:20%; text-align:right;">THÀNH TIỀN (đ)</th>
                 </tr>
               </thead>
               <tbody id="summaryTableBody">
@@ -1634,8 +1661,14 @@
             </table>
           </div>
 
+          <!-- Dòng Đọc số tiền Bằng chữ của mục E -->
+          <div class="grand-total-words-box" style="margin-top:10px; margin-bottom:12px; padding:10px 12px; background:#f8fafc; border-left:4px solid #005baa; border-radius:6px; font-size:12px; line-height:1.5;">
+            <span style="font-weight:800; color:#0f172a;">Bằng chữ: </span>
+            <span id="summaryWordsText" style="color:#005baa; font-weight:700; font-style:italic;">(Chưa có dữ liệu)</span>
+          </div>
+
           <div class="grand-total-box">
-            <div class="grand-total-label">TỔNG CỘNG DỰ TOÁN HOTLINE (BAO GỒM VAT)</div>
+            <div class="grand-total-label">TỔNG CỘNG DỰ TOÁN THI CÔNG HOTLINE (MỤC E - SAU THUẾ GTGT)</div>
             <div class="grand-total-amount" id="grandTotalText">0 đ</div>
             <div class="grand-total-words" id="grandTotalWords">(Chưa có dữ liệu)</div>
           </div>
@@ -3010,6 +3043,8 @@
     let isAdminMode = false;
     let currentVoltage = '22kV';
     let hasCrane = false;
+    let currentProjectType = 'lap_moi'; // 'lap_moi' | 'cai_tao'
+    let currentVatRate = 8; // % Thuế GTGT
 
     // Danh sách vị trí
     let positions = [
@@ -3227,6 +3262,45 @@
       document.getElementById('pillCrane').classList.toggle('active', hasCrane);
       renderAppendix();
       renderSummary();
+    }
+
+    // --- 5B. LOẠI HÌNH CÔNG TRÌNH & THUẾ GTGT ---
+    function setProjectType(type, quiet = false) {
+      currentProjectType = type;
+      const btnNew = document.getElementById('btnTypeNew');
+      const btnUpg = document.getElementById('btnTypeUpgrade');
+      if (btnNew && btnUpg) {
+        if (type === 'lap_moi') {
+          btnNew.style.background = '#005baa';
+          btnNew.style.color = '#ffffff';
+          btnUpg.style.background = '#f8fafc';
+          btnUpg.style.color = '#334155';
+        } else {
+          btnUpg.style.background = '#f37021';
+          btnUpg.style.color = '#ffffff';
+          btnNew.style.background = '#f8fafc';
+          btnNew.style.color = '#334155';
+        }
+      }
+      if (!quiet) {
+        showToast(type === 'lap_moi' ? '🏗️ Đã chọn Lắp mới (k=1)' : '🔧 Đã chọn Cải tạo / Nâng cấp (k=1.2)');
+        renderSummary();
+        saveAllAdminData();
+      }
+    }
+
+    function updateSummaryVat(val, quiet = false) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num >= 0) {
+        currentVatRate = num;
+        const inp = document.getElementById('summaryVatRate');
+        if (inp) inp.value = num;
+        if (!quiet) {
+          showToast(`Đã cập nhật thuế GTGT: ${num}%`);
+          renderSummary();
+          saveAllAdminData();
+        }
+      }
     }
 
     // --- 6. CHECK-IN GPS & KHOẢNG CÁCH ---
@@ -4059,7 +4133,7 @@
     }
 
     // --- 12. RENDER BẢNG TỔNG HỢP DỰ TOÁN (BLOCK 5) ---
-    function renderSummary() {
+    function getSummaryCalculationData() {
       let totalSubMat = 0;
       let totalHotMat = 0;
       let totalLabor = 0;
@@ -4073,51 +4147,122 @@
         totalMachine += c.machine;
       });
 
-      const directCost = totalSubMat + totalHotMat + totalLabor + totalMachine;
+      const totalMat = totalSubMat + totalHotMat;
+      const totalDirectCost = totalMat + totalLabor + totalMachine;
+
+      // II. CHI PHÍ GIÁN TIẾP: C = 65% x NC
+      const generalCost = Math.round(totalLabor * 0.65);
+      const totalIndirectCost = generalCost;
+
+      // III. THU NHẬP CHỊU THUẾ TÍNH TRƯỚC: TL = 6% x (T + GT)
+      const taxableIncome = Math.round((totalDirectCost + totalIndirectCost) * 0.06);
+
+      // IV. VẬN CHUYỂN & V. KHÁC (RÀO CHẮN) & B1. KHẢO SÁT
       const appendix = renderAppendix();
+      const transportCost = appendix.transportCost;
+      const barrierCost = appendix.barrierCost;
+      const surveyCost = appendix.surveyCost;
 
-      const otherDirectCost = Math.round(directCost * COST_RATES.otherDirectRate);
-      const generalCost = Math.round(directCost * COST_RATES.generalCostRate);
+      // A. GIÁ TRỊ XÂY DỰNG (TRƯỚC THUẾ): Gxd = T + GT + TL + VC + K
+      const Gxd = totalDirectCost + totalIndirectCost + taxableIncome + transportCost + barrierCost;
 
-      const totalBeforeTax = directCost + appendix.transportCost + appendix.barrierCost + appendix.surveyCost + otherDirectCost + generalCost;
-      const vat = Math.round(totalBeforeTax * COST_RATES.vatRate);
-      const grandTotal = totalBeforeTax + vat;
+      // B. Chi phí khảo sát, lập chiết tính/dự toán, lập phương án thi công và báo cáo tổng hợp: Gpa = Gpa1 + Gpa2
+      const Gpa1 = surveyCost;
+      const kFactor = (currentProjectType === 'cai_tao') ? 1.2 : 1.0;
+      const gpa2Formula = (currentProjectType === 'cai_tao') ? '2,46% x 0,93 x Gxd x 1,2' : '2,46% x 0,93 x Gxd x 1';
+      const Gpa2 = Math.round(Gxd * 0.0246 * 0.93 * kFactor);
+      const Gpa = Gpa1 + Gpa2;
+
+      // C. TỔNG DỰ TOÁN (trước thuế GTGT): Gtt = Gxd + Gpa
+      const Gtt = Gxd + Gpa;
+
+      // D. THUẾ GIÁ TRỊ GIA TĂNG: GTGT = Gtt x vatRate%
+      const vatAmount = Math.round(Gtt * (currentVatRate / 100));
+
+      // E. TỔNG DỰ TOÁN (sau thuế GTGT): Gdt = Gtt + GTGT
+      const Gdt = Gtt + vatAmount;
+
+      const words = readVietnameseNumber(Gdt) + ' đồng.';
 
       const summaryRows = [
-        { stt: 'I', name: 'Chi phí trực tiếp tại các vị trí thi công', val: directCost },
-        { stt: '1', name: '  - Vật liệu phụ (đã tính Kvlp)', val: totalSubMat },
-        { stt: '2', name: '  - Vật liệu Hotline (đã tính Kvlhl)', val: totalHotMat },
-        { stt: '3', name: '  - Nhân công Hotline (đã tính Knc)', val: totalLabor },
-        { stt: '4', name: '  - Máy thi công chuyên dùng (đã tính Kmtc)', val: totalMachine },
-        { stt: 'II', name: 'Phụ lục 4: Chi phí vận chuyển Hotline', val: appendix.transportCost },
-        { stt: 'III', name: 'Phụ lục 5: Chi phí rào chắn & cảnh giới giao thông', val: appendix.barrierCost },
-        { stt: 'IV', name: 'Phụ lục 6: Chi phí khảo sát hiện trường', val: appendix.surveyCost },
-        { stt: 'V', name: `Trực tiếp phí khác (${(COST_RATES.otherDirectRate*100).toFixed(1)}%)`, val: otherDirectCost, rateType: 'otherDirectRate' },
-        { stt: 'VI', name: `Chi phí chung (${(COST_RATES.generalCostRate*100).toFixed(1)}%)`, val: generalCost, rateType: 'generalCostRate' },
-        { stt: 'VII', name: `Thuế giá trị gia tăng (VAT ${(COST_RATES.vatRate*100).toFixed(1)}%)`, val: vat, rateType: 'vatRate' }
+        { stt: 'I', name: 'CHI PHÍ TRỰC TIẾP', code: 'T', formula: 'VL + NC + M', val: totalDirectCost, isHeader: true, bg: '#f8fafc' },
+        { stt: '1', name: 'Chi phí vật liệu', code: 'VL', formula: 'VL1 + VL2', val: totalMat, isSubHeader: true },
+        { stt: '', name: '  - Chi phí vật liệu phụ', code: 'VL1', formula: 'Phụ lục 1', val: totalSubMat },
+        { stt: '', name: '  - Chi phí vật liệu hotline', code: 'VL2', formula: 'Phụ lục 1', val: totalHotMat },
+        { stt: '2', name: 'Chi phí nhân công', code: 'NC', formula: 'Phụ lục 1', val: totalLabor },
+        { stt: '3', name: 'Chi phí máy thi công', code: 'M', formula: 'Phụ lục 1', val: totalMachine },
+        { stt: 'II', name: 'CHI PHÍ GIÁN TIẾP', code: 'GT', formula: 'C', val: totalIndirectCost, isHeader: true, bg: '#f8fafc' },
+        { stt: '1', name: 'Chi phí chung', code: 'C', formula: '65% x NC', val: generalCost },
+        { stt: 'III', name: 'THU NHẬP CHỊU THUẾ TÍNH TRƯỚC', code: 'TL', formula: '6% x (T + GT)', val: taxableIncome, isHeader: true, bg: '#f8fafc' },
+        { stt: 'IV', name: 'Chi phí vận chuyển', code: 'VC', formula: 'Phụ lục 4', val: transportCost, isHeader: true, bg: '#f8fafc' },
+        { stt: 'V', name: 'Chi phí khác (Công tác lập rào chắn, cảnh giới giao thông)', code: 'K', formula: 'Phụ lục 5', val: barrierCost, isHeader: true, bg: '#f8fafc' },
+        { stt: 'A', name: 'GIÁ TRỊ XÂY DỰNG (TRƯỚC THUẾ)', code: 'Gxd', formula: 'T + GT + TL + VC + K', val: Gxd, isMajor: true, bg: '#f0f9ff', color: '#0284c7' },
+        { stt: 'B', name: 'Chi phí khảo sát, lập chiết tính/dự toán, lập phương án thi công và báo cáo tổng hợp', code: 'Gpa', formula: 'Gpa1 + Gpa2', val: Gpa, isHeader: true, bg: '#f8fafc' },
+        { stt: '1', name: 'Chi phí khảo sát', code: 'Gpa1', formula: 'Phụ lục 6', val: Gpa1 },
+        { stt: '2', name: 'Chi phí lập phương án thi công, lập chiết tính/dự toán và báo cáo tổng hợp', code: 'Gpa2', formula: gpa2Formula, val: Gpa2 },
+        { stt: 'C', name: 'TỔNG DỰ TOÁN (trước thuế GTGT)', code: 'Gtt', formula: 'Gxd + Gpa', val: Gtt, isMajor: true, bg: '#fffbeb', color: '#b45309' },
+        { stt: 'D', name: 'THUẾ GIÁ TRỊ GIA TĂNG', code: 'GTGT', formula: `Gtt x ${currentVatRate}%`, val: vatAmount, isHeader: true, bg: '#f8fafc' },
+        { stt: 'E', name: 'TỔNG DỰ TOÁN (sau thuế GTGT)', code: 'Gdt', formula: 'Gtt + GTGT', val: Gdt, isGrand: true, bg: '#eff6ff', color: '#005baa' }
       ];
 
-      document.getElementById('summaryTableBody').innerHTML = summaryRows.map(r => `
-        <tr ${r.stt === 'I' || r.stt === 'II' || r.stt === 'III' || r.stt === 'IV' ? 'style="background:#f8fafc; font-weight:700;"' : ''}>
-          <td style="text-align:center;">${r.stt}</td>
-          <td>
-            ${r.rateType ? `<span class="editable-field" onclick="editCostRate('${r.rateType}')" title="Admin: Nhấp vào để sửa tỷ lệ %">${r.name}</span>` : r.name}
-          </td>
-          <td class="val">${formatMoney(r.val)}</td>
-        </tr>
-      `).join('') + `
-        <tr class="total-row">
-          <td colspan="2">TỔNG CỘNG DỰ TOÁN HOTLINE</td>
-          <td class="val" style="color:#005baa; font-size:13px;">${formatMoney(grandTotal)} đ</td>
-        </tr>
-      `;
+      return {
+        totalSubMat,
+        totalHotMat,
+        totalMat,
+        totalLabor,
+        totalMachine,
+        totalDirectCost,
+        generalCost,
+        totalIndirectCost,
+        taxableIncome,
+        transportCost,
+        barrierCost,
+        surveyCost,
+        Gxd,
+        Gpa1,
+        Gpa2,
+        Gpa,
+        Gtt,
+        vatAmount,
+        Gdt,
+        words,
+        summaryRows
+      };
+    }
 
-      const formattedTotal = formatMoney(grandTotal) + ' đ';
+    function renderSummary() {
+      const data = getSummaryCalculationData();
+      const summaryRows = data.summaryRows;
+      const Gdt = data.Gdt;
+      const words = data.words;
+
+      document.getElementById('summaryTableBody').innerHTML = summaryRows.map(r => {
+        let rowStyle = '';
+        if (r.bg) rowStyle += `background:${r.bg};`;
+        if (r.isHeader || r.isMajor || r.isGrand) rowStyle += 'font-weight:700;';
+        if (r.isGrand) rowStyle += 'font-size:12px; border-top:2px solid #005baa; border-bottom:2px solid #005baa;';
+        let colorStyle = r.color ? `color:${r.color};` : '';
+
+        return `
+          <tr style="${rowStyle}">
+            <td style="text-align:center; font-weight:700; ${colorStyle}">${r.stt}</td>
+            <td style="${r.isGrand ? 'font-weight:800;' : ''} ${colorStyle}">${r.name.replace(/  /g, '&nbsp;&nbsp;')}</td>
+            <td style="text-align:center; font-weight:700; color:#475569;">${r.code}</td>
+            <td style="text-align:center; font-size:10px; color:#334155;">${r.formula}</td>
+            <td class="val" style="${colorStyle}">${formatMoney(r.val)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const formattedTotal = formatMoney(Gdt) + ' đ';
       const elGrand = document.getElementById('grandTotalText');
       if (elGrand) elGrand.innerText = formattedTotal;
 
       const elWords = document.getElementById('grandTotalWords');
-      if (elWords) elWords.innerText = `(Bằng chữ: ${readVietnameseNumber(grandTotal)} đồng)`;
+      if (elWords) elWords.innerText = `(Bằng chữ: ${words})`;
+
+      const elWordsBox = document.getElementById('summaryWordsText');
+      if (elWordsBox) elWordsBox.innerText = words;
 
       const elMobTotal = document.getElementById('mobileGrandTotal');
       if (elMobTotal) elMobTotal.innerText = formattedTotal;
@@ -4667,6 +4812,8 @@
         lblAppx6Title: document.getElementById('lblAppx6Title').innerText,
         lblSummaryTitle: document.getElementById('lblSummaryTitle').innerText,
         lblSummarySub: document.getElementById('lblSummarySub').innerText,
+        projectType: currentProjectType,
+        vatRate: currentVatRate,
         tasks: MASTER_TASKS,
         conditions: MASTER_CONDITIONS,
         fuels: FUEL_NORMS,
@@ -4714,6 +4861,13 @@
         if (d.lblAppx6Title) document.getElementById('lblAppx6Title').innerText = d.lblAppx6Title;
         if (d.lblSummaryTitle) document.getElementById('lblSummaryTitle').innerText = d.lblSummaryTitle;
         if (d.lblSummarySub) document.getElementById('lblSummarySub').innerText = d.lblSummarySub;
+
+        if (d.projectType) {
+          setProjectType(d.projectType, true);
+        }
+        if (d.vatRate !== undefined) {
+          updateSummaryVat(d.vatRate, true);
+        }
 
         if (Array.isArray(d.tasks)) {
           DEFAULT_MASTER_TASKS.forEach(dt => {
@@ -4772,8 +4926,11 @@
       document.getElementById('lblAppx4Title').innerText = 'Phụ lục 4: Bảng tính vận chuyển hotline';
       document.getElementById('lblAppx5Title').innerText = 'Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông';
       document.getElementById('lblAppx6Title').innerText = 'Phụ lục 6: Bảng tính chi phí khảo sát';
-      document.getElementById('lblSummaryTitle').innerText = 'BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE';
+      document.getElementById('lblSummaryTitle').innerText = 'BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE';
       document.getElementById('lblSummarySub').innerText = 'BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN';
+
+      setProjectType('lap_moi', true);
+      updateSummaryVat(8, true);
 
       showToast("Đã khôi phục cài đặt gốc EVNSPC thành công!");
       populateModals();
@@ -4810,64 +4967,155 @@
     }
 
     function readVietnameseNumber(n) {
-      if (n === 0) return 'Không';
-      const defaultNumbers = ' không một hai ba bốn năm sáu bảy tám chín';
-      const units = ['', 'nghìn', 'triệu', 'tỷ'];
-      function readGroup(str) {
-        let res = '';
-        const h = parseInt(str.charAt(0));
-        const t = parseInt(str.charAt(1));
-        const u = parseInt(str.charAt(2));
-        if (h === 0 && t === 0 && u === 0) return '';
-        if (h !== 0) {
-          res += defaultNumbers.substr(h * 5, 5) + ' trăm';
-          if (t === 0 && u !== 0) res += ' linh';
+      if (!n || isNaN(n) || n === 0) return 'Không';
+      n = Math.round(Math.abs(n));
+      const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+      const units = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'];
+
+      function readThreeDigits(num, isHighestGroup) {
+        let h = Math.floor(num / 100);
+        let t = Math.floor((num % 100) / 10);
+        let u = num % 10;
+        let str = '';
+
+        if (h > 0 || !isHighestGroup) {
+          str += digits[h] + ' trăm ';
         }
-        if (t !== 0 && t !== 1) {
-          res += defaultNumbers.substr(t * 5, 5) + ' mươi';
-          if (t === 0 && u !== 0) res += ' linh';
+
+        if (t > 1) {
+          str += digits[t] + ' mươi ';
+          if (u === 1) str += 'mốt ';
+          else if (u === 5) str += 'lăm ';
+          else if (u > 0) str += digits[u] + ' ';
+        } else if (t === 1) {
+          str += 'mười ';
+          if (u === 5) str += 'lăm ';
+          else if (u > 0) str += digits[u] + ' ';
+        } else {
+          if (u > 0) {
+            if (h > 0 || !isHighestGroup) str += 'lẻ ';
+            str += digits[u] + ' ';
+          }
         }
-        if (t === 1) res += ' mười';
-        switch (u) {
-          case 1: res += (t !== 0 && t !== 1) ? ' mốt' : defaultNumbers.substr(u * 5, 5); break;
-          case 5: res += (t === 0) ? defaultNumbers.substr(u * 5, 5) : ' lăm'; break;
-          default: if (u !== 0) res += defaultNumbers.substr(u * 5, 5); break;
-        }
-        return res;
+        return str.trim();
       }
-      let s = Math.round(n).toString();
-      while (s.length % 3 !== 0) s = '0' + s;
+
       let groups = [];
-      for (let i = 0; i < s.length; i += 3) groups.push(s.substr(i, 3));
-      let out = '';
-      for (let i = 0; i < groups.length; i++) {
-        let g = readGroup(groups[i]);
-        if (g !== '') out += g + ' ' + units[groups.length - 1 - i] + ' ';
+      let temp = n;
+      while (temp > 0) {
+        groups.push(temp % 1000);
+        temp = Math.floor(temp / 1000);
       }
-      out = out.trim();
-      return out.charAt(0).toUpperCase() + out.slice(1);
+
+      let result = '';
+      for (let i = groups.length - 1; i >= 0; i--) {
+        let g = groups[i];
+        if (g > 0) {
+          let gStr = readThreeDigits(g, i === groups.length - 1);
+          result += gStr + ' ' + units[i] + ' ';
+        }
+      }
+
+      result = result.trim();
+      if (!result) return 'Không';
+      return result.charAt(0).toUpperCase() + result.slice(1);
     }
 
     // --- 19. EXPORT EXCEL (.xls) ---
     function exportToExcel() {
-      const grandTotal = document.getElementById('grandTotalText').innerText;
+      const data = getSummaryCalculationData();
+      const grandTotal = formatMoney(data.Gdt) + ' đ';
+      const words = data.words;
+      const typeLabel = (currentProjectType === 'cai_tao') ? 'Cải tạo / Nâng cấp (k=1.2)' : 'Lắp mới (k=1.0)';
+
       let html = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head><meta charset="utf-8"/></head>
+        <head>
+          <meta charset="utf-8"/>
+          <!--[if gte mso 9]>
+          <xml>
+            <x:ExcelWorkbook>
+              <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                  <x:Name>DuToanHotline</x:Name>
+                  <x:WorksheetOptions>
+                    <x:DisplayGridlines/>
+                  </x:WorksheetOptions>
+                </x:ExcelWorksheet>
+              </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+          </xml>
+          <![endif]-->
+          <style>
+            body { font-family: Arial, sans-serif; font-size: 11pt; }
+            table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
+            th, td { border: 1px solid #94a3b8; padding: 6px 8px; }
+            .th-header { background-color: #005baa; color: #ffffff; font-weight: bold; text-align: center; }
+            .row-header { background-color: #f1f5f9; font-weight: bold; }
+            .row-major { background-color: #e0f2fe; font-weight: bold; color: #0284c7; }
+            .row-grand { background-color: #dbeafe; font-weight: bold; color: #005baa; font-size: 12pt; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+          </style>
+        </head>
         <body>
-          <h2 style="color:#005baa; text-align:center;">${document.getElementById('appLogoSub').innerText}</h2>
-          <h3 style="text-align:center;">${document.getElementById('lblSummaryTitle').innerText}</h3>
-          <p><strong>Cấp điện áp:</strong> ${currentVoltage}</p>
-          <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%;">
+          <h2 style="color:#005baa; text-align:center; margin-bottom:4px;">${document.getElementById('appLogoSub').innerText}</h2>
+          <h3 style="text-align:center; margin-top:0; color:#0f172a;">${document.getElementById('lblSummaryTitle').innerText}</h3>
+          
+          <table style="border:none; margin-bottom:12px; width:auto;">
+            <tr style="border:none;">
+              <td style="border:none; padding:4px 12px 4px 0;"><strong>⚡ Cấp điện áp:</strong> ${currentVoltage}</td>
+              <td style="border:none; padding:4px 12px;"><strong>🏗️ Loại hình công trình:</strong> ${typeLabel}</td>
+              <td style="border:none; padding:4px 12px;"><strong>💰 Thuế suất GTGT:</strong> ${currentVatRate}%</td>
+            </tr>
+          </table>
+
+          <h4 style="color:#005baa; margin-bottom:6px;">I. BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</h4>
+          <table>
             <thead>
-              <tr style="background:#005baa; color:#ffffff;">
+              <tr class="th-header">
+                <th style="width:8%;">STT</th>
+                <th style="width:40%; text-align:left;">KHOẢN MỤC CHI PHÍ</th>
+                <th style="width:12%;">KÝ HIỆU</th>
+                <th style="width:22%;">CÁCH TÍNH</th>
+                <th style="width:18%; text-align:right;">THÀNH TIỀN (đ)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.summaryRows.map(r => {
+                let rowClass = '';
+                if (r.isGrand) rowClass = 'class="row-grand"';
+                else if (r.isMajor) rowClass = 'class="row-major"';
+                else if (r.isHeader) rowClass = 'class="row-header"';
+                
+                return `
+                  <tr ${rowClass}>
+                    <td class="text-center">${r.stt}</td>
+                    <td>${r.name.replace(/  /g, '&nbsp;&nbsp;')}</td>
+                    <td class="text-center">${r.code}</td>
+                    <td class="text-center">${r.formula}</td>
+                    <td class="text-right">${formatMoney(r.val)}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:10px 14px; border-radius:6px; margin-bottom:20px; font-size:11pt;">
+            <strong>Bằng chữ:</strong> <em>${words}</em>
+          </div>
+
+          <h4 style="color:#005baa; margin-bottom:6px;">II. BẢNG TÍNH CHI TIẾT THEO CÁC VỊ TRÍ (PHỤ LỤC 1)</h4>
+          <table>
+            <thead>
+              <tr class="th-header">
                 <th>Vị trí</th>
                 <th>Địa chỉ hiện trường</th>
-                <th>Vật liệu phụ (Kvlp)</th>
-                <th>Vật liệu Hotline (Kvlhl)</th>
-                <th>Nhân công (Knc)</th>
-                <th>Máy thi công (Kmtc)</th>
-                <th>Thành tiền vị trí</th>
+                <th>Vật liệu phụ</th>
+                <th>Vật liệu Hotline</th>
+                <th>Nhân công</th>
+                <th>Máy thi công</th>
+                <th>Thành tiền vị trí (đ)</th>
               </tr>
             </thead>
             <tbody>
@@ -4875,20 +5123,26 @@
                 const c = calculatePositionCost(p);
                 return `
                   <tr>
-                    <td>${p.title || 'Vị trí ' + p.id}</td>
+                    <td><strong>${p.title || 'Vị trí ' + p.id}</strong></td>
                     <td>${p.address}</td>
-                    <td align="right">${formatMoney(c.subMat)}</td>
-                    <td align="right">${formatMoney(c.hotMat)}</td>
-                    <td align="right">${formatMoney(c.labor)}</td>
-                    <td align="right">${formatMoney(c.machine)}</td>
-                    <td align="right"><strong>${formatMoney(c.total)}</strong></td>
+                    <td class="text-right">${formatMoney(c.subMat)}</td>
+                    <td class="text-right">${formatMoney(c.hotMat)}</td>
+                    <td class="text-right">${formatMoney(c.labor)}</td>
+                    <td class="text-right">${formatMoney(c.machine)}</td>
+                    <td class="text-right"><strong>${formatMoney(c.total)}</strong></td>
                   </tr>
                 `;
               }).join('')}
+              <tr class="row-header">
+                <td colspan="2" class="text-center"><strong>Tổng cộng Phụ lục 1</strong></td>
+                <td class="text-right"><strong>${formatMoney(data.totalSubMat)}</strong></td>
+                <td class="text-right"><strong>${formatMoney(data.totalHotMat)}</strong></td>
+                <td class="text-right"><strong>${formatMoney(data.totalLabor)}</strong></td>
+                <td class="text-right"><strong>${formatMoney(data.totalMachine)}</strong></td>
+                <td class="text-right"><strong>${formatMoney(data.totalDirectCost)}</strong></td>
+              </tr>
             </tbody>
           </table>
-          <br/>
-          <h3>TỔNG CỘNG DỰ TOÁN HOTLINE: ${grandTotal}</h3>
         </body>
         </html>
       `;
