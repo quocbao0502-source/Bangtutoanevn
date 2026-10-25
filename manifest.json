@@ -1,0 +1,19 @@
+{
+  "name": "Dự toán Thi công Hotline EVN Tây Ninh",
+  "short_name": "EVN Hotline",
+  "description": "Ứng dụng hỗ trợ lập dự toán thi công sửa chữa điện nóng Hotline EVN Tây Ninh",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b192c",
+  "theme_color": "#005DBB",
+  "icons": [
+    {
+      "src": "evn-logo.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

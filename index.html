@@ -1,9 +1,18 @@
-chỗ<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>EVNSPC Estimate - Bảng Dự Toán Hotline & Hệ Số Điều Chỉnh</title>
+  
+  <!-- Web App & PWA Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EVN Hotline">
+  <meta name="application-name" content="EVN Hotline">
+  <meta name="theme-color" content="#005DBB">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="evn-logo.svg">
   <style>
     /* Reset & Base Styles */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1236,12 +1245,73 @@ chỗ<!DOCTYPE html>
       line-height: 1.3;
     }
 
-    /* Action bar */
+    /* Action bar & PWA Button */
     .summary-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 8px;
     }
+    .btn-pwa-install-main {
+      width: 100%;
+      background: linear-gradient(135deg, #005DBB 0%, #0284c7 100%);
+      color: #ffffff;
+      border: 1.5px solid #004d9b;
+      border-radius: 10px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 93, 187, 0.28);
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .btn-pwa-install-main:hover {
+      background: linear-gradient(135deg, #004d9b 0%, #0369a1 100%);
+      box-shadow: 0 6px 18px rgba(0, 93, 187, 0.38);
+      transform: translateY(-1px);
+    }
+    .btn-pwa-install-main:active {
+      transform: translateY(0);
+    }
+    .pwa-btn-icon {
+      font-size: 26px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pwa-btn-text {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+    .pwa-btn-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+    .pwa-btn-desc {
+      font-size: 11px;
+      color: #bae6fd;
+      line-height: 1.25;
+    }
+    .btn-subtle-excel {
+      background: transparent;
+      border: 1px dashed #cbd5e1;
+      color: #16a34a;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-subtle-excel:hover {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
     .btn-act {
       padding: 9px;
       border-radius: 8px;
@@ -1261,6 +1331,201 @@ chỗ<!DOCTYPE html>
     .btn-act.print {
       background: #475569;
       color: #ffffff;
+    }
+
+    /* PWA Modal styling */
+    .pwa-modal-content {
+      max-width: 580px !important;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    }
+    .pwa-modal-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 13px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .pwa-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .pwa-tabs-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 14px;
+    }
+    .pwa-tab-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 6px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .pwa-tab-btn:hover {
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .pwa-tab-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 700;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .pwa-card-box {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .pwa-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pwa-card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pwa-card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .pwa-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .pwa-badge.ios {
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #facc15;
+    }
+    .pwa-badge.android {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .pwa-badge.pc {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+    .pwa-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .pwa-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pwa-step-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .pwa-step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #ea580c;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pwa-step-body {
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .pwa-inline-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f0f7ff;
+      border: 1px solid #bfdbfe;
+      color: #0284c7;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 11.5px;
+      vertical-align: middle;
+    }
+    .pwa-inline-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      margin-top: 3px;
+    }
+    .btn-native-pwa {
+      width: 100%;
+      background: #16a34a;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+      transition: background 0.2s;
+    }
+    .btn-native-pwa:hover {
+      background: #15803d;
     }
 
     /* Modal dialog */
@@ -2511,12 +2776,18 @@ chỗ<!DOCTYPE html>
           </div>
 
           <div class="summary-actions">
-            <button class="btn-act excel" onclick="exportToExcel()">
-              📥 Xuất Excel (.xls)
+            <button type="button" class="btn-pwa-install-main" onclick="openPwaModal()">
+              <span class="pwa-btn-icon">📲</span>
+              <div class="pwa-btn-text">
+                <span class="pwa-btn-title">Cài đặt App sang Màn Hình chính - Cài đặt PWA nhanh chóng</span>
+                <span class="pwa-btn-desc">Dùng mượt mà không cần mở trình duyệt • iPhone/iPad, Android & Máy tính</span>
+              </div>
             </button>
-            <button class="btn-act print" onclick="window.print()">
-              🖨 In dự toán
-            </button>
+            <div style="text-align:center;">
+              <button type="button" onclick="exportToExcel()" class="btn-subtle-excel" title="Xuất file bảng tính Excel nếu cần">
+                📥 Xuất bảng tính Excel (.xls)
+              </button>
+            </div>
           </div>
 
           <div style="text-align:center; margin-top:16px; margin-bottom:8px;">
@@ -2540,6 +2811,199 @@ chỗ<!DOCTYPE html>
     <div class="mob-actions">
       <button class="btn-mob-act add" onclick="addNewPosition()">➕ Vị trí</button>
       <button class="btn-mob-act view" onclick="scrollToSummary()">📊 Tổng hợp</button>
+    </div>
+  </div>
+
+  <!-- MODAL HƯỚNG DẪN CÀI ĐẶT PWA CHO MỌI THIẾT BỊ (IPHONE/IPAD - ANDROID - MÁY TÍNH) -->
+  <div class="modal-overlay" id="modalPwaGuide">
+    <div class="modal-content pwa-modal-content">
+      <div class="pwa-modal-header">
+        <div class="pwa-modal-title">
+          <span>📲</span>
+          <span>Cài đặt App sang Màn Hình chính - PWA</span>
+        </div>
+        <button class="modal-close" style="color:#ffffff;" onclick="closePwaModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:16px;">
+        <!-- Thanh chọn Tabs thiết bị (iPhone/iPad - Android - Máy tính) -->
+        <div class="pwa-tabs-bar">
+          <button type="button" class="pwa-tab-btn active" data-tab="ios" onclick="switchPwaTab('ios')">
+            <span style="font-size:15px;">🍎</span>
+            <span>iPhone / iPad</span>
+          </button>
+          <button type="button" class="pwa-tab-btn" data-tab="android" onclick="switchPwaTab('android')">
+            <span style="font-size:15px;">🤖</span>
+            <span>Android</span>
+          </button>
+          <button type="button" class="pwa-tab-btn" data-tab="pc" onclick="switchPwaTab('pc')">
+            <span style="font-size:15px;">💻</span>
+            <span>Máy tính (PC/Mac)</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: IPHONE & IPAD (SAFARI) - Đúng chuẩn như hình mẫu người dùng gửi -->
+        <div class="pwa-tab-pane" data-pane="ios">
+          <div class="pwa-card-box">
+            <div class="pwa-card-header">
+              <div class="pwa-card-title-group">
+                <span style="font-size:18px;">🍎</span>
+                <span class="pwa-card-title">Hướng dẫn cài đặt trên iPhone & iPad (Safari)</span>
+              </div>
+              <span class="pwa-badge ios">iOS Safari</span>
+            </div>
+            <p class="pwa-desc">
+              Hệ điều hành iOS (Apple) không hỗ trợ nút cài đặt tự động từ trình duyệt. Bạn chỉ cần thực hiện 3 bước đơn giản sau:
+            </p>
+
+            <div class="pwa-steps-list">
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">1</div>
+                <div class="pwa-step-body">
+                  Mở đường link trên trình duyệt <strong>Safari</strong>, sau đó nhấn biểu tượng 
+                  <span class="pwa-inline-badge">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                    Chia sẻ (Share)
+                  </span> 
+                  ở thanh công cụ dưới đáy màn hình.
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">2</div>
+                <div class="pwa-step-body">
+                  Cuộn xuống danh sách tính năng và chọn 
+                  <div class="pwa-inline-box">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    <span>Thêm vào MH chính (Add to Home Screen)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">3</div>
+                <div class="pwa-step-body">
+                  Chạm vào chữ <strong>"Thêm" (Add)</strong> ở góc trên bên phải màn hình để hoàn tất.
+                  <div style="font-size:11px; color:#64748b; margin-top:3px; font-style:italic;">
+                    ✨ Icon EVN Hotline sẽ xuất hiện trên màn hình chính, mở trực tiếp tràn viền toàn màn hình cực nhanh!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: ANDROID (CHROME / CỐC CỐC) -->
+        <div class="pwa-tab-pane" data-pane="android" style="display:none;">
+          <div class="pwa-card-box">
+            <div class="pwa-card-header">
+              <div class="pwa-card-title-group">
+                <span style="font-size:18px;">🤖</span>
+                <span class="pwa-card-title">Hướng dẫn cài đặt trên điện thoại Android</span>
+              </div>
+              <span class="pwa-badge android">Android OS</span>
+            </div>
+
+            <!-- Nút cài đặt tự động 1 chạm nếu Chrome hỗ trợ -->
+            <button type="button" class="btn-native-pwa" onclick="triggerNativeInstall()">
+              <span>📲 Bấm vào đây để Cài đặt App ngay lập tức</span>
+            </button>
+
+            <p class="pwa-desc">
+              Nếu thiết bị chưa hiển thị thông báo cài đặt tự động, bạn chỉ cần thực hiện 3 bước đơn giản trên Chrome hoặc Cốc Cốc:
+            </p>
+
+            <div class="pwa-steps-list">
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">1</div>
+                <div class="pwa-step-body">
+                  Mở ứng dụng trên trình duyệt <strong>Google Chrome</strong> hoặc <strong>Cốc Cốc</strong>.
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">2</div>
+                <div class="pwa-step-body">
+                  Nhấn vào biểu tượng Menu <span class="pwa-inline-badge">⋮ (3 dấu chấm)</span> ở góc trên bên phải màn hình.
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">3</div>
+                <div class="pwa-step-body">
+                  Chọn mục 
+                  <div class="pwa-inline-box">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Cài đặt ứng dụng (hoặc Thêm vào MH chính)</span>
+                  </div>
+                  sau đó nhấn <strong>Cài đặt</strong> để hoàn tất.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: MÁY TÍNH (PC / LAPTOP / MAC) -->
+        <div class="pwa-tab-pane" data-pane="pc" style="display:none;">
+          <div class="pwa-card-box">
+            <div class="pwa-card-header">
+              <div class="pwa-card-title-group">
+                <span style="font-size:18px;">💻</span>
+                <span class="pwa-card-title">Hướng dẫn cài đặt trên Máy tính (PC / Mac)</span>
+              </div>
+              <span class="pwa-badge pc">Chrome & Edge</span>
+            </div>
+
+            <!-- Nút cài đặt desktop 1 chạm nếu Chrome/Edge hỗ trợ -->
+            <button type="button" class="btn-native-pwa" onclick="triggerNativeInstall()">
+              <span>💻 Bấm vào đây để Cài đặt ứng dụng lên Desktop</span>
+            </button>
+
+            <p class="pwa-desc">
+              Cài đặt lên máy tính giúp ứng dụng chạy trong cửa sổ riêng biệt như phần mềm độc lập, không còn thanh địa chỉ trình duyệt:
+            </p>
+
+            <div class="pwa-steps-list">
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">1</div>
+                <div class="pwa-step-body">
+                  Mở ứng dụng bằng trình duyệt <strong>Google Chrome</strong> hoặc <strong>Microsoft Edge</strong>.
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">2</div>
+                <div class="pwa-step-body">
+                  Nhìn lên góc bên phải của thanh địa chỉ URL, nhấn vào biểu tượng 
+                  <span class="pwa-inline-badge">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    ⊕ Cài đặt ứng dụng (Install App)
+                  </span>
+                  hoặc biểu tượng máy tính có mũi tên tải xuống.
+                </div>
+              </div>
+
+              <div class="pwa-step-card">
+                <div class="pwa-step-num">3</div>
+                <div class="pwa-step-body">
+                  Nhấn <strong>"Cài đặt" (Install)</strong> trên hộp thoại thông báo. 
+                  <div style="font-size:11px; color:#64748b; margin-top:3px; font-style:italic;">
+                    ✨ Icon EVN Hotline sẽ xuất hiện trên màn hình Desktop và Start Menu để bạn mở làm việc bất kỳ lúc nào!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-top:1px solid #e2e8f0; padding:10px 16px;">
+        <span style="font-size:11px; color:#64748b;">⚡ Hoàn toàn miễn phí & không tốn dung lượng máy</span>
+        <button type="button" class="admin-pill-btn" style="background:#005DBB; padding:7px 18px;" onclick="closePwaModal()">
+          Đã hiểu & Đóng
+        </button>
+      </div>
     </div>
   </div>
 
@@ -6378,6 +6842,73 @@ chỗ<!DOCTYPE html>
     function closeModal(modalId) {
       const modal = document.getElementById(modalId);
       if (modal) modal.classList.remove('open');
+    }
+
+    // --- 17b. PWA MODAL & INSTALLATION LOGIC ---
+    function openPwaModal() {
+      const os = detectDeviceOS();
+      switchPwaTab(os);
+      openModal('modalPwaGuide');
+    }
+
+    function closePwaModal() {
+      closeModal('modalPwaGuide');
+    }
+
+    function detectDeviceOS() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+        return 'ios';
+      }
+      if (/android/i.test(ua)) {
+        return 'android';
+      }
+      return 'pc';
+    }
+
+    function switchPwaTab(tabKey) {
+      const tabBtns = document.querySelectorAll('.pwa-tab-btn');
+      tabBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tabKey);
+      });
+
+      const panes = document.querySelectorAll('.pwa-tab-pane');
+      panes.forEach(pane => {
+        pane.style.display = (pane.getAttribute('data-pane') === tabKey) ? 'block' : 'none';
+      });
+    }
+
+    // Lắng nghe sự kiện cài đặt PWA chuẩn của trình duyệt (Chrome, Edge, Android)
+    let deferredPwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      const nativeBtns = document.querySelectorAll('.btn-native-pwa');
+      nativeBtns.forEach(btn => {
+        btn.style.display = 'inline-flex';
+      });
+    });
+
+    function triggerNativeInstall() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt.userChoice.then((result) => {
+          if (result.outcome === 'accepted') {
+            showToast('✅ Đang cài đặt ứng dụng EVN Hotline...');
+            closePwaModal();
+          }
+          deferredPwaPrompt = null;
+        });
+      } else {
+        showToast('ℹ️ Vui lòng làm theo 3 bước hướng dẫn bên dưới để cài đặt trên thiết bị của bạn!');
+      }
+    }
+
+    // Đăng ký Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
     }
     window.onclick = function(e) {
       if (e.target.classList.contains('modal-overlay')) {
