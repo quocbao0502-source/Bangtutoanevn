@@ -276,6 +276,81 @@ chỗ<!DOCTYPE html>
       display: inline-block;
     }
 
+    .btn-refresh-project {
+      background: #005DBB; /* Màu xanh Cavansite */
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 18px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(0, 93, 187, 0.4);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      user-select: none;
+    }
+    .btn-refresh-project:hover {
+      background: #004d9b;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(0, 93, 187, 0.55);
+    }
+    .btn-refresh-project:active {
+      transform: translateY(0);
+    }
+
+    /* Định dạng tất cả các ô cần điền theo màu xanh Cavansite (#005DBB) */
+    .input-address,
+    .task-search-input,
+    .qty-input,
+    .fuel-price-input,
+    .pos-km-direct-inp,
+    .depot-km-inp,
+    #machineShiftPrice,
+    #machineShiftCount,
+    #barrierTimes,
+    #surveyWorkDays,
+    #summaryVatRate,
+    #fuelPrice,
+    #fuelTax {
+      border: 1.5px solid #005DBB !important;
+      color: #005DBB !important;
+      font-weight: 700 !important;
+      background-color: #ffffff !important;
+    }
+
+    .pos-km-badge {
+      border: 1.5px solid #005DBB !important;
+      background: #ffffff !important;
+    }
+
+    .pos-km-direct-inp {
+      color: #005DBB !important;
+      font-weight: 800 !important;
+    }
+
+    .input-address:focus,
+    .task-search-input:focus,
+    .qty-input:focus,
+    .fuel-price-input:focus,
+    .pos-km-direct-inp:focus,
+    .depot-km-inp:focus,
+    #machineShiftPrice:focus,
+    #machineShiftCount:focus,
+    #barrierTimes:focus,
+    #surveyWorkDays:focus,
+    #summaryVatRate:focus,
+    #fuelPrice:focus,
+    #fuelTax:focus {
+      border-color: #005DBB !important;
+      box-shadow: 0 0 0 3px rgba(0, 93, 187, 0.25) !important;
+      outline: none !important;
+    }
+
     /* Content Body & Responsive Layout */
     .app-body {
       padding: 16px;
@@ -2076,7 +2151,12 @@ chỗ<!DOCTYPE html>
         </div>
       </div>
       <div class="estimate-title">
-        <div class="badge editable-field" id="appBadgeText" onclick="adminQuickEdit('appBadgeText', 'Nhãn Estimate:')">ESTIMATE</div>
+        <div style="display:inline-flex; align-items:center; gap:6px;">
+          <button type="button" class="btn-refresh-project" id="btnRefreshProject" onclick="resetProjectToNew()" title="Làm mới dự toán (New): Xóa dữ liệu các Phụ lục (1, 2, 4, 5, 6) & Check-in để lập dự toán mới">
+            🔄 Refresh
+          </button>
+          <div class="badge editable-field" id="appBadgeText" onclick="adminQuickEdit('appBadgeText', 'Nhãn Estimate:')">ESTIMATE</div>
+        </div>
         <div style="font-size: 11px; color: #cbd5e1; margin-top: 3px;" class="editable-field" id="appSubTitleText" onclick="adminQuickEdit('appSubTitleText', 'Phụ đề dự toán:')">DỰ TOÁN CÔNG TÁC HOTLINE</div>
       </div>
     </header>
@@ -4594,6 +4674,72 @@ chỗ<!DOCTYPE html>
         showToast(`Đã xóa vị trí`);
         renderAll();
       }
+    }
+
+    // --- LÀM MỚI DỰ TOÁN (NEW / REFRESH DỰ ÁN) ---
+    function resetProjectToNew() {
+      if (!confirm("Bắt đầu lập dự toán mới (New Project)?\nToàn bộ công tác đã chọn, các vị trí thi công, check-in và số liệu tính toán ở các Phụ lục (1, 2, 4, 5, 6) sẽ được làm mới về ban đầu.")) {
+        return;
+      }
+
+      // 1. Phụ lục 1 & 2: Đưa danh sách vị trí về 1 vị trí ban đầu (Vị trí 1, công tác mẫu đầu tiên)
+      positions = [
+        {
+          id: 1,
+          title: 'Vị trí 1',
+          address: '',
+          checkedIn: false,
+          gps: '',
+          distanceKm: 15,
+          tasks: [
+            {
+              taskId: (MASTER_TASKS[0] ? MASTER_TASKS[0].id : 'CV3592'),
+              condIds: (MASTER_CONDITIONS[0] ? [MASTER_CONDITIONS[0].id] : []),
+              qty: 1
+            }
+          ],
+          factors: [1.0, 0.8, 0.7, 0.6],
+          similarCount: 1
+        }
+      ];
+
+      // 2. Điểm xuất phát & Check-in: Trở về ban đầu
+      const radio1 = document.getElementById('depotRadio1');
+      if (radio1) radio1.checked = true;
+      updateDepotRowStyles(1);
+      const km1 = document.getElementById('depotKm1');
+      const km2 = document.getElementById('depotKm2');
+      if (km1) km1.value = 15;
+      if (km2) km2.value = 25;
+
+      // 3. Phụ lục 4: Giá dầu (21.500) & Thuế dầu (0%)
+      const fuelP = document.getElementById('fuelPrice');
+      const fuelT = document.getElementById('fuelTax');
+      if (fuelP) fuelP.value = 21500;
+      if (fuelT) fuelT.value = 0;
+
+      // 4. Phụ lục 5: Đơn giá ca máy (1.250.000) & Reset số ca máy tự động
+      const shiftP = document.getElementById('machineShiftPrice');
+      if (shiftP) shiftP.value = 1250000;
+      const countInp = document.getElementById('machineShiftCount');
+      if (countInp && countInp.dataset) {
+        delete countInp.dataset.userEdited;
+      }
+
+      // 5. Phụ lục 6: Rào chắn (1 lần) & Khảo sát (0.5 công)
+      const barrier = document.getElementById('barrierTimes');
+      if (barrier) barrier.value = 1;
+      const survey = document.getElementById('surveyWorkDays');
+      if (survey) survey.value = 0.5;
+
+      // 6. Cấp điện áp & Dự án: Trở về 22kV, Lắp mới (k=1), VAT 8%
+      setVoltage('22kV');
+      setProjectType('lap_moi', true);
+      updateSummaryVat(8, true);
+
+      renderAll();
+      saveAllAdminData();
+      showToast("✨ Đã làm mới toàn bộ dự toán (New)! Các phụ lục & check-in đã sẵn sàng cho dự toán mới.");
     }
 
     // --- 8. THÊM / CẬP NHẬT CÔNG TÁC & HỆ SỐ ĐIỀU CHỈNH VÀO VỊ TRÍ ---
