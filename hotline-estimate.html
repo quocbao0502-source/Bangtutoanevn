@@ -2034,11 +2034,11 @@
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
                 Số ca máy max: <span id="lblMachineShiftMaxRef" style="font-weight:normal; color:#64748b; font-size:10px;"></span>
               </label>
-              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.000" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
+              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.0" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số ca máy chọn:</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="0.5" step="0.05" min="0" oninput="this.dataset.userEdited='true'; renderAll();" title="Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn 0.5">
+              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="0.5" step="0.1" min="0" oninput="this.dataset.userEdited='true'; renderAll();" title="Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn 0.5">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Tổng số lần thực hiện:</label>
@@ -4695,23 +4695,25 @@
 
       // 2. Tính số ca máy max = Thành tiền tổng các vị trí của Máy thi công / Giá ca máy
       const maxMachineShifts = machineShiftPrice > 0 ? (totalMachineAllPos / machineShiftPrice) : 0;
+      // Lấy 1 chữ số thập phân sau dấu phẩy (không làm tròn lên, ví dụ: 0.334 -> 0.3)
+      const maxMachineShifts1Dec = Math.floor(maxMachineShifts * 10) / 10;
       const shiftMaxInp = document.getElementById('machineShiftMax');
       if (shiftMaxInp) {
-        shiftMaxInp.value = maxMachineShifts.toFixed(3);
-        shiftMaxInp.title = `Số ca máy max = ${formatMoney(totalMachineAllPos)} đ (máy thi công) / ${formatMoney(machineShiftPrice)} đ (giá ca máy)`;
+        shiftMaxInp.value = maxMachineShifts1Dec.toFixed(1);
+        shiftMaxInp.title = `Số ca máy max = ${formatMoney(totalMachineAllPos)} đ (máy thi công) / ${formatMoney(machineShiftPrice)} đ (giá ca máy) = ${maxMachineShifts.toFixed(3)}`;
       }
       const lblMaxRef = document.getElementById('lblMachineShiftMaxRef');
       if (lblMaxRef) {
         lblMaxRef.innerText = `(${formatMoney(machineShiftPrice)} đ/ca)`;
       }
 
-      // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5
-      const autoShiftCount = (maxMachineShifts <= 0.5) ? (Math.floor(maxMachineShifts * 1000) / 1000) : 0.5;
+      // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5 (lấy 1 chữ số thập phân)
+      const autoShiftCount = (maxMachineShifts1Dec <= 0.5) ? maxMachineShifts1Dec : 0.5;
       const countInp = document.getElementById('machineShiftCount');
       let selectedShifts = autoShiftCount;
       if (countInp) {
         if (countInp.dataset && !countInp.dataset.userEdited) {
-          countInp.value = autoShiftCount;
+          countInp.value = autoShiftCount.toFixed(1);
           selectedShifts = autoShiftCount;
         } else {
           selectedShifts = parseFloat(countInp.value);
