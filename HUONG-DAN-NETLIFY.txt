@@ -1,0 +1,86 @@
+================================================================================
+          HƯỚNG DẪN ĐẨY DỰ ÁN EVN POLEINSPECTOR LÊN WEB NETLIFY
+================================================================================
+
+Dự án EVN PoleInspector đã được tối ưu và đóng gói hoàn chỉnh sẵn sàng cho Netlify.
+Thư mục chứa toàn bộ sản phẩm hoàn thiện để đưa lên web là:
+  dist-netlify\
+
+Trong thư mục dist-netlify bao gồm:
+  - index.html               : Giao diện web chính thức (React 19 + Tailwind + Leaflet)
+  - assets\                  : Tệp mã nguồn JavaScript và CSS nén tối ưu
+  - EVN-PoleInspector.html   : Bản HTML độc lập 1 tệp mở nhanh không cần mạng
+  - dien-thoai.html          : Trình giả lập màn hình iPhone/Android/iPad
+  - _redirects               : Tệp cấu hình điều hướng SPA trên Netlify
+
+
+--------------------------------------------------------------------------------
+CÁCH 1: KÉO THẢ QUA NETLIFY DROP (KHUYÊN DÙNG - CỰC NHANH, 10 GIÂY CÓ LINK)
+--------------------------------------------------------------------------------
+Đây là cách chính thức và tiện nhất của Netlify, không cần cài đặt lệnh:
+
+1. Chạy tệp DEPLOY-NETLIFY.cmd (chọn phím 1), hoặc tự mở trình duyệt vào:
+   https://app.netlify.com/drop
+
+2. Mở thư mục "dist-netlify" trên máy tính của bạn:
+   D:\LAPTRINH\DUTOANEVN\dist-netlify
+
+3. Kéo toàn bộ thư mục "dist-netlify" (hoặc chọn tất cả các file bên trong) 
+   thả vào vùng có vòng tròn đứt nét "Drag and drop your site output folder here"
+   trên trang web Netlify.
+
+4. Netlify sẽ xử lý trong 5-10 giây và cấp ngay một đường link miễn phí dạng:
+   https://evn-poleinspector-xxxx.netlify.app
+
+5. ĐỔI TÊN ĐƯỜNG DẪN ĐẸP HƠN:
+   - Trên trang quản lý trang của Netlify, bấm "Site configuration"
+   - Bấm "Change site name"
+   - Đặt tên theo ý muốn, ví dụ: dutoan-dien-luc-tayninh.netlify.app
+
+
+--------------------------------------------------------------------------------
+CÁCH 2: TRIỂN KHAI TỰ ĐỘNG BẰNG NETLIFY CLI (DÒNG LỆNH)
+--------------------------------------------------------------------------------
+1. Chạy tệp DEPLOY-NETLIFY.cmd -> Chọn phím [2].
+   Hoặc mở PowerShell gõ:
+   npx --yes netlify-cli deploy --dir=dist-netlify --prod
+
+2. Trình duyệt sẽ mở trang đăng nhập Netlify (nếu chưa đăng nhập):
+   Bấm "Authorize" để cấp quyền.
+
+3. Dòng lệnh sẽ hỏi:
+   - "Create & configure a new site": Bấm Enter để tạo trang mới.
+   - Chọn Team của bạn.
+   - Đặt tên Site name (hoặc để trống để Netlify tự sinh tên ngẫu nhiên).
+
+4. Quá trình tải lên hoàn tất và trả về đường link "Website URL" công khai!
+
+
+--------------------------------------------------------------------------------
+CÁCH 3: KẾT NỐI QUA GITHUB ĐỂ TỰ ĐỘNG CẬP NHẬT (CI/CD)
+--------------------------------------------------------------------------------
+Nếu bạn dùng GitHub:
+1. Đẩy mã nguồn dự án lên một kho GitHub (Private hoặc Public).
+2. Đăng nhập https://app.netlify.com -> Bấm "Add new site" -> "Import an existing project".
+3. Chọn GitHub và chọn kho dự án của bạn.
+4. Cấu hình thông số Build:
+   - Base directory: (để trống)
+   - Build command: cd "evn-poleinspector---quản-lý-trụ-điện-&-lộ-trình-bảo-trì" && npm run build
+   - Publish directory: evn-poleinspector---quản-lý-trụ-điện-&-lộ-trình-bảo-trì/dist
+5. Bấm "Deploy site". Mỗi lần bạn commit mã lên GitHub, Netlify sẽ tự động cập nhật web mới nhất!
+
+
+--------------------------------------------------------------------------------
+CẤU HÌNH TÍNH NĂNG AI GEMINI PHÂN TÍCH ẢNH TRỤ ĐIỆN TRÊN NETLIFY
+--------------------------------------------------------------------------------
+- Dự án đã tích hợp sẵn Netlify Serverless Function tại:
+  netlify/functions/api.ts
+- Khi chạy trên Netlify, để kích hoạt phân tích ảnh bằng AI Gemini qua internet:
+  1. Vào quản lý site trên Netlify -> Chọn "Site configuration".
+  2. Chọn mục "Environment variables" -> Bấm "Add a variable".
+  3. Đặt Key: GEMINI_API_KEY
+     Đặt Value: [Dán khóa Gemini API của bạn vào đây]
+  4. Bấm "Save". Từ thời điểm này, chức năng chụp ảnh phân tích trụ điện bằng AI 
+     sẽ hoạt động trực tuyến trên mọi điện thoại di động!
+================================================================================
+

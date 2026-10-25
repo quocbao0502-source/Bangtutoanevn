@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/hotline", "destination": "/index.html" },
+    { "source": "/estimate", "destination": "/index.html" },
+    { "source": "/hotline-estimate", "destination": "/index.html" }
+  ]
+}

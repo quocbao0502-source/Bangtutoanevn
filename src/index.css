@@ -1,0 +1,69 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+html { color-scheme: light; }
+body { margin: 0; min-width: 320px; }
+button, input, select, textarea { touch-action: manipulation; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  input, select, textarea { font-size: 16px !important; }
+  main { padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important; }
+}
+
+/* Ensure map container takes full height and custom markers render cleanly */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  font-family: inherit;
+}
+
+/* Custom Marker Pin Styles */
+.custom-pole-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease-in-out;
+}
+
+.custom-pole-pin:hover {
+  transform: scale(1.15);
+  z-index: 999 !important;
+}
+
+/* Print Styles for Maintenance Worksheet */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  html, body, #root { height: auto !important; overflow: visible !important; background: white !important; }
+  #root > div > :not(:has(#printable-report)) { display: none !important; }
+  div:has(#printable-report) { position: static !important; height: auto !important; max-height: none !important; overflow: visible !important; padding: 0 !important; border: 0 !important; box-shadow: none !important; }
+  body * {
+    visibility: hidden;
+  }
+  #printable-report, #printable-report * {
+    visibility: visible;
+  }
+  #printable-report {
+    position: static;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  #printable-report { overflow: visible !important; }
+  #printable-report .overflow-x-auto { overflow: visible !important; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+}

@@ -1,0 +1,3179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>EVNSPC Estimate - Bảng Dự Toán Hotline & Hệ Số Điều Chỉnh</title>
+  <style>
+    /* Reset & Base Styles */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease;
+    }
+
+    /* Top switcher bar */
+    .top-toolbar {
+      width: 100%;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      gap: 10px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 2px solid #005baa;
+    }
+    .top-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .top-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .brand-pill {
+      font-weight: 800;
+      color: #38bdf8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    .top-toolbar .btn-mode {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .top-toolbar .btn-mode:hover {
+      background: #334155;
+      color: #fff;
+    }
+    .top-toolbar .btn-mode.active {
+      background: #005baa;
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+    .top-toolbar .btn-admin-toggle {
+      background: #334155;
+      color: #f1f5f9;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .top-toolbar .btn-admin-toggle.is-admin {
+      background: #d97706;
+      border-color: #fbbf24;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Admin Action Notification Banner */
+    .admin-banner {
+      width: 100%;
+      background: linear-gradient(90deg, #92400e 0%, #b45309 100%);
+      color: #ffffff;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #f59e0b;
+      animation: bannerSlide 0.25s ease;
+    }
+    .admin-banner.show { display: flex; }
+    @keyframes bannerSlide {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+    .admin-banner-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .admin-pill-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .admin-pill-btn:hover { background: rgba(255, 255, 255, 0.35); }
+
+    /* Main Responsive App Container */
+    .app-container, .phone-container {
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Mode 1: Responsive (Default cho toàn bộ thiết bị) */
+    body.mode-responsive .app-container, body.mode-responsive .phone-container {
+      max-width: 1400px;
+      margin: 12px auto 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    /* Mode 2: Mockup khung điện thoại (390px) */
+    body.mode-mockup {
+      background: #0b1329;
+      padding: 0 0 40px 0;
+    }
+    body.mode-mockup .app-container, body.mode-mockup .phone-container {
+      max-width: 430px;
+      margin: 20px auto;
+      border-radius: 36px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b;
+      overflow: hidden;
+    }
+
+    /* Mode 3: Tràn toàn màn hình */
+    body.mode-full .app-container, body.mode-full .phone-container {
+      max-width: 100%;
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    /* Trên điện thoại thật (< 768px): Tự động full tràn viền đẹp mắt */
+    @media (max-width: 767px) {
+      body {
+        padding: 0;
+        background: #f8fafc;
+      }
+      body:not(.mode-mockup) .app-container, body:not(.mode-mockup) .phone-container {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* Editable Styling when Admin Mode is ON */
+    body.admin-mode .editable-field {
+      cursor: pointer !important;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+    body.admin-mode .editable-field:hover {
+      background: rgba(245, 158, 11, 0.15) !important;
+      outline: 1.5px dashed #d97706 !important;
+      border-radius: 4px;
+    }
+    body.admin-mode .editable-field::after {
+      content: '✏️';
+      font-size: 10px;
+      margin-left: 4px;
+      opacity: 0.6;
+    }
+
+    /* Header Bar */
+    .app-header {
+      background: linear-gradient(135deg, #004b87 0%, #002d55 100%);
+      color: #ffffff;
+      padding: 16px 20px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #f37021;
+    }
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      background: #ffffff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #d9251d;
+      font-size: 20px;
+      border: 2px solid #f37021;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .logo-text h1 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    .logo-text span {
+      font-size: 11px;
+      color: #fed7aa;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .estimate-title {
+      text-align: right;
+    }
+    .estimate-title .badge {
+      background: #f37021;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(243, 112, 33, 0.4);
+      display: inline-block;
+    }
+
+    /* Content Body & Responsive Layout */
+    .app-body {
+      padding: 16px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .main-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .sidebar-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    /* DESKTOP LAYOUT (>= 1024px): 2 Cột Chuyên Nghiệp */
+    @media (min-width: 1024px) {
+      body:not(.mode-mockup) .app-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 440px;
+        gap: 20px;
+        padding: 20px 24px;
+        align-items: start;
+      }
+      body:not(.mode-mockup) .sidebar-column {
+        position: sticky;
+        top: 60px;
+        z-index: 50;
+      }
+      body:not(.mode-mockup) .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* TABLET LAYOUT (768px - 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      body:not(.mode-mockup) .app-body {
+        padding: 18px;
+        max-width: 920px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      body:not(.mode-mockup) .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* MOBILE LAYOUT (< 768px) */
+    @media (max-width: 767px) {
+      .app-body {
+        padding: 12px 10px 80px 10px; /* Chừa chỗ cho mobile bottom bar */
+        gap: 12px;
+      }
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .app-header {
+        padding: 12px 14px;
+      }
+      .logo-badge {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+      }
+      .logo-text h1 {
+        font-size: 14px;
+      }
+    }
+
+    /* Quick Stats Bar (Thống kê nhanh) */
+    .quick-stats-card {
+      background: #ffffff;
+      border: 1.5px solid #005baa;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0, 91, 170, 0.08);
+      text-align: center;
+    }
+    .stats-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .stats-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: #005baa;
+      line-height: 1.2;
+    }
+    .stats-lbl {
+      font-size: 10px;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    /* Table Responsive Wrapper */
+    .table-responsive-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* Mobile Floating Bottom Bar */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 14px;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
+      border-top: 2px solid #005baa;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (max-width: 767px) {
+      body:not(.mode-mockup) .mobile-bottom-bar {
+        display: flex;
+      }
+    }
+    .mob-total-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .mob-lbl {
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .mob-val {
+      font-size: 15px;
+      font-weight: 900;
+      color: #38bdf8;
+      line-height: 1.2;
+    }
+    .mob-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-mob-act {
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-mob-act:active {
+      transform: scale(0.96);
+    }
+    .btn-mob-act.add {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-mob-act.view {
+      background: #f37021;
+      color: #ffffff;
+    }
+
+    /* Card Box (Numbered Blocks 1, 2, 3, 4, 5) */
+    .block-card {
+      background: #ffffff;
+      border: 1.5px solid #005baa;
+      border-radius: 12px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 91, 170, 0.08);
+    }
+    .block-badge-num {
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      background: #005baa;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Block 1: 4 Master Category Buttons */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .btn-cat {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1e3a8a;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      line-height: 1.25;
+      min-height: 52px;
+      position: relative;
+    }
+    .btn-cat:hover, .btn-cat:active {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
+      transform: translateY(-1px);
+    }
+    .btn-cat svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    /* Block 2: Voltage selection */
+    .voltage-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .voltage-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    .voltage-options {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .btn-volt {
+      background: #ffffff;
+      border: 1.5px solid #94a3b8;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-volt.active {
+      background: #005baa;
+      border-color: #005baa;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 91, 170, 0.35);
+    }
+
+    /* Block 3: Position Items */
+    .position-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .position-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #fafbfc;
+    }
+    .pos-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .pos-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #005baa;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pos-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-pos-action {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-pos-action.checked {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .input-address {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #1e293b;
+      background: #ffffff;
+      outline: none;
+    }
+    .input-address:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    }
+
+    /* Work & Condition selector card */
+    .work-selector-box {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .select-dropdown {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12px;
+      background: #f8fafc;
+      outline: none;
+      color: #334155;
+    }
+
+    /* Multi condition check box list inside position */
+    .cond-picker-area {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 8px;
+      max-height: 110px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 66.67%; /* Ô chọn nhỏ bằng 2/3 ô định mức */
+      box-sizing: border-box;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .cond-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 11px;
+      color: #334155;
+      cursor: pointer;
+      padding: 3px;
+      border-radius: 4px;
+    }
+    .cond-check-item:hover {
+      background: #e2e8f0;
+    }
+    .cond-match-badge {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .btn-add-task {
+      width: 100%;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25);
+    }
+    .btn-add-task:active { transform: scale(0.99); }
+
+    /* Task list table inside position */
+    .task-list-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 4px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .task-list-table th, .task-list-table td {
+      padding: 6px 4px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .task-list-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    /* K factors pills */
+    .k-pills {
+      display: inline-flex;
+      gap: 3px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .k-pill {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .k-vlp { background: #f3e8ff; color: #7e22ce; }
+    .k-vlhl { background: #fee2e2; color: #b91c1c; }
+    .k-nc { background: #dbeafe; color: #1d4ed8; }
+    .k-mtc { background: #ffedd5; color: #c2410c; }
+
+    /* Multi-task discount factors (Hệ số đồng thời 4 ô) */
+    .discount-factors-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      padding: 4px 0;
+    }
+    .factor-boxes {
+      display: flex;
+      gap: 6px;
+    }
+    .factor-box-input {
+      width: 44px;
+      height: 30px;
+      text-align: center;
+      border: 1.5px solid #94a3b8;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+      background: #ffffff;
+      outline: none;
+    }
+
+    /* Similar positions count */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid #cbd5e1;
+      background: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .qty-input {
+      width: 50px;
+      height: 28px;
+      text-align: center;
+      border: 1.5px solid #94a3b8;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #ffffff;
+    }
+
+    /* Subtotal table (Thành tiền: Vật liệu phụ | Vật liệu hotline | Nhân công | Máy thi công) */
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1.5px solid #94a3b8;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      text-align: center;
+      font-size: 10px;
+    }
+    .cost-cell-header {
+      background: #e2e8f0;
+      padding: 6px 2px;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 1px solid #cbd5e1;
+      border-right: 1px solid #cbd5e1;
+    }
+    .cost-cell-header:last-child { border-right: none; }
+    .cost-cell-val {
+      padding: 6px 2px;
+      font-weight: 700;
+      color: #0369a1;
+      border-right: 1px solid #cbd5e1;
+      font-size: 11px;
+    }
+    .cost-cell-val:last-child { border-right: none; }
+
+    /* Button to add position 2..20 */
+    .btn-add-pos {
+      width: 100%;
+      background: #ffffff;
+      border: 2px dashed #005baa;
+      color: #005baa;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      margin-top: 4px;
+    }
+    .btn-add-pos:hover {
+      background: #eff6ff;
+    }
+
+    /* Block 4: Phụ lục 4, 5, 6 */
+    .appendix-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0f172a;
+      border-left: 3px solid #f37021;
+      padding-left: 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .fuel-price-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .fuel-price-input {
+      width: 110px;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .vehicle-picker-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px;
+      background: #f8fafc;
+      margin-bottom: 8px;
+    }
+    .vehicle-picker-title {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    .vehicle-options-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .veh-pill {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .veh-pill.active {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
+    }
+    .veh-pill.locked {
+      background: #f1f5f9;
+      color: #475569;
+      cursor: not-allowed;
+    }
+
+    /* Appendix Table */
+    .appendix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .appendix-table th, .appendix-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 6px;
+    }
+    .appendix-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #334155;
+    }
+    .appendix-table td.num {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    /* Block 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE */
+    .summary-card {
+      background: #ffffff;
+      border: 2px solid #005baa;
+      border-radius: 12px;
+      padding: 14px 12px;
+      box-shadow: 0 4px 15px rgba(0, 91, 170, 0.12);
+    }
+    .summary-header {
+      text-align: center;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .summary-header h2 {
+      font-size: 13px;
+      font-weight: 900;
+      color: #005baa;
+      letter-spacing: 0.5px;
+    }
+    .summary-header p {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+    .summary-table th, .summary-table td {
+      border: 1px solid #e2e8f0;
+      padding: 6px 6px;
+    }
+    .summary-table th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .summary-table td.val {
+      text-align: right;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .summary-table tr.total-row {
+      background: #eff6ff;
+    }
+    .summary-table tr.total-row td {
+      font-size: 12px;
+      font-weight: 800;
+      color: #005baa;
+      border-top: 2px solid #005baa;
+    }
+    .grand-total-box {
+      background: linear-gradient(135deg, #005baa 0%, #003876 100%);
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .grand-total-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #fed7aa;
+      font-weight: 600;
+    }
+    .grand-total-amount {
+      font-size: 20px;
+      font-weight: 900;
+      margin: 4px 0;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .grand-total-words {
+      font-size: 11px;
+      font-style: italic;
+      color: #e2e8f0;
+      line-height: 1.3;
+    }
+
+    /* Action bar */
+    .summary-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .btn-act {
+      padding: 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+    }
+    .btn-act.excel {
+      background: #16a34a;
+      color: #ffffff;
+    }
+    .btn-act.print {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    /* Modal dialog */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(3px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-content {
+      background: #ffffff;
+      width: 100%;
+      max-width: 490px;
+      max-height: 85vh;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      animation: modalFadeIn 0.2s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-header {
+      background: #004b87;
+      color: #ffffff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h3 { font-size: 14px; font-weight: 800; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-body {
+      padding: 12px;
+      overflow-y: auto;
+      font-size: 12px;
+      flex: 1;
+    }
+    .modal-footer {
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* Filter pill inside modal */
+    .modal-filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .filter-pill {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #475569;
+    }
+    .filter-pill.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+    }
+
+    /* Condition card styling in Modal */
+    .cond-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 9px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cond-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .cond-prefix-tag {
+      font-family: monospace;
+      font-size: 10px;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Admin Action Buttons inside Modals */
+    .admin-edit-btn {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #b45309;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .admin-delete-btn {
+      background: #fee2e2;
+      border: 1px solid #ef4444;
+      color: #b91c1c;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Quick Inline Prompt Modal */
+    .quick-edit-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .quick-edit-modal.open { display: flex; }
+    .quick-edit-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .quick-edit-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #005baa;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 3000;
+      transition: transform 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #334155;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white; padding: 0; }
+      .top-toolbar, .admin-banner, .btn-mode, .btn-add-pos, .btn-pos-action, .btn-add-task, .summary-actions { display: none !important; }
+      .phone-container { max-width: 100%; box-shadow: none; border-radius: 0; }
+      .block-card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Toolbar -->
+  <div class="top-toolbar">
+    <div class="top-toolbar-left">
+      <div class="brand-pill">
+        ⚡ <span>EVNSPC ESTIMATE</span>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn-mode active" id="btnModeResponsive" onclick="setAppViewMode('responsive')" title="Tự động thích ứng mọi thiết bị: Điện thoại, iPad, Laptop, Màn hình lớn">
+          🌐 Mọi thiết bị
+        </button>
+        <button class="btn-mode" id="btnModeMockup" onclick="setAppViewMode('mockup')" title="Khung mô phỏng điện thoại di động (390px)">
+          📱 Khung ĐT
+        </button>
+        <button class="btn-mode" id="btnModeFull" onclick="setAppViewMode('full')" title="Mở rộng tràn toàn màn hình">
+          🖥 Tràn viền
+        </button>
+      </div>
+    </div>
+    
+    <div class="top-toolbar-right">
+      <div style="display:flex; gap:5px; align-items:center;">
+        <span style="font-size:11px; color:#94a3b8; font-weight:600;">Cấp điện áp:</span>
+        <button class="btn-mode" id="btnTopVolt12" onclick="setVoltage('12,7kV')" style="padding:3px 8px;">12,7kV</button>
+        <button class="btn-mode active" id="btnTopVolt22" onclick="setVoltage('22kV')" style="padding:3px 8px;">22kV</button>
+      </div>
+      <button class="btn-admin-toggle" id="btnAdminToggle" onclick="toggleAdminMode()">
+        🛡️ Quyền Admin: <span id="adminStatusText">TẮT</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="app-container" id="phoneContainer">
+
+    <!-- Admin Alert Banner when Admin Mode is ON -->
+    <div class="admin-banner" id="adminBanner">
+      <div style="display:flex; align-items:center; gap:5px;">
+        <span>👑</span>
+        <span><strong>Admin/Mod:</strong> Bấm mục có ✏️ để sửa. Hệ số điều chỉnh tự kết nối theo 10 ký tự!</span>
+      </div>
+      <div class="admin-banner-actions">
+        <button class="admin-pill-btn" onclick="saveAllAdminData()">💾 Lưu</button>
+        <button class="admin-pill-btn" onclick="resetDefaultConfig()">🔄 Mặc định</button>
+      </div>
+    </div>
+
+    <!-- Header: Logo EVNSPC & Estimate -->
+    <header class="app-header">
+      <div class="logo-box">
+        <div class="logo-badge">⚡</div>
+        <div class="logo-text">
+          <h1 class="editable-field" id="appLogoTitle" onclick="adminQuickEdit('appLogoTitle', 'Tên tập đoàn / Đơn vị:')">EVNSPC</h1>
+          <span class="editable-field" id="appLogoSub" onclick="adminQuickEdit('appLogoSub', 'Tên đơn vị chủ quản:')">TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM</span>
+        </div>
+      </div>
+      <div class="estimate-title">
+        <div class="badge editable-field" id="appBadgeText" onclick="adminQuickEdit('appBadgeText', 'Nhãn Estimate:')">ESTIMATE</div>
+        <div style="font-size: 11px; color: #cbd5e1; margin-top: 3px;" class="editable-field" id="appSubTitleText" onclick="adminQuickEdit('appSubTitleText', 'Phụ đề dự toán:')">DỰ TOÁN CÔNG TÁC HOTLINE</div>
+      </div>
+    </header>
+
+    <!-- Main Content Body: 2 Cột trên Desktop, 1 Cột trên Tablet & Mobile -->
+    <main class="app-body">
+
+      <!-- CỘT CHÍNH (Bên trái trên Desktop): Bố cục 1, 2, 3, 4 -->
+      <div class="main-column">
+
+        <!-- BỐ CỤC 1: 4 BẢNG ĐỊNH MỨC & HỆ SỐ ĐIỀU CHỈNH -->
+        <section class="block-card">
+          <div class="block-badge-num">1</div>
+          <div class="category-grid">
+            <button class="btn-cat" onclick="openModal('modalCongViec')">
+              <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+              <span class="editable-field" id="lblCat1" onclick="adminQuickEdit('lblCat1', 'Tiêu đề Bảng 1:')">Bảng định mức<br>công việc</span>
+            </button>
+            
+            <!-- Bảng 2: Hệ số điều chỉnh (Đã đổi tên theo yêu cầu) -->
+            <button class="btn-cat" onclick="openModal('modalDieuKien')" style="border-color:#f59e0b; background:#fffbeb;">
+              <svg viewBox="0 0 24 24" style="color:#d97706;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <span class="editable-field" id="lblCat2" style="color:#b45309; font-weight:700;" onclick="adminQuickEdit('lblCat2', 'Tiêu đề Bảng 2:')">Hệ số điều chỉnh<br>(Kvlp, Kvlhl, Knc, Kmtc)</span>
+            </button>
+
+            <button class="btn-cat" onclick="openModal('modalNhienLieu')">
+              <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span class="editable-field" id="lblCat3" onclick="adminQuickEdit('lblCat3', 'Tiêu đề Bảng 3:')">Bảng định mức<br>nhiên liệu</span>
+            </button>
+            <button class="btn-cat" onclick="openModal('modalNhanCong')">
+              <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              <span class="editable-field" id="lblCat4" onclick="adminQuickEdit('lblCat4', 'Tiêu đề Bảng 4:')">Bảng định mức<br>nhân công</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- BỐ CỤC 2: CẤP ĐIỆN ÁP (12,7kV / 22kV) -->
+        <section class="block-card">
+          <div class="block-badge-num">2</div>
+          <div class="voltage-row">
+            <div class="voltage-label editable-field" id="lblVoltageTitle" onclick="adminQuickEdit('lblVoltageTitle', 'Tiêu đề Cấp điện áp:')">⚡ Cấp điện áp:</div>
+            <div class="voltage-options">
+              <button class="btn-volt" id="btnVolt12" onclick="setVoltage('12,7kV')">12,7kV</button>
+              <button class="btn-volt active" id="btnVolt22" onclick="setVoltage('22kV')">22kV</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- BỐ CỤC 3: CÁC VỊ TRÍ (VỊ TRÍ 1 .. VỊ TRÍ 20) -->
+        <section class="block-card">
+          <div class="block-badge-num">3</div>
+          <div class="position-container" id="positionList">
+            <!-- Position items will be dynamically generated by JS -->
+          </div>
+
+          <!-- Nút thêm vị trí 2..20 -->
+          <button class="btn-add-pos" id="btnAddPosition" onclick="addNewPosition()">
+            <span style="font-size:16px;">➕</span> Thêm vị trí tiếp theo (Tối đa 20 vị trí)
+          </button>
+        </section>
+
+        <!-- BỐ CỤC 4: CÁC PHỤ LỤC (4, 5, 6) -->
+        <section class="block-card">
+          <div class="block-badge-num">4</div>
+
+          <!-- Phụ lục 4: Bảng tính vận chuyển hotline -->
+          <div class="appendix-title editable-field" id="lblAppx4Title" onclick="adminQuickEdit('lblAppx4Title', 'Tiêu đề Phụ lục 4:')">Phụ lục 4: Bảng tính vận chuyển hotline</div>
+          <div class="fuel-price-row">
+            <label style="font-size:12px; font-weight:700; color:#334155;">Giá dầu (VNĐ/lít):</label>
+            <input type="number" class="fuel-price-input" id="fuelPrice" value="21500" step="500" onchange="renderAll()">
+          </div>
+
+          <div class="vehicle-picker-box">
+            <div class="vehicle-picker-title">Chọn xe di chuyển bằng cách bấm vô tick chọn xe bên dưới:</div>
+            <div class="vehicle-options-row">
+              <label class="veh-pill active locked" title="Mặc định luôn có trong đội hotline">
+                <input type="checkbox" checked disabled> Xe bán tải & Xe gàu (mặc định)
+              </label>
+              <label class="veh-pill" id="pillCrane" onclick="toggleCraneVehicle()">
+                <input type="checkbox" id="chkCrane" onchange="toggleCraneVehicle()"> Xe cẩu
+              </label>
+            </div>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="appendix-table">
+              <thead>
+                <tr>
+                  <th>Loại xe</th>
+                  <th>Định mức (L/100km)</th>
+                  <th>Tổng km</th>
+                  <th>Thành tiền (đ)</th>
+                </tr>
+              </thead>
+              <tbody id="transportTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông -->
+          <div class="appendix-title editable-field" id="lblAppx5Title" onclick="adminQuickEdit('lblAppx5Title', 'Tiêu đề Phụ lục 5:')">Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+            <div>
+              <label style="font-size:11px; font-weight:700; color:#334155;">Giá ca máy (đ):</label>
+              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftPrice" value="1250000" step="50000" onchange="renderAll()">
+            </div>
+            <div>
+              <label style="font-size:11px; font-weight:700; color:#334155;">Số ca máy chọn:</label>
+              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="1" min="1" max="50" onchange="renderAll()">
+            </div>
+          </div>
+          <div class="table-responsive-wrapper">
+            <table class="appendix-table">
+              <thead>
+                <tr>
+                  <th>Hạng mục rào chắn</th>
+                  <th>Số lượng</th>
+                  <th>Đơn giá (đ)</th>
+                  <th>Thành tiền (đ)</th>
+                </tr>
+              </thead>
+              <tbody id="barrierTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Phụ lục 6: Bảng tính chi phí khảo sát -->
+          <div class="appendix-title editable-field" id="lblAppx6Title" onclick="adminQuickEdit('lblAppx6Title', 'Tiêu đề Phụ lục 6:')">Phụ lục 6: Bảng tính chi phí khảo sát</div>
+          <div class="table-responsive-wrapper">
+            <table class="appendix-table">
+              <thead>
+                <tr>
+                  <th>Nội dung khảo sát</th>
+                  <th>Đơn vị</th>
+                  <th>Khối lượng</th>
+                  <th>Thành tiền (đ)</th>
+                </tr>
+              </thead>
+              <tbody id="surveyTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div> <!-- Kết thúc .main-column -->
+
+      <!-- CỘT TỔNG HỢP & THỐNG KÊ (Bên phải trên Desktop, Sticky): Bố cục 5 -->
+      <div class="sidebar-column" id="summarySidebar">
+
+        <!-- Thẻ thống kê nhanh dự toán -->
+        <div class="quick-stats-card">
+          <div class="stats-item">
+            <span class="stats-val" id="statPosCount">1</span>
+            <span class="stats-lbl">Vị trí</span>
+          </div>
+          <div class="stats-item">
+            <span class="stats-val" id="statTaskCount">1</span>
+            <span class="stats-lbl">Hạng mục</span>
+          </div>
+          <div class="stats-item">
+            <span class="stats-val" id="statDistTotal">15 km</span>
+            <span class="stats-lbl">Tổng cự ly</span>
+          </div>
+          <div class="stats-item">
+            <span class="stats-val" id="statMachineShifts">1 ca</span>
+            <span class="stats-lbl">Ca máy</span>
+          </div>
+        </div>
+
+        <!-- BỐ CỤC 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE -->
+        <section class="summary-card" id="summarySection">
+          <div class="block-badge-num">5</div>
+          <div class="summary-header">
+            <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE</h2>
+            <p class="editable-field" id="lblSummarySub" onclick="adminQuickEdit('lblSummarySub', 'Ghi chú công thức:')">BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN</p>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th style="width:10%;">STT</th>
+                  <th style="width:55%; text-align:left;">Hạng mục chi phí</th>
+                  <th style="width:35%; text-align:right;">Thành tiền (đ)</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grand-total-box">
+            <div class="grand-total-label">TỔNG CỘNG DỰ TOÁN HOTLINE (BAO GỒM VAT)</div>
+            <div class="grand-total-amount" id="grandTotalText">0 đ</div>
+            <div class="grand-total-words" id="grandTotalWords">(Chưa có dữ liệu)</div>
+          </div>
+
+          <div class="summary-actions">
+            <button class="btn-act excel" onclick="exportToExcel()">
+              📥 Xuất Excel (.xls)
+            </button>
+            <button class="btn-act print" onclick="window.print()">
+              🖨 In dự toán
+            </button>
+          </div>
+        </section>
+
+      </div> <!-- Kết thúc .sidebar-column -->
+
+    </main>
+  </div> <!-- Kết thúc .app-container -->
+
+  <!-- Floating Sticky Bottom Bar trên điện thoại di động -->
+  <div class="mobile-bottom-bar" id="mobileBottomBar">
+    <div class="mob-total-info">
+      <span class="mob-lbl">Tổng dự toán:</span>
+      <span class="mob-val" id="mobileGrandTotal">0 đ</span>
+    </div>
+    <div class="mob-actions">
+      <button class="btn-mob-act add" onclick="addNewPosition()">➕ Vị trí</button>
+      <button class="btn-mob-act view" onclick="scrollToSummary()">📊 Tổng hợp</button>
+    </div>
+  </div>
+
+  <!-- MODAL 1: BẢNG ĐỊNH MỨC CÔNG VIỆC -->
+  <div class="modal-overlay" id="modalCongViec">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📋 Bảng định mức công việc Hotline</h3>
+        <button class="modal-close" onclick="closeModal('modalCongViec')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <p style="color:#64748b; font-size:11px;">Đơn giá định mức công tác Hotline:</p>
+          <button class="admin-pill-btn" style="background:#0284c7;" onclick="adminAddNewTask()">➕ Thêm công việc mới</button>
+        </div>
+        <div id="masterWorkList" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pos-action" onclick="closeModal('modalCongViec')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: BẢNG HỆ SỐ ĐIỀU CHỈNH (4 HỆ SỐ & CẤP ĐIỆN ÁP & 10 KÝ TỰ LIÊN KẾT) -->
+  <div class="modal-overlay" id="modalDieuKien">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#b45309;">
+        <h3>⚠️ Hệ số điều chỉnh thi công (Điều kiện)</h3>
+        <button class="modal-close" onclick="closeModal('modalDieuKien')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Lọc Cấp điện áp trong bảng điều kiện -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+          <div class="modal-filter-bar">
+            <button class="filter-pill active" id="fCondAll" onclick="setCondFilter('All')">Tất cả</button>
+            <button class="filter-pill" id="fCond22" onclick="setCondFilter('22kV')">22kV</button>
+            <button class="filter-pill" id="fCond12" onclick="setCondFilter('12,7kV')">12,7kV</button>
+          </div>
+          <button class="admin-pill-btn" style="background:#b45309;" onclick="adminAddNewCondition()">➕ Thêm hệ số mới</button>
+        </div>
+
+        <div style="font-size:10px; color:#64748b; background:#f1f5f9; padding:6px 8px; border-radius:6px; margin-bottom:8px; border-left:3px solid #b45309;">
+          💡 <strong>Quy tắc liên kết tự động:</strong> Mỗi điều kiện có tên bắt đầu bằng 10 ký tự trùng với công tác sẽ tự động được tìm thấy và gắn vào công việc đó. Hệ số tính theo <strong>tích số lẫn nhau</strong> cho 4 thành phần: <strong>Kvlp</strong>, <strong>Kvlhl</strong>, <strong>Knc</strong>, <strong>Kmtc</strong>.
+        </div>
+
+        <div id="masterConditionList" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pos-action" onclick="closeModal('modalDieuKien')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: BẢNG ĐỊNH MỨC NHIÊN LIỆU -->
+  <div class="modal-overlay" id="modalNhienLieu">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>⛽ Bảng định mức nhiên liệu xe Hotline</h3>
+        <button class="modal-close" onclick="closeModal('modalNhienLieu')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="appendix-table">
+          <thead>
+            <tr><th>Phương tiện</th><th>Định mức di chuyển</th><th>Thao tác</th></tr>
+          </thead>
+          <tbody id="fuelNormTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+        <p style="font-size:11px; color:#64748b; font-style:italic;">* Áp dụng theo định mức tiêu hao nhiên liệu cơ giới EVN.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pos-action" onclick="closeModal('modalNhienLieu')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: BẢNG ĐỊNH MỨC NHÂN CÔNG -->
+  <div class="modal-overlay" id="modalNhanCong">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>👷 Bảng định mức nhân công Hotline</h3>
+        <button class="modal-close" onclick="closeModal('modalNhanCong')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="appendix-table">
+          <thead>
+            <tr><th>Cấp bậc thợ Hotline</th><th>Đơn giá ngày công (đ)</th><th>Thao tác</th></tr>
+          </thead>
+          <tbody id="laborNormTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pos-action" onclick="closeModal('modalNhanCong')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM MODAL THÊM / SỬA HỆ SỐ ĐIỀU CHỈNH CHI TIẾT -->
+  <div class="quick-edit-modal" id="condDetailModal">
+    <div class="quick-edit-card" style="max-width: 440px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4 style="font-size:13px; font-weight:800; color:#b45309;" id="condModalTitle">Thêm / Sửa hệ số điều chỉnh</h4>
+        <button style="border:none; background:none; font-size:18px; cursor:pointer;" onclick="closeCondDetailModal()">&times;</button>
+      </div>
+
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+          Tên / Nội dung điều kiện (Chứa 10 ký tự nhận diện):
+        </label>
+        <input type="text" class="quick-edit-input" id="inpCondName" placeholder="Ví dụ: 16.01.01-1.1 - Nếu trên trụ có thiết bị bảo vệ..." oninput="updatePrefixPreview()">
+        <div style="font-size:10px; color:#0284c7; margin-top:3px; font-weight:600;" id="txtPrefixPreview">
+          10 ký tự nhận diện: <em>(Chưa có)</em>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+          Cấp điện áp áp dụng:
+        </label>
+        <select class="quick-edit-input" id="inpCondVolt">
+          <option value="22kV">22kV (Trung thế)</option>
+          <option value="12,7kV">12,7kV (1 pha)</option>
+          <option value="Tất cả">Tất cả cấp điện áp</option>
+        </select>
+      </div>
+
+      <!-- 4 Hệ số: Kvlp, Kvlhl, Knc, Kmtc -->
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+          4 Hệ số điều chỉnh (Kvlp, Kvlhl, Knc, Kmtc):
+        </label>
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#7e22ce;">Kvlp (VL phụ):</span>
+            <input type="number" step="0.05" class="quick-edit-input" style="padding:4px; text-align:center;" id="inpKvlp" value="1.0">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#b91c1c;">Kvlhl (Hotline):</span>
+            <input type="number" step="0.05" class="quick-edit-input" style="padding:4px; text-align:center;" id="inpKvlhl" value="1.0">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#1d4ed8;">Knc (Nhân công):</span>
+            <input type="number" step="0.05" class="quick-edit-input" style="padding:4px; text-align:center; font-weight:bold;" id="inpKnc" value="1.3">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#c2410c;">Kmtc (Ca máy):</span>
+            <input type="number" step="0.05" class="quick-edit-input" style="padding:4px; text-align:center;" id="inpKmtc" value="1.0">
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" id="editingCondId" value="">
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
+        <button class="btn-pos-action" onclick="closeCondDetailModal()">Hủy</button>
+        <button class="btn-pos-action" style="background:#b45309; color:#fff;" onclick="saveCondDetail()">💾 Lưu hệ số điều chỉnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK INLINE EDIT MODAL (POPUP CHỈNH SỬA VĂN BẢN KHI NHẤP VÀO MỤC) -->
+  <div class="quick-edit-modal" id="quickEditModal">
+    <div class="quick-edit-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4 style="font-size:13px; font-weight:800; color:#005baa;" id="quickEditTitle">Chỉnh sửa nội dung</h4>
+        <button style="border:none; background:none; font-size:18px; cursor:pointer;" onclick="closeQuickEdit()">&times;</button>
+      </div>
+      <div>
+        <label style="font-size:11px; color:#64748b; display:block; margin-bottom:4px;" id="quickEditPrompt">Nhập nội dung mới:</label>
+        <input type="text" class="quick-edit-input" id="quickEditVal" onkeydown="if(event.key==='Enter') saveQuickEdit()">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn-pos-action" onclick="closeQuickEdit()">Hủy</button>
+        <button class="btn-pos-action" style="background:#0284c7; color:#fff;" onclick="saveQuickEdit()">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="appToast">
+    <span>✅</span> <span id="toastMessage">Thông báo</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & APPLICATION ENGINE -->
+  <script>
+    // --- 1. DỮ LIỆU ĐỊNH MỨC CÔNG VIỆC MẪU (CHUẨN 10 KÝ TỰ ĐẦU EVN) ---
+    const DEFAULT_MASTER_TASKS = [
+      { id: '16.01.01-1.0', name: '16.01.01-1.0 - Thay sứ đứng hotline 22kV', unit: 'Quả', volt: '22kV', matSub: 45000, matHotline: 120000, labor: 380000, machine: 190000 },
+      { id: '16.01.01-2', name: '16.01.01-2 Thay thế (lắp mới/tháo gỡ) cách điện đứng, chống sét van', unit: 'Bộ', volt: '22kV', matSub: 45000, matHotline: 120000, labor: 450000, machine: 220000 },
+      { id: '16.01.02-1.0', name: '16.01.02-1.0 - Vệ sinh cách điện hotline bằng nước áp lực cao', unit: 'Trụ', volt: '22kV', matSub: 30000, matHotline: 80000, labor: 320000, machine: 250000 },
+      { id: '16.01.03-1.0', name: '16.01.03-1.0 - Bọc cách điện dây dẫn hotline 22kV', unit: 'Khoảng', volt: '22kV', matSub: 60000, matHotline: 350000, labor: 420000, machine: 210000 },
+      { id: '16.01.04-1.0', name: '16.01.04-1.0 - Thay FCO / Chống sét van hotline 22kV', unit: 'Bộ', volt: '22kV', matSub: 50000, matHotline: 180000, labor: 410000, machine: 200000 },
+      { id: '16.01.05-1.0', name: '16.01.05-1.0 - Đấu nối lèo hotline / Nhánh rẽ 22kV', unit: 'Mối', volt: '22kV', matSub: 35000, matHotline: 90000, labor: 290000, machine: 180000 },
+      { id: '16.01.06-1.0', name: '16.01.06-1.0 - Thay xà đà trung thế hotline 22kV', unit: 'Bộ', volt: '22kV', matSub: 80000, matHotline: 450000, labor: 680000, machine: 350000 },
+      { id: '16.02.01-1.0', name: '16.02.01-1.0 - Thay sứ đứng hotline 12,7kV', unit: 'Quả', volt: '12,7kV', matSub: 40000, matHotline: 95000, labor: 320000, machine: 160000 },
+      { id: '16.02.02-1.0', name: '16.02.02-1.0 - Bọc cách điện dây dẫn 12,7kV', unit: 'Khoảng', volt: '12,7kV', matSub: 50000, matHotline: 280000, labor: 360000, machine: 180000 },
+      { id: '16.02.03-1.0', name: '16.02.03-1.0 - Đấu nối lèo hotline 12,7kV', unit: 'Mối', volt: '12,7kV', matSub: 30000, matHotline: 75000, labor: 250000, machine: 150000 }
+    ];
+
+    // --- BẢNG HỆ SỐ ĐIỀU CHỈNH (CÓ 4 HỆ SỐ: Kvlp, Kvlhl, Knc, Kmtc & CẤP ĐIỆN ÁP) ---
+    // 10 ký tự đầu tiên trùng khớp với công việc để tự tìm tới nhau!
+    const DEFAULT_MASTER_CONDITIONS = [
+      {
+        id: 'DK01',
+        name: '16.01.01-1.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,3)',
+        volt: '22kV',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.3,
+        kmtc: 1.0
+      },
+      {
+        id: 'DK02',
+        name: '16.01.01-1.2 - Thi công tại cột góc / néo dây tăng cường an toàn (Knc=1,15, Kmtc=1,1)',
+        volt: '22kV',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.15,
+        kmtc: 1.1
+      },
+      {
+        id: 'DK_16_01_01_2_1',
+        name: '16.01.01-2.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,3)',
+        volt: '22kV',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.3,
+        kmtc: 1.0
+      },
+      {
+        id: 'DK_16_01_01_2_2',
+        name: '16.01.01-2.2 - Nếu trên trụ có máy biến áp (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,4)',
+        volt: '22kV',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.4,
+        kmtc: 1.0
+      },
+      {
+        id: 'DK03',
+        name: '16.01.02-1.1 - Vệ sinh cách điện trong vùng bụi bẩn công nghiệp, nhiễm mặn (Kvlp=1,2, Knc=1,25)',
+        volt: '22kV',
+        kvlp: 1.2,
+        kvlhl: 1.0,
+        knc: 1.25,
+        kmtc: 1.0
+      },
+      {
+        id: 'DK04',
+        name: '16.02.01-1.1 - Thay sứ 12,7kV tại trụ có nhiều nhánh rẽ phức tạp (Knc=1,2, Kmtc=1,15)',
+        volt: '12,7kV',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.2,
+        kmtc: 1.15
+      },
+      {
+        id: 'DK05',
+        name: 'CHUNG-01 - Thi công ban đêm / thời tiết sương mù ẩm ướt (Knc=1,3, Kmtc=1,2)',
+        volt: 'Tất cả',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.3,
+        kmtc: 1.2
+      },
+      {
+        id: 'DK06',
+        name: 'CHUNG-02 - Địa hình sình lầy, ngập nước khó thao tác cơ giới (Kmtc=1,25, Knc=1,15)',
+        volt: 'Tất cả',
+        kvlp: 1.0,
+        kvlhl: 1.0,
+        knc: 1.15,
+        kmtc: 1.25
+      }
+    ];
+
+    const DEFAULT_FUEL_NORMS = [
+      { id: 'F01', name: 'Xe bán tải phục vụ', rate: 9.5 },
+      { id: 'F02', name: 'Xe gàu cách điện Hotline', rate: 24.0 },
+      { id: 'F03', name: 'Xe cẩu chuyên dùng', rate: 28.0 }
+    ];
+
+    const DEFAULT_LABOR_NORMS = [
+      { id: 'L01', title: 'Thợ Hotline Bậc 3/7', wage: 450000 },
+      { id: 'L02', title: 'Thợ Hotline Bậc 4/7', wage: 540000 },
+      { id: 'L03', title: 'Thợ Hotline Bậc 5/7', wage: 650000 },
+      { id: 'L04', title: 'Chỉ huy trực tiếp Hotline', wage: 750000 }
+    ];
+
+    // Khởi tạo các biến dữ liệu
+    let MASTER_TASKS = JSON.parse(JSON.stringify(DEFAULT_MASTER_TASKS));
+    let MASTER_CONDITIONS = JSON.parse(JSON.stringify(DEFAULT_MASTER_CONDITIONS));
+    let FUEL_NORMS = JSON.parse(JSON.stringify(DEFAULT_FUEL_NORMS));
+    let LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
+
+    // Bộ lọc cấp điện áp trong modal điều kiện
+    let condFilterVolt = 'All';
+
+    // Cấu hình tỷ lệ % chi phí
+    let COST_RATES = {
+      otherDirectRate: 0.025,
+      generalCostRate: 0.055,
+      vatRate: 0.08
+    };
+
+    // --- 2. TRẠNG THÁI ỨNG DỤNG (STATE) ---
+    let isAdminMode = false;
+    let currentVoltage = '22kV';
+    let hasCrane = false;
+
+    // Danh sách vị trí
+    let positions = [
+      {
+        id: 1,
+        title: 'Vị trí 1',
+        address: 'Ấp Ninh Trung, Xã Ninh Sơn, TP Tây Ninh',
+        checkedIn: false,
+        gps: '',
+        distanceKm: 15,
+        tasks: [
+          { 
+            taskId: '16.01.01-1.0', 
+            condIds: ['DK01'], 
+            qty: 3 
+          }
+        ],
+        factors: [1.0, 0.8, 0.7, 0.6],
+        similarCount: 1
+      }
+    ];
+
+    // Hàm lấy 10 ký tự đầu tiên tính từ trái qua
+    function get10Prefix(str) {
+      if (!str) return '';
+      return str.trim().slice(0, 10).toLowerCase();
+    }
+
+    // --- 3. ĐIỀU HƯỚNG QUYỀN ADMIN / MOD & CHẾ ĐỘ XEM ---
+    function toggleAdminMode() {
+      isAdminMode = !isAdminMode;
+      document.body.classList.toggle('admin-mode', isAdminMode);
+      const btn = document.getElementById('btnAdminToggle');
+      const statusText = document.getElementById('adminStatusText');
+      const banner = document.getElementById('adminBanner');
+
+      if (isAdminMode) {
+        btn.classList.add('is-admin');
+        statusText.innerText = 'BẬT (MOD)';
+        banner.classList.add('show');
+        showToast("👑 Đã BẬT quyền Admin/Mod! Bạn có thể thêm, sửa, xóa hệ số điều chỉnh và các mục.");
+      } else {
+        btn.classList.remove('is-admin');
+        statusText.innerText = 'TẮT';
+        banner.classList.remove('show');
+        showToast("Đã chuyển về chế độ Xem thông thường.");
+      }
+      populateModals();
+      renderAll();
+    }
+
+    function setAppViewMode(mode) {
+      const body = document.body;
+      body.classList.remove('mode-responsive', 'mode-mockup', 'mode-full');
+      
+      const btnResp = document.getElementById('btnModeResponsive');
+      const btnMock = document.getElementById('btnModeMockup');
+      const btnFull = document.getElementById('btnModeFull');
+      if (btnResp) btnResp.classList.remove('active');
+      if (btnMock) btnMock.classList.remove('active');
+      if (btnFull) btnFull.classList.remove('active');
+
+      if (mode === 'mockup' || mode === 'phone') {
+        body.classList.add('mode-mockup');
+        if (btnMock) btnMock.classList.add('active');
+        showToast("📱 Chế độ giả lập khung điện thoại!");
+      } else if (mode === 'full') {
+        body.classList.add('mode-full');
+        if (btnFull) btnFull.classList.add('active');
+        showToast("🖥 Chế độ mở rộng tràn toàn màn hình!");
+      } else {
+        body.classList.add('mode-responsive');
+        if (btnResp) btnResp.classList.add('active');
+        showToast("🌐 Chế độ tự động thích ứng mọi thiết bị!");
+      }
+      try { localStorage.setItem('evn_view_mode', mode); } catch (e) {}
+    }
+
+    // Tương thích ngược với setMode cũ
+    function setMode(mode) {
+      setAppViewMode(mode === 'phone' ? 'mockup' : mode);
+    }
+
+    function scrollToSummary() {
+      const el = document.getElementById('summarySection') || document.getElementById('summarySidebar');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // --- 4. QUICK INLINE EDIT LOGIC CHO ADMIN ---
+    let currentEditTargetId = null;
+
+    function adminQuickEdit(elementId, promptText) {
+      if (!isAdminMode) return;
+      const el = document.getElementById(elementId);
+      if (!el) return;
+
+      currentEditTargetId = elementId;
+      document.getElementById('quickEditTitle').innerText = "✏️ Chỉnh sửa trực tiếp";
+      document.getElementById('quickEditPrompt').innerText = promptText || "Nhập giá trị mới:";
+      document.getElementById('quickEditVal').value = el.innerText.trim();
+      document.getElementById('quickEditModal').classList.add('open');
+      document.getElementById('quickEditVal').focus();
+    }
+
+    function closeQuickEdit() {
+      document.getElementById('quickEditModal').classList.remove('open');
+      currentEditTargetId = null;
+    }
+
+    function saveQuickEdit() {
+      if (!currentEditTargetId) return;
+      const el = document.getElementById(currentEditTargetId);
+      const val = document.getElementById('quickEditVal').value;
+      if (el) {
+        el.innerText = val;
+        showToast("Đã cập nhật mục!");
+        saveAllAdminData();
+      }
+      closeQuickEdit();
+    }
+
+    function editPositionTitle(posId) {
+      if (!isAdminMode) return;
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      const newName = prompt(`Nhập tên/mã trụ mới cho Vị trí ${posId}:`, pos.title || `Vị trí ${posId}`);
+      if (newName !== null && newName.trim() !== "") {
+        pos.title = newName.trim();
+        showToast(`Đã đổi tên thành: ${pos.title}`);
+        renderPositions();
+        saveAllAdminData();
+      }
+    }
+
+    function editCostRate(rateType) {
+      if (!isAdminMode) return;
+      let currentVal = (COST_RATES[rateType] * 100).toFixed(1);
+      let label = rateType === 'otherDirectRate' ? 'Trực tiếp phí khác (%)' :
+                  rateType === 'generalCostRate' ? 'Chi phí chung (%)' : 'Thuế VAT (%)';
+      let newVal = prompt(`Nhập tỷ lệ phần trăm mới cho ${label}:`, currentVal);
+      if (newVal !== null) {
+        let f = parseFloat(newVal);
+        if (!isNaN(f) && f >= 0) {
+          COST_RATES[rateType] = f / 100;
+          showToast(`Đã đổi ${label} thành ${f}%`);
+          renderSummary();
+          saveAllAdminData();
+        }
+      }
+    }
+
+    // --- 5. CẤP ĐIỆN ÁP ---
+    function setVoltage(volt) {
+      currentVoltage = volt;
+      const b12 = document.getElementById('btnVolt12');
+      const b22 = document.getElementById('btnVolt22');
+      if (b12) b12.classList.toggle('active', volt === '12,7kV');
+      if (b22) b22.classList.toggle('active', volt === '22kV');
+
+      const top12 = document.getElementById('btnTopVolt12');
+      const top22 = document.getElementById('btnTopVolt22');
+      if (top12) top12.classList.toggle('active', volt === '12,7kV');
+      if (top22) top22.classList.toggle('active', volt === '22kV');
+
+      showToast(`⚡ Đã chuyển sang cấp điện áp ${volt}`);
+      renderAll();
+    }
+
+    function toggleCraneVehicle() {
+      const chk = document.getElementById('chkCrane');
+      hasCrane = chk.checked;
+      document.getElementById('pillCrane').classList.toggle('active', hasCrane);
+      renderAppendix();
+      renderSummary();
+    }
+
+    // --- 6. CHECK-IN GPS & KHOẢNG CÁCH ---
+    function checkInPosition(posId) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+
+      if ("geolocation" in navigator) {
+        showToast("Đang lấy tọa độ GPS từ vệ tinh...");
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            pos.checkedIn = true;
+            pos.gps = `${lat}, ${lng}`;
+            showToast(`${pos.title || 'Vị trí ' + posId}: Check-in thành công! (${pos.gps})`);
+            renderPositions();
+          },
+          (error) => {
+            const sampleLat = (11.3665 + (Math.random() - 0.5) * 0.05).toFixed(6);
+            const sampleLng = (106.1362 + (Math.random() - 0.5) * 0.05).toFixed(6);
+            pos.checkedIn = true;
+            pos.gps = `${sampleLat}, ${sampleLng}`;
+            showToast(`${pos.title || 'Vị trí ' + posId}: Check-in mô phỏng (${pos.gps})`);
+            renderPositions();
+          },
+          { timeout: 8000 }
+        );
+      } else {
+        pos.checkedIn = true;
+        pos.gps = "11.366500, 106.136200";
+        showToast(`${pos.title || 'Vị trí ' + posId}: Check-in thành công!`);
+        renderPositions();
+      }
+    }
+
+    function promptDistance(posId) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      const val = prompt(`Nhập khoảng cách di chuyển từ đơn vị đến ${pos.title || 'Vị trí ' + posId} (km):`, pos.distanceKm || 15);
+      if (val !== null) {
+        const num = parseFloat(val);
+        if (!isNaN(num) && num >= 0) {
+          pos.distanceKm = num;
+          showToast(`${pos.title || 'Vị trí ' + posId}: Đã cập nhật ${num} km`);
+          renderAll();
+        }
+      }
+    }
+
+    // --- 7. THÊM / XÓA VỊ TRÍ (TỐI ĐA 20) ---
+    function addNewPosition() {
+      if (positions.length >= 20) {
+        alert("Đã đạt giới hạn tối đa 20 vị trí theo quy định!");
+        return;
+      }
+      const newId = positions.length > 0 ? Math.max(...positions.map(p => p.id)) + 1 : 1;
+      positions.push({
+        id: newId,
+        title: `Vị trí ${newId}`,
+        address: `Ấp Ninh Tân, Xã Ninh Sơn, TP Tây Ninh (Vị trí ${newId})`,
+        checkedIn: false,
+        gps: '',
+        distanceKm: 15,
+        tasks: [
+          { taskId: '16.01.01-1.0', condIds: ['DK01'], qty: 2 }
+        ],
+        factors: [1.0, 0.8, 0.7, 0.6],
+        similarCount: 1
+      });
+      showToast(`Đã thêm Vị trí ${newId}!`);
+      renderAll();
+    }
+
+    function removePosition(posId) {
+      if (positions.length <= 1) {
+        alert("Dự toán phải có ít nhất 1 vị trí!");
+        return;
+      }
+      const pos = positions.find(p => p.id === posId);
+      if (confirm(`Bạn có chắc muốn xóa ${pos ? pos.title : 'Vị trí ' + posId}?`)) {
+        positions = positions.filter(p => p.id !== posId);
+        showToast(`Đã xóa vị trí`);
+        renderAll();
+      }
+    }
+
+    // --- 8. THÊM / CẬP NHẬT CÔNG TÁC & HỆ SỐ ĐIỀU CHỈNH VÀO VỊ TRÍ ---
+    // Tìm các điều kiện tương thích với công tác theo 10 ký tự đầu tiên
+    function getMatchedConditionsForTask(task) {
+      if (!task) return [];
+      const prefix10 = get10Prefix(task.name);
+      return MASTER_CONDITIONS.filter(c => {
+        // Kiểm tra cấp điện áp
+        const voltMatch = (c.volt === 'Tất cả' || c.volt === currentVoltage || c.volt === task.volt);
+        if (!voltMatch) return false;
+
+        // Chỉ hiển thị điều kiện khớp 10 ký tự đầu tiên
+        const cPrefix = get10Prefix(c.name);
+        return (prefix10.length >= 5 && cPrefix === prefix10);
+      });
+    }
+
+    function onTaskSelectChange(posId) {
+      const taskSelect = document.getElementById(`selTask_${posId}`);
+      if (!taskSelect) return;
+      const taskId = taskSelect.value;
+      const task = MASTER_TASKS.find(t => t.id === taskId);
+      const prefix10 = get10Prefix(task ? task.name : '');
+
+      const condPickerArea = document.getElementById(`condArea_${posId}`);
+      if (!condPickerArea) return;
+
+      // Tìm các điều kiện tự động liên kết (chỉ hiển thị khi khớp đúng 10 ký tự đầu tiên)
+      const matched = MASTER_CONDITIONS.filter(c => {
+        const voltMatch = (c.volt === 'Tất cả' || c.volt === currentVoltage || !c.volt);
+        if (!voltMatch) return false;
+        const cPrefix = get10Prefix(c.name);
+        return (prefix10.length >= 5 && cPrefix === prefix10);
+      });
+
+      if (matched.length === 0) {
+        condPickerArea.innerHTML = `<div style="font-size:11px; color:#94a3b8; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+        return;
+      }
+
+      condPickerArea.innerHTML = matched.map(c => {
+        return `
+          <label class="cond-check-item">
+            <input type="checkbox" name="condChk_${posId}" value="${c.id}" checked>
+            <div>
+              <span>${c.name}</span>
+              <div class="k-pills">
+                ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
+                ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
+                ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
+                ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
+              </div>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function addTaskToPosition(posId) {
+      const taskSelect = document.getElementById(`selTask_${posId}`);
+      if (!taskSelect) return;
+      const taskId = taskSelect.value;
+
+      // Lấy danh sách các điều kiện đã được tick chọn
+      const checkboxes = document.querySelectorAll(`input[name="condChk_${posId}"]:checked`);
+      const selectedCondIds = Array.from(checkboxes).map(cb => cb.value);
+
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+
+      pos.tasks.push({
+        taskId: taskId,
+        condIds: selectedCondIds,
+        qty: 1
+      });
+
+      showToast(`Đã thêm định mức vào ${pos.title || 'Vị trí ' + posId}`);
+      renderAll();
+    }
+
+    function removeTaskFromPos(posId, taskIndex) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      pos.tasks.splice(taskIndex, 1);
+      renderAll();
+    }
+
+    function updateTaskQty(posId, taskIndex, newQty) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      const q = parseInt(newQty, 10);
+      pos.tasks[taskIndex].qty = isNaN(q) || q < 1 ? 1 : q;
+      renderAll();
+    }
+
+    function changeSimilarCount(posId, delta) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      let count = (pos.similarCount || 1) + delta;
+      if (count < 1) count = 1;
+      if (count > 100) count = 100;
+      pos.similarCount = count;
+      renderAll();
+    }
+
+    function updateFactor(posId, factorIndex, val) {
+      const pos = positions.find(p => p.id === posId);
+      if (!pos) return;
+      const f = parseFloat(val);
+      if (!isNaN(f) && f > 0) {
+        pos.factors[factorIndex] = f;
+        renderAll();
+      }
+    }
+
+    // --- 9. TÍNH TOÁN CHI PHÍ (CÔNG THỨC NHÂN TÍCH CÁC HỆ SỐ ĐIỀU CHỈNH) ---
+    function calculatePositionCost(pos) {
+      let subMat = 0;
+      let hotMat = 0;
+      let labor = 0;
+      let machine = 0;
+
+      pos.tasks.forEach((item, idx) => {
+        const task = MASTER_TASKS.find(t => t.id === item.taskId) || MASTER_TASKS[0];
+        const factorDiscount = (pos.factors && pos.factors[idx] !== undefined) ? pos.factors[idx] : 1.0;
+        const q = item.qty || 1;
+
+        // Tính TÍCH LẪN NHAU của các hệ số điều kiện được chọn:
+        // Kvlp = Kvlp1 * Kvlp2 * ...
+        // Kvlhl = Kvlhl1 * Kvlhl2 * ...
+        // Knc = Knc1 * Knc2 * ...
+        // Kmtc = Kmtc1 * Kmtc2 * ...
+        let totalKvlp = 1.0;
+        let totalKvlhl = 1.0;
+        let totalKnc = 1.0;
+        let totalKmtc = 1.0;
+
+        const condIdList = item.condIds || (item.condId ? [item.condId] : []);
+        condIdList.forEach(cId => {
+          const cond = MASTER_CONDITIONS.find(c => c.id === cId);
+          if (cond) {
+            totalKvlp *= (cond.kvlp !== undefined ? cond.kvlp : 1.0);
+            totalKvlhl *= (cond.kvlhl !== undefined ? cond.kvlhl : 1.0);
+            totalKnc *= (cond.knc !== undefined ? cond.knc : (cond.factor || 1.0));
+            totalKmtc *= (cond.kmtc !== undefined ? cond.kmtc : 1.0);
+          }
+        });
+
+        // Nhân với đơn giá gốc và hệ số đồng thời
+        subMat += (task.matSub || 0) * q * totalKvlp;
+        hotMat += (task.matHotline || 0) * q * totalKvlhl;
+        labor += (task.labor || 0) * q * totalKnc * factorDiscount;
+        machine += (task.machine || 0) * q * totalKmtc * factorDiscount;
+      });
+
+      const similarMultiplier = pos.similarCount || 1;
+      return {
+        subMat: Math.round(subMat * similarMultiplier),
+        hotMat: Math.round(hotMat * similarMultiplier),
+        labor: Math.round(labor * similarMultiplier),
+        machine: Math.round(machine * similarMultiplier),
+        total: Math.round((subMat + hotMat + labor + machine) * similarMultiplier)
+      };
+    }
+
+    // --- 10. RENDER GIAO DIỆN CÁC VỊ TRÍ (BLOCK 3) ---
+    function renderPositions() {
+      const container = document.getElementById('positionList');
+      if (!container) return;
+
+      const filteredTasks = MASTER_TASKS.filter(t => t.volt === currentVoltage || !t.volt);
+
+      container.innerHTML = positions.map((pos) => {
+        const costs = calculatePositionCost(pos);
+        const firstTask = filteredTasks[0] || MASTER_TASKS[0];
+        const firstPrefix = get10Prefix(firstTask ? firstTask.name : '');
+
+        return `
+          <div class="position-item">
+            <!-- Dòng tiêu đề Vị trí & Nút thao tác -->
+            <div class="pos-header-row">
+              <div class="pos-title editable-field" onclick="editPositionTitle(${pos.id})" title="Admin: Nhấp vào để đổi tên vị trí">
+                <span>📍 ${pos.title || 'Vị trí ' + pos.id}</span>
+                ${pos.checkedIn ? '<span style="color:#16a34a; font-size:10px; font-weight:700;">[Đã Check-in]</span>' : ''}
+              </div>
+              <div class="pos-actions">
+                <button class="btn-pos-action ${pos.checkedIn ? 'checked' : ''}" onclick="checkInPosition(${pos.id})">
+                  ${pos.checkedIn ? '✅ Đã Check in' : '📌 Check in'}
+                </button>
+                <button class="btn-pos-action" onclick="promptDistance(${pos.id})">
+                  🚗 ${pos.distanceKm || 0} km
+                </button>
+                ${positions.length > 1 ? `<button class="btn-pos-action" style="color:#dc2626;" onclick="removePosition(${pos.id})" title="Xóa vị trí này">🗑</button>` : ''}
+              </div>
+            </div>
+
+            <!-- Ô nhập Ấp/ Khu phố - Xã/phường - tỉnh -->
+            <input type="text" class="input-address" value="${pos.address || ''}" 
+                   placeholder="Ấp/ Khu phố - Xã/phường - tỉnh"
+                   onchange="positions.find(p=>p.id===${pos.id}).address = this.value">
+
+            <!-- Khung chọn định mức công việc & hệ số điều chỉnh -->
+            <div class="work-selector-box">
+              <label style="font-size:11px; font-weight:700; color:#475569;">Hạng mục công việc:</label>
+              <select class="select-dropdown" id="selTask_${pos.id}" onchange="onTaskSelectChange(${pos.id})">
+                ${filteredTasks.map(t => `<option value="${t.id}">${t.name} (${t.unit})</option>`).join('')}
+              </select>
+
+              <label style="font-size:11px; font-weight:700; color:#475569;">
+                Chọn hệ số điều chỉnh - Kđc (Điều kiện):
+              </label>
+              <div class="cond-picker-area" id="condArea_${pos.id}">
+                ${(() => {
+                  const matched = MASTER_CONDITIONS.filter(c => {
+                    const voltMatch = (c.volt === 'Tất cả' || c.volt === currentVoltage || !c.volt);
+                    if (!voltMatch) return false;
+                    const cPrefix = get10Prefix(c.name);
+                    return (firstPrefix.length >= 5 && cPrefix === firstPrefix);
+                  });
+                  if (matched.length === 0) {
+                    return `<div style="font-size:11px; color:#94a3b8; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+                  }
+                  return matched.map(c => `
+                    <label class="cond-check-item">
+                      <input type="checkbox" name="condChk_${pos.id}" value="${c.id}" checked>
+                      <div>
+                        <span>${c.name}</span>
+                        <div class="k-pills">
+                          ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
+                          ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
+                          ${c.knc !== 1.0 ? `<span class="k-pill k-nc">Knc=${c.knc}</span>` : ''}
+                          ${c.kmtc !== 1.0 ? `<span class="k-pill k-mtc">Kmtc=${c.kmtc}</span>` : ''}
+                        </div>
+                      </div>
+                    </label>
+                  `).join('');
+                })()}
+              </div>
+
+              <button class="btn-add-task" onclick="addTaskToPosition(${pos.id})">
+                ➕ Thêm định mức vào ${pos.title || 'Vị trí ' + pos.id}
+              </button>
+            </div>
+
+            <!-- Bảng công việc đã thêm vào vị trí này -->
+            ${pos.tasks.length > 0 ? `
+              <table class="task-list-table">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;">Công việc & Hệ số điều chỉnh</th>
+                    <th style="width:45px;">SL</th>
+                    <th style="width:25px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${pos.tasks.map((it, tIdx) => {
+                    const task = MASTER_TASKS.find(t => t.id === it.taskId) || MASTER_TASKS[0];
+                    const condIdList = it.condIds || (it.condId ? [it.condId] : []);
+                    
+                    // Tính tích hệ số hiển thị
+                    let pKvlp = 1, pKvlhl = 1, pKnc = 1, pKmtc = 1;
+                    const condNames = condIdList.map(cId => {
+                      const c = MASTER_CONDITIONS.find(x => x.id === cId);
+                      if (!c) return '';
+                      pKvlp *= (c.kvlp || 1);
+                      pKvlhl *= (c.kvlhl || 1);
+                      pKnc *= (c.knc || 1);
+                      pKmtc *= (c.kmtc || 1);
+                      return c.name;
+                    }).filter(Boolean);
+
+                    return `
+                      <tr>
+                        <td style="text-align:left;">
+                          <strong>${task.name}</strong>
+                          ${condNames.length > 0 ? `
+                            <div style="font-size:10px; color:#64748b; margin-top:2px;">
+                              ${condNames.map(cn => `• ${cn}`).join('<br>')}
+                            </div>
+                            <div class="k-pills" style="margin-top:3px;">
+                              <span class="k-pill k-vlp">Kvlp=${pKvlp.toFixed(2)}</span>
+                              <span class="k-pill k-vlhl">Kvlhl=${pKvlhl.toFixed(2)}</span>
+                              <span class="k-pill k-nc">Knc=${pKnc.toFixed(2)}</span>
+                              <span class="k-pill k-mtc">Kmtc=${pKmtc.toFixed(2)}</span>
+                            </div>
+                          ` : '<div style="font-size:10px; color:#94a3b8; font-style:italic;">(Tiêu chuẩn, không điều chỉnh)</div>'}
+                        </td>
+                        <td>
+                          <input type="number" value="${it.qty || 1}" min="1" max="99" style="width:40px; text-align:center; border:1px solid #cbd5e1; border-radius:4px;"
+                                 onchange="updateTaskQty(${pos.id}, ${tIdx}, this.value)">
+                        </td>
+                        <td>
+                          <button style="border:none; background:none; color:#ef4444; cursor:pointer;" onclick="removeTaskFromPos(${pos.id}, ${tIdx})">✕</button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            ` : '<div style="font-size:11px; color:#94a3b8; font-style:italic; text-align:center;">Chưa chọn công việc nào</div>'}
+
+            <!-- Hệ số đồng thời: 4 ô -->
+            <div class="discount-factors-row">
+              <span>Hệ số đồng thời:</span>
+              <div class="factor-boxes">
+                <input type="number" step="0.1" class="factor-box-input" value="${pos.factors[0] || 1.0}" onchange="updateFactor(${pos.id}, 0, this.value)">
+                <input type="number" step="0.1" class="factor-box-input" value="${pos.factors[1] || 0.8}" onchange="updateFactor(${pos.id}, 1, this.value)">
+                <input type="number" step="0.1" class="factor-box-input" value="${pos.factors[2] || 0.7}" onchange="updateFactor(${pos.id}, 2, this.value)">
+                <input type="number" step="0.1" class="factor-box-input" value="${pos.factors[3] || 0.6}" onchange="updateFactor(${pos.id}, 3, this.value)">
+              </div>
+            </div>
+
+            <!-- Số lượng vị trí tương tự: Mặc định là 1, thay đổi từ 1 đến 100 -->
+            <div class="qty-row">
+              <span>Số lượng vị trí tương tự:</span>
+              <div class="qty-stepper">
+                <button class="qty-btn" onclick="changeSimilarCount(${pos.id}, -1)">-</button>
+                <input type="number" class="qty-input" value="${pos.similarCount || 1}" min="1" max="100" 
+                       onchange="let v=parseInt(this.value,10); if(!isNaN(v)) { positions.find(p=>p.id===${pos.id}).similarCount=Math.max(1,Math.min(100,v)); renderAll(); }">
+                <button class="qty-btn" onclick="changeSimilarCount(${pos.id}, 1)">+</button>
+              </div>
+            </div>
+
+            <!-- Khung Thành tiền: 4 cột theo đúng bản vẽ -->
+            <div>
+              <div style="font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thành tiền ${pos.title || 'Vị trí ' + pos.id} (VNĐ):</div>
+              <div class="cost-grid">
+                <div class="cost-cell-header">Vật liệu phụ</div>
+                <div class="cost-cell-header">Vật liệu hotline</div>
+                <div class="cost-cell-header">Nhân công</div>
+                <div class="cost-cell-header">Máy thi công</div>
+                <div class="cost-cell-val">${formatMoney(costs.subMat)}</div>
+                <div class="cost-cell-val">${formatMoney(costs.hotMat)}</div>
+                <div class="cost-cell-val">${formatMoney(costs.labor)}</div>
+                <div class="cost-cell-val">${formatMoney(costs.machine)}</div>
+              </div>
+              <div style="text-align:right; font-size:11px; font-weight:800; color:#005baa; margin-top:4px;">
+                Tổng ${pos.title || 'Vị trí ' + pos.id}: ${formatMoney(costs.total)} đ
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- 11. RENDER CÁC PHỤ LỤC (BLOCK 4) ---
+    function renderAppendix() {
+      const fuelPrice = parseFloat(document.getElementById('fuelPrice').value) || 21500;
+      const machineShiftPrice = parseFloat(document.getElementById('machineShiftPrice').value) || 1250000;
+      const machineShiftCount = parseInt(document.getElementById('machineShiftCount').value, 10) || 1;
+
+      // Tính tổng khoảng cách di chuyển từ các vị trí (nhân 2 khứ hồi)
+      const totalKm = positions.reduce((sum, p) => sum + (parseFloat(p.distanceKm) || 0), 0) * 2;
+
+      // Phụ lục 4: Vận chuyển
+      let totalTransportCost = 0;
+      const transportHtml = FUEL_NORMS.map(r => {
+        let isAct = (r.id === 'F01' || r.id === 'F02') || (r.id === 'F03' && hasCrane);
+        if (!isAct) return '';
+        const fuelLiters = (totalKm * r.rate) / 100;
+        const cost = Math.round(fuelLiters * fuelPrice);
+        totalTransportCost += cost;
+        return `
+          <tr>
+            <td><strong>${r.name}</strong></td>
+            <td style="text-align:center;">${r.rate}</td>
+            <td style="text-align:center;">${totalKm.toFixed(1)} km</td>
+            <td class="num">${formatMoney(cost)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('transportTableBody').innerHTML = transportHtml + `
+        <tr style="background:#eff6ff; font-weight:700;">
+          <td colspan="3">Cộng chi phí vận chuyển (Phụ lục 4)</td>
+          <td class="num" style="color:#005baa;">${formatMoney(totalTransportCost)} đ</td>
+        </tr>
+      `;
+
+      // Phụ lục 5: Rào chắn & cảnh giới
+      const barrierMachineCost = machineShiftPrice * machineShiftCount;
+      const barrierSafetyCost = 450000 * machineShiftCount;
+      const totalBarrierCost = barrierMachineCost + barrierSafetyCost;
+
+      document.getElementById('barrierTableBody').innerHTML = `
+        <tr>
+          <td>Ca máy cảnh giới & lập rào chắn</td>
+          <td style="text-align:center;">${machineShiftCount} ca</td>
+          <td class="num">${formatMoney(machineShiftPrice)}</td>
+          <td class="num">${formatMoney(barrierMachineCost)}</td>
+        </tr>
+        <tr>
+          <td>Vật tư rào chắn, biển báo, đèn tín hiệu</td>
+          <td style="text-align:center;">${machineShiftCount} bộ</td>
+          <td class="num">450.000</td>
+          <td class="num">${formatMoney(barrierSafetyCost)}</td>
+        </tr>
+        <tr style="background:#eff6ff; font-weight:700;">
+          <td colspan="3">Cộng chi phí rào chắn (Phụ lục 5)</td>
+          <td class="num" style="color:#005baa;">${formatMoney(totalBarrierCost)} đ</td>
+        </tr>
+      `;
+
+      // Phụ lục 6: Khảo sát hiện trường
+      const surveyPeople = 2;
+      const surveyDays = Math.max(1, Math.ceil(positions.length / 5));
+      const surveyLaborRate = 420000;
+      const surveyCost = surveyPeople * surveyDays * surveyLaborRate;
+
+      document.getElementById('surveyTableBody').innerHTML = `
+        <tr>
+          <td>Khảo sát hiện trường trước khi thi công hotline</td>
+          <td style="text-align:center;">Công</td>
+          <td style="text-align:center;">${surveyPeople * surveyDays}</td>
+          <td class="num">${formatMoney(surveyCost)}</td>
+        </tr>
+        <tr style="background:#eff6ff; font-weight:700;">
+          <td colspan="3">Cộng chi phí khảo sát (Phụ lục 6)</td>
+          <td class="num" style="color:#005baa;">${formatMoney(surveyCost)} đ</td>
+        </tr>
+      `;
+
+      return {
+        transportCost: totalTransportCost,
+        barrierCost: totalBarrierCost,
+        surveyCost: surveyCost
+      };
+    }
+
+    // --- 12. RENDER BẢNG TỔNG HỢP DỰ TOÁN (BLOCK 5) ---
+    function renderSummary() {
+      let totalSubMat = 0;
+      let totalHotMat = 0;
+      let totalLabor = 0;
+      let totalMachine = 0;
+
+      positions.forEach(p => {
+        const c = calculatePositionCost(p);
+        totalSubMat += c.subMat;
+        totalHotMat += c.hotMat;
+        totalLabor += c.labor;
+        totalMachine += c.machine;
+      });
+
+      const directCost = totalSubMat + totalHotMat + totalLabor + totalMachine;
+      const appendix = renderAppendix();
+
+      const otherDirectCost = Math.round(directCost * COST_RATES.otherDirectRate);
+      const generalCost = Math.round(directCost * COST_RATES.generalCostRate);
+
+      const totalBeforeTax = directCost + appendix.transportCost + appendix.barrierCost + appendix.surveyCost + otherDirectCost + generalCost;
+      const vat = Math.round(totalBeforeTax * COST_RATES.vatRate);
+      const grandTotal = totalBeforeTax + vat;
+
+      const summaryRows = [
+        { stt: 'I', name: 'Chi phí trực tiếp tại các vị trí thi công', val: directCost },
+        { stt: '1', name: '  - Vật liệu phụ (đã tính Kvlp)', val: totalSubMat },
+        { stt: '2', name: '  - Vật liệu Hotline (đã tính Kvlhl)', val: totalHotMat },
+        { stt: '3', name: '  - Nhân công Hotline (đã tính Knc)', val: totalLabor },
+        { stt: '4', name: '  - Máy thi công chuyên dùng (đã tính Kmtc)', val: totalMachine },
+        { stt: 'II', name: 'Phụ lục 4: Chi phí vận chuyển Hotline', val: appendix.transportCost },
+        { stt: 'III', name: 'Phụ lục 5: Chi phí rào chắn & cảnh giới giao thông', val: appendix.barrierCost },
+        { stt: 'IV', name: 'Phụ lục 6: Chi phí khảo sát hiện trường', val: appendix.surveyCost },
+        { stt: 'V', name: `Trực tiếp phí khác (${(COST_RATES.otherDirectRate*100).toFixed(1)}%)`, val: otherDirectCost, rateType: 'otherDirectRate' },
+        { stt: 'VI', name: `Chi phí chung (${(COST_RATES.generalCostRate*100).toFixed(1)}%)`, val: generalCost, rateType: 'generalCostRate' },
+        { stt: 'VII', name: `Thuế giá trị gia tăng (VAT ${(COST_RATES.vatRate*100).toFixed(1)}%)`, val: vat, rateType: 'vatRate' }
+      ];
+
+      document.getElementById('summaryTableBody').innerHTML = summaryRows.map(r => `
+        <tr ${r.stt === 'I' || r.stt === 'II' || r.stt === 'III' || r.stt === 'IV' ? 'style="background:#f8fafc; font-weight:700;"' : ''}>
+          <td style="text-align:center;">${r.stt}</td>
+          <td>
+            ${r.rateType ? `<span class="editable-field" onclick="editCostRate('${r.rateType}')" title="Admin: Nhấp vào để sửa tỷ lệ %">${r.name}</span>` : r.name}
+          </td>
+          <td class="val">${formatMoney(r.val)}</td>
+        </tr>
+      `).join('') + `
+        <tr class="total-row">
+          <td colspan="2">TỔNG CỘNG DỰ TOÁN HOTLINE</td>
+          <td class="val" style="color:#005baa; font-size:13px;">${formatMoney(grandTotal)} đ</td>
+        </tr>
+      `;
+
+      const formattedTotal = formatMoney(grandTotal) + ' đ';
+      const elGrand = document.getElementById('grandTotalText');
+      if (elGrand) elGrand.innerText = formattedTotal;
+
+      const elWords = document.getElementById('grandTotalWords');
+      if (elWords) elWords.innerText = `(Bằng chữ: ${readVietnameseNumber(grandTotal)} đồng)`;
+
+      const elMobTotal = document.getElementById('mobileGrandTotal');
+      if (elMobTotal) elMobTotal.innerText = formattedTotal;
+
+      // Cập nhật thẻ thống kê nhanh (Quick Stats Card)
+      const elStatPos = document.getElementById('statPosCount');
+      if (elStatPos) elStatPos.innerText = positions.length;
+
+      const elStatTasks = document.getElementById('statTaskCount');
+      if (elStatTasks) {
+        const totalT = positions.reduce((acc, p) => acc + (p.tasks ? p.tasks.length : 0), 0);
+        elStatTasks.innerText = totalT;
+      }
+
+      const elStatDist = document.getElementById('statDistTotal');
+      if (elStatDist) {
+        const totalKm = positions.reduce((acc, p) => acc + (parseFloat(p.distanceKm) || 0), 0);
+        elStatDist.innerText = totalKm + ' km';
+      }
+
+      const elStatShift = document.getElementById('statMachineShifts');
+      if (elStatShift) {
+        const shifts = document.getElementById('machineShiftCount') ? document.getElementById('machineShiftCount').value : 1;
+        elStatShift.innerText = shifts + ' ca';
+      }
+    }
+
+    // --- 13. QUẢN LÝ BẢNG HỆ SỐ ĐIỀU CHỈNH (MODAL & FORM SỬA/THÊM) ---
+    function setCondFilter(volt) {
+      condFilterVolt = volt;
+      document.getElementById('fCondAll').classList.toggle('active', volt === 'All');
+      document.getElementById('fCond22').classList.toggle('active', volt === '22kV');
+      document.getElementById('fCond12').classList.toggle('active', volt === '12,7kV');
+      renderConditionListModal();
+    }
+
+    function renderConditionListModal() {
+      const listEl = document.getElementById('masterConditionList');
+      if (!listEl) return;
+
+      const filtered = MASTER_CONDITIONS.filter(c => {
+        if (condFilterVolt === 'All') return true;
+        return c.volt === condFilterVolt || c.volt === 'Tất cả';
+      });
+
+      listEl.innerHTML = filtered.map(c => {
+        const prefix10 = get10Prefix(c.name);
+        return `
+          <div class="cond-card">
+            <div class="cond-card-top">
+              <div>
+                <div style="font-weight:700; color:#0f172a; font-size:12px;">${c.name}</div>
+                <div style="display:flex; gap:6px; align-items:center; margin-top:3px;">
+                  <span class="cond-prefix-tag" title="10 ký tự nhận diện liên kết">Mã: ${prefix10}</span>
+                  <span style="font-size:10px; font-weight:700; color:#0284c7; background:#e0f2fe; padding:1px 5px; border-radius:3px;">${c.volt || 'Tất cả'}</span>
+                  <span style="font-size:10px; color:#64748b;">Mã ID: ${c.id}</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:4px;">
+                <button class="admin-edit-btn" onclick="openEditCondModal('${c.id}')">✏️ Sửa</button>
+                <button class="admin-delete-btn" onclick="adminDeleteCondition('${c.id}')">🗑</button>
+              </div>
+            </div>
+
+            <!-- 4 Hệ số trực quan -->
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; margin-top:2px; font-size:10px;">
+              <div style="background:#f3e8ff; color:#7e22ce; padding:3px; border-radius:4px; text-align:center;">
+                <strong>Kvlp:</strong> ${c.kvlp !== undefined ? c.kvlp : 1.0}
+              </div>
+              <div style="background:#fee2e2; color:#b91c1c; padding:3px; border-radius:4px; text-align:center;">
+                <strong>Kvlhl:</strong> ${c.kvlhl !== undefined ? c.kvlhl : 1.0}
+              </div>
+              <div style="background:#dbeafe; color:#1d4ed8; padding:3px; border-radius:4px; text-align:center;">
+                <strong>Knc:</strong> ${c.knc !== undefined ? c.knc : 1.0}
+              </div>
+              <div style="background:#ffedd5; color:#c2410c; padding:3px; border-radius:4px; text-align:center;">
+                <strong>Kmtc:</strong> ${c.kmtc !== undefined ? c.kmtc : 1.0}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updatePrefixPreview() {
+      const val = document.getElementById('inpCondName').value;
+      const prefix = get10Prefix(val);
+      const prevEl = document.getElementById('txtPrefixPreview');
+      if (prefix) {
+        prevEl.innerHTML = `🔍 10 ký tự nhận diện liên kết: <strong style="color:#b45309;">[${prefix}]</strong> (Sẽ tự động ghép với công việc có cùng mã)`;
+      } else {
+        prevEl.innerHTML = `10 ký tự nhận diện: <em>(Chưa có)</em>`;
+      }
+    }
+
+    function openEditCondModal(condId) {
+      const cond = MASTER_CONDITIONS.find(c => c.id === condId);
+      if (!cond) return;
+
+      document.getElementById('condModalTitle').innerText = "✏️ Sửa hệ số điều chỉnh";
+      document.getElementById('editingCondId').value = cond.id;
+      document.getElementById('inpCondName').value = cond.name;
+      document.getElementById('inpCondVolt').value = cond.volt || '22kV';
+      document.getElementById('inpKvlp').value = cond.kvlp !== undefined ? cond.kvlp : 1.0;
+      document.getElementById('inpKvlhl').value = cond.kvlhl !== undefined ? cond.kvlhl : 1.0;
+      document.getElementById('inpKnc').value = cond.knc !== undefined ? cond.knc : 1.0;
+      document.getElementById('inpKmtc').value = cond.kmtc !== undefined ? cond.kmtc : 1.0;
+
+      updatePrefixPreview();
+      document.getElementById('condDetailModal').classList.add('open');
+    }
+
+    function adminAddNewCondition() {
+      document.getElementById('condModalTitle').innerText = "➕ Thêm hệ số điều chỉnh mới";
+      document.getElementById('editingCondId').value = "";
+      document.getElementById('inpCondName').value = "16.01.01-1.3 - Điều kiện mới (Knc=1.2)";
+      document.getElementById('inpCondVolt').value = currentVoltage || "22kV";
+      document.getElementById('inpKvlp').value = "1.0";
+      document.getElementById('inpKvlhl').value = "1.0";
+      document.getElementById('inpKnc').value = "1.2";
+      document.getElementById('inpKmtc').value = "1.0";
+
+      updatePrefixPreview();
+      document.getElementById('condDetailModal').classList.add('open');
+    }
+
+    function closeCondDetailModal() {
+      document.getElementById('condDetailModal').classList.remove('open');
+    }
+
+    function saveCondDetail() {
+      const condId = document.getElementById('editingCondId').value;
+      const name = document.getElementById('inpCondName').value.trim();
+      const volt = document.getElementById('inpCondVolt').value;
+      const kvlp = parseFloat(document.getElementById('inpKvlp').value) || 1.0;
+      const kvlhl = parseFloat(document.getElementById('inpKvlhl').value) || 1.0;
+      const knc = parseFloat(document.getElementById('inpKnc').value) || 1.0;
+      const kmtc = parseFloat(document.getElementById('inpKmtc').value) || 1.0;
+
+      if (!name) {
+        alert("Vui lòng nhập tên điều kiện!");
+        return;
+      }
+
+      if (condId) {
+        // Cập nhật điều kiện cũ
+        const cond = MASTER_CONDITIONS.find(c => c.id === condId);
+        if (cond) {
+          cond.name = name;
+          cond.volt = volt;
+          cond.kvlp = kvlp;
+          cond.kvlhl = kvlhl;
+          cond.knc = knc;
+          cond.kmtc = kmtc;
+          showToast(`Đã cập nhật hệ số điều chỉnh ${condId}!`);
+        }
+      } else {
+        // Thêm điều kiện mới
+        const newId = 'DK' + String(Date.now()).slice(-4);
+        MASTER_CONDITIONS.push({
+          id: newId,
+          name: name,
+          volt: volt,
+          kvlp: kvlp,
+          kvlhl: kvlhl,
+          knc: knc,
+          kmtc: kmtc
+        });
+        showToast("Đã thêm hệ số điều chỉnh mới!");
+      }
+
+      closeCondDetailModal();
+      renderConditionListModal();
+      renderPositions();
+      renderSummary();
+      saveAllAdminData();
+    }
+
+    function adminDeleteCondition(condId) {
+      if (!confirm(`Bạn có chắc muốn xóa hệ số điều chỉnh ${condId}?`)) return;
+      MASTER_CONDITIONS = MASTER_CONDITIONS.filter(c => c.id !== condId);
+      showToast(`Đã xóa điều kiện ${condId}!`);
+      renderConditionListModal();
+      renderPositions();
+      renderSummary();
+      saveAllAdminData();
+    }
+
+    // --- 14. QUẢN LÝ ĐỊNH MỨC CÔNG VIỆC, NHIÊN LIỆU, NHÂN CÔNG ---
+    function adminEditTask(taskId) {
+      const task = MASTER_TASKS.find(t => t.id === taskId);
+      if (!task) return;
+
+      const newName = prompt("Tên công việc:", task.name);
+      if (!newName) return;
+      const newMatSub = parseFloat(prompt("Đơn giá Vật liệu phụ (đ):", task.matSub)) || 0;
+      const newMatHotline = parseFloat(prompt("Đơn giá Vật liệu Hotline (đ):", task.matHotline)) || 0;
+      const newLabor = parseFloat(prompt("Đơn giá Nhân công (đ):", task.labor)) || 0;
+      const newMachine = parseFloat(prompt("Đơn giá Máy thi công (đ):", task.machine)) || 0;
+
+      task.name = newName;
+      task.matSub = newMatSub;
+      task.matHotline = newMatHotline;
+      task.labor = newLabor;
+      task.machine = newMachine;
+
+      showToast(`Đã lưu thay đổi cho công việc ${taskId}!`);
+      populateModals();
+      renderAll();
+      saveAllAdminData();
+    }
+
+    function adminDeleteTask(taskId) {
+      if (!confirm(`Bạn có chắc muốn xóa công việc ${taskId} khỏi danh mục?`)) return;
+      MASTER_TASKS = MASTER_TASKS.filter(t => t.id !== taskId);
+      showToast(`Đã xóa công việc ${taskId}!`);
+      populateModals();
+      renderAll();
+      saveAllAdminData();
+    }
+
+    function adminAddNewTask() {
+      const name = prompt("Nhập tên công việc mới (Nên có 10 ký tự mã, ví dụ 16.01.07-1.0 - ...):", "16.01.07-1.0 - ");
+      if (!name) return;
+      const unit = prompt("Đơn vị tính (Quả, Trụ, Bộ, Mối...):", "Bộ") || "Bộ";
+      const volt = prompt("Cấp điện áp áp dụng (22kV hoặc 12,7kV):", currentVoltage) || currentVoltage;
+      const labor = parseFloat(prompt("Đơn giá Nhân công (đ):", "400000")) || 400000;
+      const matHotline = parseFloat(prompt("Đơn giá Vật liệu Hotline (đ):", "150000")) || 150000;
+      const matSub = parseFloat(prompt("Đơn giá Vật liệu phụ (đ):", "50000")) || 50000;
+      const machine = parseFloat(prompt("Đơn giá Máy thi công (đ):", "200000")) || 200000;
+
+      const newId = name.split(' ')[0] || ('CV' + String(Date.now()).slice(-4));
+      MASTER_TASKS.push({
+        id: newId,
+        name: name,
+        unit: unit,
+        volt: volt,
+        labor: labor,
+        matHotline: matHotline,
+        matSub: matSub,
+        machine: machine
+      });
+
+      showToast("Đã thêm công việc mới thành công!");
+      populateModals();
+      renderAll();
+      saveAllAdminData();
+    }
+
+    function adminEditFuel(fuelId) {
+      const f = FUEL_NORMS.find(x => x.id === fuelId);
+      if (!f) return;
+      const newRate = parseFloat(prompt(`Nhập định mức nhiên liệu mới cho ${f.name} (Lít / 100km):`, f.rate));
+      if (!isNaN(newRate) && newRate > 0) {
+        f.rate = newRate;
+        showToast("Đã lưu định mức nhiên liệu!");
+        populateModals();
+        renderAppendix();
+        renderSummary();
+        saveAllAdminData();
+      }
+    }
+
+    function adminEditLabor(laborId) {
+      const l = LABOR_NORMS.find(x => x.id === laborId);
+      if (!l) return;
+      const newWage = parseFloat(prompt(`Nhập đơn giá ngày công mới cho ${l.title} (đ):`, l.wage));
+      if (!isNaN(newWage) && newWage > 0) {
+        l.wage = newWage;
+        showToast("Đã lưu đơn giá nhân công!");
+        populateModals();
+        saveAllAdminData();
+      }
+    }
+
+    // --- 15. POPULATE MODALS ---
+    function populateModals() {
+      // 1. Master Works
+      document.getElementById('masterWorkList').innerHTML = MASTER_TASKS.map(t => {
+        const prefix10 = get10Prefix(t.name);
+        return `
+          <div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px; background:#f8fafc;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div>
+                <div style="font-weight:700; color:#0f172a;">${t.name} <span style="color:#0284c7; font-size:10px;">[${t.volt}]</span></div>
+                <span class="cond-prefix-tag" style="margin-top:2px; display:inline-block;">Mã 10 ký tự: ${prefix10}</span>
+              </div>
+              ${isAdminMode ? `
+                <div style="display:flex; gap:4px;">
+                  <button class="admin-edit-btn" onclick="adminEditTask('${t.id}')">✏️ Sửa</button>
+                  <button class="admin-delete-btn" onclick="adminDeleteTask('${t.id}')">🗑</button>
+                </div>
+              ` : ''}
+            </div>
+            <div style="font-size:11px; color:#64748b; margin-top:4px; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+              <span>ĐVT: ${t.unit}</span>
+              <span>Vật liệu phụ: ${formatMoney(t.matSub)}đ</span>
+              <span>Vật liệu Hotline: ${formatMoney(t.matHotline)}đ</span>
+              <span>Nhân công: ${formatMoney(t.labor)}đ</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 2. Master Conditions
+      renderConditionListModal();
+
+      // 3. Fuel Norms
+      document.getElementById('fuelNormTableBody').innerHTML = FUEL_NORMS.map(f => `
+        <tr>
+          <td>${f.name}</td>
+          <td style="text-align:center; font-weight:700;">${f.rate} lít / 100km</td>
+          <td style="text-align:center;">
+            ${isAdminMode ? `<button class="admin-edit-btn" onclick="adminEditFuel('${f.id}')">✏️ Sửa định mức</button>` : '-'}
+          </td>
+        </tr>
+      `).join('');
+
+      // 4. Labor Norms
+      document.getElementById('laborNormTableBody').innerHTML = LABOR_NORMS.map(l => `
+        <tr>
+          <td>${l.title}</td>
+          <td class="num">${formatMoney(l.wage)}</td>
+          <td style="text-align:center;">
+            ${isAdminMode ? `<button class="admin-edit-btn" onclick="adminEditLabor('${l.id}')">✏️ Sửa đơn giá</button>` : '-'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- 16. PERSISTENCE (LƯU & KHÔI PHỤC VÀO LOCALSTORAGE) ---
+    function saveAllAdminData() {
+      const payload = {
+        appLogoTitle: document.getElementById('appLogoTitle').innerText,
+        appLogoSub: document.getElementById('appLogoSub').innerText,
+        appBadgeText: document.getElementById('appBadgeText').innerText,
+        appSubTitleText: document.getElementById('appSubTitleText').innerText,
+        lblCat1: document.getElementById('lblCat1').innerHTML,
+        lblCat2: document.getElementById('lblCat2').innerHTML,
+        lblCat3: document.getElementById('lblCat3').innerHTML,
+        lblCat4: document.getElementById('lblCat4').innerHTML,
+        lblVoltageTitle: document.getElementById('lblVoltageTitle').innerText,
+        lblAppx4Title: document.getElementById('lblAppx4Title').innerText,
+        lblAppx5Title: document.getElementById('lblAppx5Title').innerText,
+        lblAppx6Title: document.getElementById('lblAppx6Title').innerText,
+        lblSummaryTitle: document.getElementById('lblSummaryTitle').innerText,
+        lblSummarySub: document.getElementById('lblSummarySub').innerText,
+        tasks: MASTER_TASKS,
+        conditions: MASTER_CONDITIONS,
+        fuels: FUEL_NORMS,
+        labors: LABOR_NORMS,
+        costRates: COST_RATES,
+        positions: positions
+      };
+      localStorage.setItem('evn_hotline_admin_saved', JSON.stringify(payload));
+      showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
+    }
+
+    function loadSavedAdminData() {
+      try {
+        const raw = localStorage.getItem('evn_hotline_admin_saved');
+        if (!raw) return;
+        const d = JSON.parse(raw);
+
+        if (d.appLogoTitle) document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
+        if (d.appLogoSub) document.getElementById('appLogoSub').innerText = d.appLogoSub;
+        if (d.appBadgeText) document.getElementById('appBadgeText').innerText = d.appBadgeText;
+        if (d.appSubTitleText) document.getElementById('appSubTitleText').innerText = d.appSubTitleText;
+        if (d.lblCat1) document.getElementById('lblCat1').innerHTML = d.lblCat1;
+        if (d.lblCat2) document.getElementById('lblCat2').innerHTML = d.lblCat2;
+        if (d.lblCat3) document.getElementById('lblCat3').innerHTML = d.lblCat3;
+        if (d.lblCat4) document.getElementById('lblCat4').innerHTML = d.lblCat4;
+        if (d.lblVoltageTitle) document.getElementById('lblVoltageTitle').innerText = d.lblVoltageTitle;
+        if (d.lblAppx4Title) document.getElementById('lblAppx4Title').innerText = d.lblAppx4Title;
+        if (d.lblAppx5Title) document.getElementById('lblAppx5Title').innerText = d.lblAppx5Title;
+        if (d.lblAppx6Title) document.getElementById('lblAppx6Title').innerText = d.lblAppx6Title;
+        if (d.lblSummaryTitle) document.getElementById('lblSummaryTitle').innerText = d.lblSummaryTitle;
+        if (d.lblSummarySub) document.getElementById('lblSummarySub').innerText = d.lblSummarySub;
+
+        if (Array.isArray(d.tasks)) {
+          DEFAULT_MASTER_TASKS.forEach(dt => {
+            if (!d.tasks.some(t => t.id === dt.id)) d.tasks.push(dt);
+          });
+          MASTER_TASKS = d.tasks;
+        }
+        if (Array.isArray(d.conditions)) {
+          DEFAULT_MASTER_CONDITIONS.forEach(dc => {
+            if (!d.conditions.some(c => c.id === dc.id)) d.conditions.push(dc);
+          });
+          MASTER_CONDITIONS = d.conditions;
+        }
+        if (Array.isArray(d.fuels)) FUEL_NORMS = d.fuels;
+        if (Array.isArray(d.labors)) LABOR_NORMS = d.labors;
+        if (d.costRates) COST_RATES = Object.assign(COST_RATES, d.costRates);
+        if (Array.isArray(d.positions) && d.positions.length > 0) positions = d.positions;
+      } catch (e) {
+        console.warn("Could not parse saved admin config", e);
+      }
+    }
+
+    function resetDefaultConfig() {
+      if (!confirm("Bạn có chắc chắn muốn khôi phục về cấu hình mẫu mặc định của EVNSPC?")) return;
+      localStorage.removeItem('evn_hotline_admin_saved');
+      MASTER_TASKS = JSON.parse(JSON.stringify(DEFAULT_MASTER_TASKS));
+      MASTER_CONDITIONS = JSON.parse(JSON.stringify(DEFAULT_MASTER_CONDITIONS));
+      FUEL_NORMS = JSON.parse(JSON.stringify(DEFAULT_FUEL_NORMS));
+      LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
+      COST_RATES = { otherDirectRate: 0.025, generalCostRate: 0.055, vatRate: 0.08 };
+
+      document.getElementById('appLogoTitle').innerText = 'EVNSPC';
+      document.getElementById('appLogoSub').innerText = 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM';
+      document.getElementById('appBadgeText').innerText = 'ESTIMATE';
+      document.getElementById('appSubTitleText').innerText = 'DỰ TOÁN HOTLINE';
+      document.getElementById('lblCat1').innerHTML = 'Bảng định mức<br>công việc';
+      document.getElementById('lblCat2').innerHTML = 'Hệ số điều chỉnh<br>(Kvlp, Kvlhl, Knc, Kmtc)';
+      document.getElementById('lblCat3').innerHTML = 'Bảng định mức<br>nhiên liệu';
+      document.getElementById('lblCat4').innerHTML = 'Bảng định mức<br>nhân công';
+      document.getElementById('lblVoltageTitle').innerText = '⚡ Cấp điện áp:';
+      document.getElementById('lblAppx4Title').innerText = 'Phụ lục 4: Bảng tính vận chuyển hotline';
+      document.getElementById('lblAppx5Title').innerText = 'Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông';
+      document.getElementById('lblAppx6Title').innerText = 'Phụ lục 6: Bảng tính chi phí khảo sát';
+      document.getElementById('lblSummaryTitle').innerText = 'BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ HOTLINE';
+      document.getElementById('lblSummarySub').innerText = 'BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN';
+
+      showToast("Đã khôi phục cài đặt gốc EVNSPC thành công!");
+      populateModals();
+      renderAll();
+    }
+
+    // --- 17. MODAL UTILITIES ---
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add('open');
+    }
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove('open');
+    }
+    window.onclick = function(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    };
+
+    // --- 18. UTILITIES: MONEY & WORDS & TOAST ---
+    function formatMoney(amount) {
+      return (Math.round(amount || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('appToast');
+      const text = document.getElementById('toastMessage');
+      if (!toast || !text) return;
+      text.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function readVietnameseNumber(n) {
+      if (n === 0) return 'Không';
+      const defaultNumbers = ' không một hai ba bốn năm sáu bảy tám chín';
+      const units = ['', 'nghìn', 'triệu', 'tỷ'];
+      function readGroup(str) {
+        let res = '';
+        const h = parseInt(str.charAt(0));
+        const t = parseInt(str.charAt(1));
+        const u = parseInt(str.charAt(2));
+        if (h === 0 && t === 0 && u === 0) return '';
+        if (h !== 0) {
+          res += defaultNumbers.substr(h * 5, 5) + ' trăm';
+          if (t === 0 && u !== 0) res += ' linh';
+        }
+        if (t !== 0 && t !== 1) {
+          res += defaultNumbers.substr(t * 5, 5) + ' mươi';
+          if (t === 0 && u !== 0) res += ' linh';
+        }
+        if (t === 1) res += ' mười';
+        switch (u) {
+          case 1: res += (t !== 0 && t !== 1) ? ' mốt' : defaultNumbers.substr(u * 5, 5); break;
+          case 5: res += (t === 0) ? defaultNumbers.substr(u * 5, 5) : ' lăm'; break;
+          default: if (u !== 0) res += defaultNumbers.substr(u * 5, 5); break;
+        }
+        return res;
+      }
+      let s = Math.round(n).toString();
+      while (s.length % 3 !== 0) s = '0' + s;
+      let groups = [];
+      for (let i = 0; i < s.length; i += 3) groups.push(s.substr(i, 3));
+      let out = '';
+      for (let i = 0; i < groups.length; i++) {
+        let g = readGroup(groups[i]);
+        if (g !== '') out += g + ' ' + units[groups.length - 1 - i] + ' ';
+      }
+      out = out.trim();
+      return out.charAt(0).toUpperCase() + out.slice(1);
+    }
+
+    // --- 19. EXPORT EXCEL (.xls) ---
+    function exportToExcel() {
+      const grandTotal = document.getElementById('grandTotalText').innerText;
+      let html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head><meta charset="utf-8"/></head>
+        <body>
+          <h2 style="color:#005baa; text-align:center;">${document.getElementById('appLogoSub').innerText}</h2>
+          <h3 style="text-align:center;">${document.getElementById('lblSummaryTitle').innerText}</h3>
+          <p><strong>Cấp điện áp:</strong> ${currentVoltage}</p>
+          <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%;">
+            <thead>
+              <tr style="background:#005baa; color:#ffffff;">
+                <th>Vị trí</th>
+                <th>Địa chỉ hiện trường</th>
+                <th>Vật liệu phụ (Kvlp)</th>
+                <th>Vật liệu Hotline (Kvlhl)</th>
+                <th>Nhân công (Knc)</th>
+                <th>Máy thi công (Kmtc)</th>
+                <th>Thành tiền vị trí</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${positions.map(p => {
+                const c = calculatePositionCost(p);
+                return `
+                  <tr>
+                    <td>${p.title || 'Vị trí ' + p.id}</td>
+                    <td>${p.address}</td>
+                    <td align="right">${formatMoney(c.subMat)}</td>
+                    <td align="right">${formatMoney(c.hotMat)}</td>
+                    <td align="right">${formatMoney(c.labor)}</td>
+                    <td align="right">${formatMoney(c.machine)}</td>
+                    <td align="right"><strong>${formatMoney(c.total)}</strong></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+          <br/>
+          <h3>TỔNG CỘNG DỰ TOÁN HOTLINE: ${grandTotal}</h3>
+        </body>
+        </html>
+      `;
+      const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Du-Toan-Hotline-EVNSPC-${Date.now()}.xls`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("Đã xuất tệp Excel thành công!");
+    }
+
+    // --- 20. INITIALIZATION ---
+    function renderAll() {
+      renderPositions();
+      renderAppendix();
+      renderSummary();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedAdminData();
+      populateModals();
+      renderAll();
+      const savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
+      setAppViewMode(savedMode);
+    });
+  </script>
+</body>
+</html>

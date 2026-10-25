@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>EVN PoleInspector - Quản Lý Trụ Điện & Lộ Trình Bảo Trì</title>
+    <meta name="description" content="Hệ thống kiểm tra hiện trạng cây trụ điện bằng AI Gemini, check-in GPS, tối ưu lộ trình di chuyển, phân bổ định mức xăng dầu và tính toán chi phí bảo trì." />
+    <meta property="og:title" content="EVN PoleInspector - Quản Lý Trụ Điện & Lộ Trình Bảo Trì" />
+    <meta property="og:description" content="Hệ thống kiểm tra hiện trạng cây trụ điện bằng AI Gemini, check-in GPS, tối ưu lộ trình di chuyển, phân bổ định mức xăng dầu và tính toán chi phí bảo trì." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      (function() {
+        if (typeof window === 'undefined') return;
+        window.global = window;
+        if (!window.process) window.process = { env: {} };
+
+        // 1. ResizeObserver polyfill for iOS Safari / in-app WebViews
+        if (!window.ResizeObserver) {
+          window.ResizeObserver = class ResizeObserver {
+            constructor(callback) { this.cb = callback; }
+            observe() {}
+            unobserve() {}
+            disconnect() {}
+          };
+        }
+
+        // 2. requestIdleCallback polyfill for iOS Safari < 16.4
+        if (!window.requestIdleCallback) {
+          window.requestIdleCallback = function(cb) {
+            var start = Date.now();
+            return setTimeout(function() {
+              cb({
+                didTimeout: false,
+                timeRemaining: function() {
+                  return Math.max(0, 50 - (Date.now() - start));
+                }
+              });
+            }, 1);
+          };
+          window.cancelIdleCallback = function(id) { clearTimeout(id); };
+        }
+
+        // 3. matchMedia addListener fallback for older Safari
+        if (window.matchMedia) {
+          var m = window.matchMedia('(min-width: 0px)');
+          if (m && !m.addEventListener && m.addListener) {
+            var origMatchMedia = window.matchMedia;
+            window.matchMedia = function(query) {
+              var res = origMatchMedia.call(window, query);
+              if (res && !res.addEventListener) {
+                res.addEventListener = function(type, fn) { if (type === 'change') res.addListener(fn); };
+                res.removeEventListener = function(type, fn) { if (type === 'change') res.removeListener(fn); };
+              }
+              return res;
+            };
+          }
+        }
+
+        // 4. Safe localStorage fallback if private browsing or file:// blocks storage
+        try {
+          var testKey = '__test_storage__';
+          window.localStorage.setItem(testKey, testKey);
+          window.localStorage.removeItem(testKey);
+        } catch (e) {
+          console.warn('localStorage blocked or insecure context. Using memory storage fallback.');
+          var mem = {};
+          try {
+            Object.defineProperty(window, 'localStorage', {
+              value: {
+                getItem: function(k) { return mem.hasOwnProperty(k) ? mem[k] : null; },
+                setItem: function(k, v) { mem[k] = String(v); },
+                removeItem: function(k) { delete mem[k]; },
+                clear: function() { mem = {}; },
+                key: function(i) { return Object.keys(mem)[i] || null; },
+                get length() { return Object.keys(mem).length; }
+              },
+              configurable: true,
+              writable: true
+            });
+          } catch (e2) {}
+        }
+        // 5. Object.hasOwn and structuredClone polyfills for iOS Safari < 15.4
+        if (!Object.hasOwn) {
+          Object.hasOwn = function(obj, prop) {
+            return Object.prototype.hasOwnProperty.call(obj, prop);
+          };
+        }
+        if (typeof window.structuredClone !== 'function') {
+          window.structuredClone = function(obj) {
+            return JSON.parse(JSON.stringify(obj));
+          };
+        }
+
+        // 6. crypto.randomUUID polyfill for iOS Safari < 15.4 and insecure contexts
+        if (!window.crypto) {
+          window.crypto = {};
+        }
+        if (!window.crypto.randomUUID) {
+          window.crypto.randomUUID = function() {
+            return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, function(c) {
+              return (c ^ (crypto.getRandomValues ? crypto.getRandomValues(new Uint8Array(1))[0] : Math.floor(Math.random() * 256)) & (15 >> (c / 4))).toString(16);
+            });
+          };
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

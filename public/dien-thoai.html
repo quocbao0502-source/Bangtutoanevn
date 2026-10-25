@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>Xem giao diện điện thoại · EVN PoleInspector</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#e2e8f0;color:#0f172a;font:14px/1.6 system-ui,sans-serif}
+    header{padding:20px;text-align:center;background:#0f172a;color:white}h1{margin:0;font-size:20px}p{margin:6px 0}
+    select,a{display:inline-block;padding:8px 12px;border-radius:8px;margin:6px;background:white;color:#0f172a;border:1px solid #cbd5e1}
+    .device{box-sizing:content-box;width:390px;max-width:calc(100% - 16px);height:800px;max-height:85dvh;margin:24px auto;border:8px solid #0f172a;border-radius:30px;overflow:hidden;background:white;box-shadow:0 20px 50px #0f172a33}
+    iframe{width:100%;height:100%;border:0}footer{max-width:640px;margin:20px auto;padding:16px;text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Xem giao diện điện thoại</h1>
+    <p>Khung xem dùng cùng ứng dụng và dữ liệu trên trình duyệt này.</p>
+    <label for="width">Chiều rộng màn hình</label>
+    <select id="width"><option value="390">390 px</option><option value="360">360 px</option><option value="430">430 px</option><option value="768">768 px · Máy tính bảng</option></select>
+    <a href="/">Mở toàn màn hình</a>
+  </header>
+  <div class="device" id="device"><iframe src="/" title="Ứng dụng EVN ở kích thước điện thoại"></iframe></div>
+  <footer><p>Để xem trên điện thoại thật, dùng địa chỉ mạng LAN trong tệp <strong>TRUY-CAP.txt</strong> khi điện thoại và máy tính cùng Wi-Fi.</p><p>Đây là khung kiểm tra bố cục; camera và GPS cần kiểm tra trên thiết bị thật qua HTTPS.</p></footer>
+  <script>document.getElementById('width').addEventListener('change',e=>document.getElementById('device').style.width=e.target.value+'px');</script>
+</body>
+</html>
