@@ -1558,7 +1558,7 @@
       <div class="modal-body">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <p style="color:#64748b; font-size:11px;">Đơn giá định mức công tác Hotline:</p>
-          <button class="admin-pill-btn" style="background:#0284c7;" onclick="adminAddNewTask()">➕ Thêm công việc mới</button>
+          <button class="admin-pill-btn" style="background:#0284c7;" onclick="openAddNewTaskModal()">➕ Thêm công việc mới</button>
         </div>
         <div id="masterWorkList" style="display:flex; flex-direction:column; gap:8px;"></div>
       </div>
@@ -1704,6 +1704,79 @@
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
         <button class="btn-pos-action" onclick="closeCondDetailModal()">Hủy</button>
         <button class="btn-pos-action" style="background:#b45309; color:#fff;" onclick="saveCondDetail()">💾 Lưu hệ số điều chỉnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM MODAL THÊM / SỬA ĐỊNH MỨC CÔNG VIỆC CHI TIẾT -->
+  <div class="quick-edit-modal" id="taskDetailModal">
+    <div class="quick-edit-card" style="max-width: 480px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4 style="font-size:14px; font-weight:800; color:#005baa;" id="taskModalTitle">✏️ Sửa định mức công việc</h4>
+        <button style="border:none; background:none; font-size:20px; cursor:pointer;" onclick="closeTaskDetailModal()">&times;</button>
+      </div>
+
+      <!-- Tên công việc (có 10 ký tự nhận diện) -->
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+          Tên công việc & Mã định mức (Chứa 10 ký tự nhận diện EVN):
+        </label>
+        <input type="text" class="quick-edit-input" id="inpTaskName" placeholder="Ví dụ: 16.01.01-1.0 - Thay sứ đứng hotline 22kV" oninput="updateTaskPrefixPreview()">
+        <div style="font-size:10px; color:#0284c7; margin-top:3px; font-weight:600;" id="txtTaskPrefixPreview">
+          10 ký tự nhận diện: <em>(Chưa có)</em>
+        </div>
+      </div>
+
+      <!-- ĐVT & Cấp điện áp -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+            Đơn vị tính (ĐVT):
+          </label>
+          <input type="text" class="quick-edit-input" id="inpTaskUnit" placeholder="Bộ, Quả, Trụ, Khoảng, Mối...">
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+            Cấp điện áp áp dụng:
+          </label>
+          <select class="quick-edit-input" id="inpTaskVolt">
+            <option value="22kV">22kV (Trung thế)</option>
+            <option value="12,7kV">12,7kV (1 pha)</option>
+            <option value="Tất cả">Tất cả cấp điện áp</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 4 thành phần đơn giá cơ sở -->
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+          Đơn giá 4 thành phần định mức cơ sở (VNĐ):
+        </label>
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px;">
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#7e22ce;">🟣 Vật liệu phụ (VL phụ):</span>
+            <input type="number" step="1000" class="quick-edit-input" style="padding:6px; font-weight:700;" id="inpTaskMatSub" value="0">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#b91c1c;">🔴 Vật liệu Hotline (VLHL):</span>
+            <input type="number" step="1000" class="quick-edit-input" style="padding:6px; font-weight:700;" id="inpTaskMatHotline" value="0">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#1d4ed8;">🔵 Nhân công Hotline (NC):</span>
+            <input type="number" step="1000" class="quick-edit-input" style="padding:6px; font-weight:700;" id="inpTaskLabor" value="0">
+          </div>
+          <div>
+            <span style="font-size:10px; font-weight:700; color:#c2410c;">🟠 Máy thi công (MTC):</span>
+            <input type="number" step="1000" class="quick-edit-input" style="padding:6px; font-weight:700;" id="inpTaskMachine" value="0">
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" id="editingTaskId" value="">
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button class="btn-pos-action" onclick="closeTaskDetailModal()">Hủy</button>
+        <button class="btn-pos-action" style="background:#005baa; color:#fff;" onclick="saveTaskDetail()">💾 Lưu định mức công việc</button>
       </div>
     </div>
   </div>
@@ -2797,61 +2870,116 @@
     }
 
     // --- 14. QUẢN LÝ ĐỊNH MỨC CÔNG VIỆC, NHIÊN LIỆU, NHÂN CÔNG ---
-    function adminEditTask(taskId) {
+    function updateTaskPrefixPreview() {
+      const val = document.getElementById('inpTaskName') ? document.getElementById('inpTaskName').value : '';
+      const prefix = get10Prefix(val);
+      const el = document.getElementById('txtTaskPrefixPreview');
+      if (!el) return;
+      if (prefix) {
+        el.innerHTML = `10 ký tự nhận diện liên kết: <strong style="color:#0284c7; background:#e0f2fe; padding:2px 6px; border-radius:4px;">[${prefix}]</strong>`;
+      } else {
+        el.innerHTML = `10 ký tự nhận diện liên kết: <em>(Chưa đủ 10 ký tự)</em>`;
+      }
+    }
+
+    function openEditTaskModal(taskId) {
       const task = MASTER_TASKS.find(t => t.id === taskId);
       if (!task) return;
+      document.getElementById('taskModalTitle').innerText = '✏️ Sửa định mức công việc';
+      document.getElementById('editingTaskId').value = task.id;
+      document.getElementById('inpTaskName').value = task.name || '';
+      document.getElementById('inpTaskUnit').value = task.unit || 'Bộ';
+      document.getElementById('inpTaskVolt').value = task.volt || '22kV';
+      document.getElementById('inpTaskMatSub').value = task.matSub || 0;
+      document.getElementById('inpTaskMatHotline').value = task.matHotline || 0;
+      document.getElementById('inpTaskLabor').value = task.labor || 0;
+      document.getElementById('inpTaskMachine').value = task.machine || 0;
+      updateTaskPrefixPreview();
+      document.getElementById('taskDetailModal').classList.add('active');
+    }
 
-      const newName = prompt("Tên công việc:", task.name);
-      if (!newName) return;
-      const newMatSub = parseFloat(prompt("Đơn giá Vật liệu phụ (đ):", task.matSub)) || 0;
-      const newMatHotline = parseFloat(prompt("Đơn giá Vật liệu Hotline (đ):", task.matHotline)) || 0;
-      const newLabor = parseFloat(prompt("Đơn giá Nhân công (đ):", task.labor)) || 0;
-      const newMachine = parseFloat(prompt("Đơn giá Máy thi công (đ):", task.machine)) || 0;
+    function openAddNewTaskModal() {
+      document.getElementById('taskModalTitle').innerText = '➕ Thêm định mức công việc mới';
+      document.getElementById('editingTaskId').value = '';
+      document.getElementById('inpTaskName').value = '16.01.07-1.0 - ';
+      document.getElementById('inpTaskUnit').value = 'Bộ';
+      document.getElementById('inpTaskVolt').value = currentVoltage || '22kV';
+      document.getElementById('inpTaskMatSub').value = 50000;
+      document.getElementById('inpTaskMatHotline').value = 150000;
+      document.getElementById('inpTaskLabor').value = 400000;
+      document.getElementById('inpTaskMachine').value = 200000;
+      updateTaskPrefixPreview();
+      document.getElementById('taskDetailModal').classList.add('active');
+    }
 
-      task.name = newName;
-      task.matSub = newMatSub;
-      task.matHotline = newMatHotline;
-      task.labor = newLabor;
-      task.machine = newMachine;
+    function closeTaskDetailModal() {
+      document.getElementById('taskDetailModal').classList.remove('active');
+    }
 
-      showToast(`Đã lưu thay đổi cho công việc ${taskId}!`);
+    function saveTaskDetail() {
+      const taskId = document.getElementById('editingTaskId').value;
+      const name = document.getElementById('inpTaskName').value.trim();
+      const unit = document.getElementById('inpTaskUnit').value.trim() || 'Bộ';
+      const volt = document.getElementById('inpTaskVolt').value || '22kV';
+      const matSub = parseFloat(document.getElementById('inpTaskMatSub').value) || 0;
+      const matHotline = parseFloat(document.getElementById('inpTaskMatHotline').value) || 0;
+      const labor = parseFloat(document.getElementById('inpTaskLabor').value) || 0;
+      const machine = parseFloat(document.getElementById('inpTaskMachine').value) || 0;
+
+      if (!name) {
+        alert("Vui lòng nhập tên công việc định mức!");
+        return;
+      }
+
+      if (taskId) {
+        // Cập nhật công việc hiện có
+        const task = MASTER_TASKS.find(t => t.id === taskId);
+        if (task) {
+          task.name = name;
+          task.unit = unit;
+          task.volt = volt;
+          task.matSub = matSub;
+          task.matHotline = matHotline;
+          task.labor = labor;
+          task.machine = machine;
+          showToast(`Đã lưu thay đổi định mức: ${name}`);
+        }
+      } else {
+        // Thêm công việc mới
+        const newId = name.split(' ')[0] || ('CV' + String(Date.now()).slice(-4));
+        MASTER_TASKS.push({
+          id: newId,
+          name: name,
+          unit: unit,
+          volt: volt,
+          matSub: matSub,
+          matHotline: matHotline,
+          labor: labor,
+          machine: machine
+        });
+        showToast(`Đã thêm mới định mức thành công!`);
+      }
+
+      closeTaskDetailModal();
       populateModals();
       renderAll();
       saveAllAdminData();
     }
 
-    function adminDeleteTask(taskId) {
-      if (!confirm(`Bạn có chắc muốn xóa công việc ${taskId} khỏi danh mục?`)) return;
-      MASTER_TASKS = MASTER_TASKS.filter(t => t.id !== taskId);
-      showToast(`Đã xóa công việc ${taskId}!`);
-      populateModals();
-      renderAll();
-      saveAllAdminData();
+    function adminEditTask(taskId) {
+      openEditTaskModal(taskId);
     }
 
     function adminAddNewTask() {
-      const name = prompt("Nhập tên công việc mới (Nên có 10 ký tự mã, ví dụ 16.01.07-1.0 - ...):", "16.01.07-1.0 - ");
-      if (!name) return;
-      const unit = prompt("Đơn vị tính (Quả, Trụ, Bộ, Mối...):", "Bộ") || "Bộ";
-      const volt = prompt("Cấp điện áp áp dụng (22kV hoặc 12,7kV):", currentVoltage) || currentVoltage;
-      const labor = parseFloat(prompt("Đơn giá Nhân công (đ):", "400000")) || 400000;
-      const matHotline = parseFloat(prompt("Đơn giá Vật liệu Hotline (đ):", "150000")) || 150000;
-      const matSub = parseFloat(prompt("Đơn giá Vật liệu phụ (đ):", "50000")) || 50000;
-      const machine = parseFloat(prompt("Đơn giá Máy thi công (đ):", "200000")) || 200000;
+      openAddNewTaskModal();
+    }
 
-      const newId = name.split(' ')[0] || ('CV' + String(Date.now()).slice(-4));
-      MASTER_TASKS.push({
-        id: newId,
-        name: name,
-        unit: unit,
-        volt: volt,
-        labor: labor,
-        matHotline: matHotline,
-        matSub: matSub,
-        machine: machine
-      });
-
-      showToast("Đã thêm công việc mới thành công!");
+    function adminDeleteTask(taskId) {
+      const task = MASTER_TASKS.find(t => t.id === taskId);
+      const taskName = task ? task.name : taskId;
+      if (!confirm(`Bạn có chắc muốn xóa công việc định mức:\n"${taskName}" khỏi danh mục?`)) return;
+      MASTER_TASKS = MASTER_TASKS.filter(t => t.id !== taskId);
+      showToast(`Đã xóa công việc ${taskId}!`);
       populateModals();
       renderAll();
       saveAllAdminData();
@@ -2889,24 +3017,25 @@
       document.getElementById('masterWorkList').innerHTML = MASTER_TASKS.map(t => {
         const prefix10 = get10Prefix(t.name);
         return `
-          <div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px; background:#f8fafc;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-              <div>
-                <div style="font-weight:700; color:#0f172a;">${t.name} <span style="color:#0284c7; font-size:10px;">[${t.volt}]</span></div>
-                <span class="cond-prefix-tag" style="margin-top:2px; display:inline-block;">Mã 10 ký tự: ${prefix10}</span>
-              </div>
-              ${isAdminMode ? `
-                <div style="display:flex; gap:4px;">
-                  <button class="admin-edit-btn" onclick="adminEditTask('${t.id}')">✏️ Sửa</button>
-                  <button class="admin-delete-btn" onclick="adminDeleteTask('${t.id}')">🗑</button>
+          <div style="border:1px solid #e2e8f0; border-radius:8px; padding:10px; background:#f8fafc; transition:all 0.2s; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+              <div style="flex:1;">
+                <div style="font-weight:700; color:#0f172a; font-size:13px; line-height:1.4;">${t.name} <span style="color:#0284c7; font-size:10px; font-weight:700; background:#e0f2fe; padding:1px 5px; border-radius:4px;">[${t.volt}]</span></div>
+                <div style="display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
+                  <span class="cond-prefix-tag" style="display:inline-block; font-size:10px;">Mã 10 ký tự: ${prefix10 || 'Không có'}</span>
+                  <span style="font-size:11px; color:#475569; font-weight:600;">ĐVT: <strong>${t.unit}</strong></span>
                 </div>
-              ` : ''}
+              </div>
+              <div style="display:flex; gap:6px; flex-shrink:0;">
+                <button class="admin-edit-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:3px;" onclick="openEditTaskModal('${t.id}')">✏️ Sửa</button>
+                <button class="admin-delete-btn" style="background:#ef4444; color:#fff; border:none; padding:4px 7px; border-radius:4px; font-size:11px; cursor:pointer;" onclick="adminDeleteTask('${t.id}')" title="Xóa">🗑</button>
+              </div>
             </div>
-            <div style="font-size:11px; color:#64748b; margin-top:4px; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
-              <span>ĐVT: ${t.unit}</span>
-              <span>Vật liệu phụ: ${formatMoney(t.matSub)}đ</span>
-              <span>Vật liệu Hotline: ${formatMoney(t.matHotline)}đ</span>
-              <span>Nhân công: ${formatMoney(t.labor)}đ</span>
+            <div style="font-size:11px; margin-top:8px; display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:6px; background:#fff; padding:6px 8px; border-radius:6px; border:1px solid #edf2f7;">
+              <div style="color:#7e22ce;"><span style="font-weight:600;">VL phụ:</span> ${formatMoney(t.matSub || 0)}đ</div>
+              <div style="color:#b91c1c;"><span style="font-weight:600;">VL Hotline:</span> ${formatMoney(t.matHotline || 0)}đ</div>
+              <div style="color:#1d4ed8;"><span style="font-weight:600;">Nhân công:</span> ${formatMoney(t.labor || 0)}đ</div>
+              <div style="color:#c2410c;"><span style="font-weight:600;">Máy TC:</span> ${formatMoney(t.machine || 0)}đ</div>
             </div>
           </div>
         `;
@@ -2921,7 +3050,7 @@
           <td>${f.name}</td>
           <td style="text-align:center; font-weight:700;">${f.rate} lít / 100km</td>
           <td style="text-align:center;">
-            ${isAdminMode ? `<button class="admin-edit-btn" onclick="adminEditFuel('${f.id}')">✏️ Sửa định mức</button>` : '-'}
+            <button class="admin-edit-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;" onclick="adminEditFuel('${f.id}')">✏️ Sửa định mức</button>
           </td>
         </tr>
       `).join('');
@@ -2932,7 +3061,7 @@
           <td>${l.title}</td>
           <td class="num">${formatMoney(l.wage)}</td>
           <td style="text-align:center;">
-            ${isAdminMode ? `<button class="admin-edit-btn" onclick="adminEditLabor('${l.id}')">✏️ Sửa đơn giá</button>` : '-'}
+            <button class="admin-edit-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;" onclick="adminEditLabor('${l.id}')">✏️ Sửa đơn giá</button>
           </td>
         </tr>
       `).join('');
