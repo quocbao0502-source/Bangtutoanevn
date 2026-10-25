@@ -1521,21 +1521,31 @@
 
           <!-- Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông -->
           <div class="appendix-title editable-field" id="lblAppx5Title" onclick="adminQuickEdit('lblAppx5Title', 'Tiêu đề Phụ lục 5:')">Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
-              <label style="font-size:11px; font-weight:700; color:#334155;">Giá ca máy (đ):</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftPrice" value="1250000" step="50000" onchange="renderAll()">
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
+                Giá ca máy (đ): <span id="lblLockMachinePrice" style="color:#64748b; font-size:10px; font-weight:normal;">🔒 Admin</span>
+              </label>
+              <input type="number" class="fuel-price-input" style="width:100%; background:#f1f5f9; cursor:not-allowed;" id="machineShiftPrice" value="1250000" step="50000" readonly onchange="renderAll()" onclick="if(!isAdminMode) showToast('🔒 Chỉ Admin/Mod mới có quyền thay đổi Giá ca máy!');" title="Chỉ Admin/Mod mới được thay đổi giá ca máy">
             </div>
             <div>
-              <label style="font-size:11px; font-weight:700; color:#334155;">Số ca máy chọn:</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="1" min="1" max="50" onchange="renderAll()">
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số ca máy max:</label>
+              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.000" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số ca máy chọn:</label>
+              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="0.5" step="0.05" min="0" oninput="this.dataset.userEdited='true'; renderAll();" title="Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn 0.5">
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Tổng số lần thực hiện:</label>
+              <input type="number" class="fuel-price-input" style="width:100%" id="barrierTimes" value="1" min="1" step="1" onchange="renderAll()">
             </div>
           </div>
           <div class="table-responsive-wrapper">
             <table class="appendix-table">
               <thead>
                 <tr>
-                  <th>Hạng mục rào chắn</th>
+                  <th style="text-align:left;">Nội dung công việc</th>
                   <th>Số lượng</th>
                   <th>Đơn giá (đ)</th>
                   <th>Thành tiền (đ)</th>
@@ -1549,11 +1559,21 @@
 
           <!-- Phụ lục 6: Bảng tính chi phí khảo sát -->
           <div class="appendix-title editable-field" id="lblAppx6Title" onclick="adminQuickEdit('lblAppx6Title', 'Tiêu đề Phụ lục 6:')">Phụ lục 6: Bảng tính chi phí khảo sát</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số công thực hiện:</label>
+              <input type="number" class="fuel-price-input" style="width:100%" id="surveyWorkDays" value="2" min="0.5" step="0.5" onchange="renderAll()">
+            </div>
+            <div>
+              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Km khảo sát (Vị trí 1):</label>
+              <input type="text" class="fuel-price-input" style="width:100%; background:#f1f5f9; font-weight:700; color:#334155;" id="surveyKmText" value="15.0 km" readonly>
+            </div>
+          </div>
           <div class="table-responsive-wrapper">
             <table class="appendix-table">
               <thead>
                 <tr>
-                  <th>Nội dung khảo sát</th>
+                  <th style="text-align:left;">Nội dung khảo sát</th>
                   <th>Đơn vị</th>
                   <th>Khối lượng</th>
                   <th>Thành tiền (đ)</th>
@@ -3051,6 +3071,18 @@
         banner.classList.remove('show');
         showToast("Đã chuyển về chế độ Xem thông thường.");
       }
+
+      const machinePriceInp = document.getElementById('machineShiftPrice');
+      const lockMachineLbl = document.getElementById('lblLockMachinePrice');
+      if (machinePriceInp) {
+        machinePriceInp.readOnly = !isAdminMode;
+        machinePriceInp.style.background = isAdminMode ? '#ffffff' : '#f1f5f9';
+        machinePriceInp.style.cursor = isAdminMode ? 'text' : 'not-allowed';
+      }
+      if (lockMachineLbl) {
+        lockMachineLbl.innerText = isAdminMode ? '🔓 Admin (Được sửa)' : '🔒 Admin';
+      }
+
       populateModals();
       renderAll();
     }
@@ -3932,27 +3964,50 @@
       `;
 
       // Phụ lục 5: Rào chắn & cảnh giới giao thông
-      // Lấy đơn giá nhân công cảnh giới từ bảng LABOR_NORMS (ưu tiên bậc 3/7 hoặc bậc đầu tiên)
+      // 1. Tính tổng thành tiền máy thi công từ tất cả các vị trí
+      let totalMachineAllPos = 0;
+      positions.forEach(p => {
+        const c = calculatePositionCost(p);
+        totalMachineAllPos += c.machine;
+      });
+
+      // 2. Tính số ca máy max = Thành tiền tổng các vị trí của Máy thi công / Giá ca máy
+      const maxMachineShifts = machineShiftPrice > 0 ? (totalMachineAllPos / machineShiftPrice) : 0;
+      const shiftMaxInp = document.getElementById('machineShiftMax');
+      if (shiftMaxInp) {
+        shiftMaxInp.value = maxMachineShifts.toFixed(3);
+      }
+
+      // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5
+      const autoShiftCount = (maxMachineShifts <= 0.5) ? (Math.round(maxMachineShifts * 1000) / 1000) : 0.5;
+      const countInp = document.getElementById('machineShiftCount');
+      let selectedShifts = autoShiftCount;
+      if (countInp) {
+        if (countInp.dataset && !countInp.dataset.userEdited) {
+          countInp.value = autoShiftCount;
+          selectedShifts = autoShiftCount;
+        } else {
+          selectedShifts = parseFloat(countInp.value);
+          if (isNaN(selectedShifts) || selectedShifts < 0) selectedShifts = autoShiftCount;
+        }
+      }
+
+      // 4. Tổng số lần thực hiện (mặc định 1)
+      const barrierTimes = Math.max(1, parseInt(document.getElementById('barrierTimes')?.value, 10) || 1);
+
+      // 5. Đơn giá nhân công (thợ hotline bậc 3/7)
       const guardLabor = LABOR_NORMS.find(l => (l.title || '').includes('3/7')) || LABOR_NORMS[0];
       const guardLaborRate = guardLabor ? guardLabor.wage : 298431;
-      const guardTitle = guardLabor ? guardLabor.title : 'Thợ Bậc 3/7';
 
-      const barrierMachineCost = machineShiftPrice * machineShiftCount;
-      const barrierSafetyCost = guardLaborRate * machineShiftCount;
-      const totalBarrierCost = barrierMachineCost + barrierSafetyCost;
+      // 6. Cách tính: Tổng số ca máy x đơn giá nhân công bậc 3/7 x tổng số lần thực hiện
+      const totalBarrierCost = Math.round(selectedShifts * guardLaborRate * barrierTimes);
 
       document.getElementById('barrierTableBody').innerHTML = `
         <tr>
-          <td>Ca máy cảnh giới & lập rào chắn</td>
-          <td style="text-align:center;">${machineShiftCount} ca</td>
-          <td class="num">${formatMoney(machineShiftPrice)}</td>
-          <td class="num">${formatMoney(barrierMachineCost)}</td>
-        </tr>
-        <tr>
-          <td>Vật tư rào chắn & Nhân công cảnh giới (${guardTitle})</td>
-          <td style="text-align:center;">${machineShiftCount} ca</td>
+          <td><strong>Nhân công lập (thu dọn) rào chắn, cảnh giới giao thông (bậc 3,5/7 - nhóm I)</strong></td>
+          <td style="text-align:center; font-weight:700;">${selectedShifts} ca x ${barrierTimes} lần</td>
           <td class="num">${formatMoney(guardLaborRate)}</td>
-          <td class="num">${formatMoney(barrierSafetyCost)}</td>
+          <td class="num" style="font-weight:700;">${formatMoney(totalBarrierCost)}</td>
         </tr>
         <tr style="background:#eff6ff; font-weight:700;">
           <td colspan="3">Cộng chi phí rào chắn (Phụ lục 5)</td>
@@ -3961,33 +4016,45 @@
       `;
 
       // Phụ lục 6: Khảo sát hiện trường
-      // Lấy đơn giá thợ khảo sát từ bảng LABOR_NORMS (ưu tiên bậc 4/7 hoặc bậc thứ hai)
+      const surveyWorkDays = parseFloat(document.getElementById('surveyWorkDays')?.value) || 2;
+      const surveyKmInp = document.getElementById('surveyKmText');
+      if (surveyKmInp) surveyKmInp.value = `${pos1Km.toFixed(1)} km`;
+
+      // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7)
       const surveyLabor = LABOR_NORMS.find(l => (l.title || '').includes('4/7')) || LABOR_NORMS[1] || LABOR_NORMS[0];
       const surveyLaborRate = surveyLabor ? surveyLabor.wage : 394809;
-      const surveyTitle = surveyLabor ? surveyLabor.title : 'Thợ Bậc 4/7';
+      const costSurveyLabor = Math.round(surveyWorkDays * surveyLaborRate);
 
-      const surveyPeople = 2;
-      const surveyDays = Math.max(1, Math.ceil(positions.length / 5));
-      const totalSurveyDays = surveyPeople * surveyDays;
-      const surveyCost = totalSurveyDays * surveyLaborRate;
+      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải x km ở vị trí 1 x giá dầu
+      const pickupTruck = FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) || FUEL_NORMS[0];
+      const pickupRate = pickupTruck ? pickupTruck.rate : 12.5;
+      const costSurveyTransport = Math.round((pickupRate / 100) * pos1Km * effectiveFuelPrice);
+
+      const totalSurveyCost = costSurveyLabor + costSurveyTransport;
 
       document.getElementById('surveyTableBody').innerHTML = `
         <tr>
-          <td>Khảo sát hiện trường trước khi thi công hotline (${surveyTitle})</td>
+          <td><strong>Nhân công thực hiện</strong> (Thợ Hotline Bậc 4/7)</td>
           <td style="text-align:center;">Công</td>
-          <td style="text-align:center;">${totalSurveyDays}</td>
-          <td class="num">${formatMoney(surveyCost)}</td>
+          <td style="text-align:center; font-weight:700;">${surveyWorkDays}</td>
+          <td class="num">${formatMoney(costSurveyLabor)}</td>
+        </tr>
+        <tr>
+          <td><strong>Vận chuyển phục vụ khảo sát</strong> (Xe bán tải ${pickupRate} L/100km)</td>
+          <td style="text-align:center;">km</td>
+          <td style="text-align:center; font-weight:700;">${pos1Km.toFixed(1)}</td>
+          <td class="num">${formatMoney(costSurveyTransport)}</td>
         </tr>
         <tr style="background:#eff6ff; font-weight:700;">
           <td colspan="3">Cộng chi phí khảo sát (Phụ lục 6)</td>
-          <td class="num" style="color:#005baa;">${formatMoney(surveyCost)} đ</td>
+          <td class="num" style="color:#005baa;">${formatMoney(totalSurveyCost)} đ</td>
         </tr>
       `;
 
       return {
         transportCost: totalTransportCost,
         barrierCost: totalBarrierCost,
-        surveyCost: surveyCost
+        surveyCost: totalSurveyCost
       };
     }
 
@@ -4582,6 +4649,9 @@
         fuelPrice: document.getElementById('fuelPrice') ? document.getElementById('fuelPrice').value : '21500',
         fuelTax: document.getElementById('fuelTax') ? document.getElementById('fuelTax').value : '0',
         fuelTrips: document.getElementById('fuelTrips') ? document.getElementById('fuelTrips').value : '1',
+        machineShiftPrice: document.getElementById('machineShiftPrice') ? document.getElementById('machineShiftPrice').value : '1250000',
+        barrierTimes: document.getElementById('barrierTimes') ? document.getElementById('barrierTimes').value : '1',
+        surveyWorkDays: document.getElementById('surveyWorkDays') ? document.getElementById('surveyWorkDays').value : '2',
         appLogoTitle: document.getElementById('appLogoTitle').innerText,
         appLogoSub: document.getElementById('appLogoSub').innerText,
         appBadgeText: document.getElementById('appBadgeText').innerText,
@@ -4622,6 +4692,9 @@
         if (d.fuelPrice && document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = d.fuelPrice;
         if (d.fuelTax !== undefined && document.getElementById('fuelTax')) document.getElementById('fuelTax').value = d.fuelTax;
         if (d.fuelTrips && document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = d.fuelTrips;
+        if (d.machineShiftPrice && document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = d.machineShiftPrice;
+        if (d.barrierTimes && document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = d.barrierTimes;
+        if (d.surveyWorkDays && document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = d.surveyWorkDays;
 
         if (d.appLogoTitle) document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
         if (d.appLogoSub) document.getElementById('appLogoSub').innerText = d.appLogoSub;
@@ -4680,6 +4753,11 @@
       if (document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = '21500';
       if (document.getElementById('fuelTax')) document.getElementById('fuelTax').value = '0';
       if (document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = '1';
+      if (document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = '1250000';
+      if (document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = '1';
+      if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '2';
+      const countInpReset = document.getElementById('machineShiftCount');
+      if (countInpReset && countInpReset.dataset) delete countInpReset.dataset.userEdited;
       window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
 
       document.getElementById('appLogoTitle').innerText = 'EVNSPC';
