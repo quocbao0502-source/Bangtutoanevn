@@ -1968,11 +1968,11 @@ chỗ<!DOCTYPE html>
         <section class="block-card">
           <div class="block-badge-num editable-field" id="badgeBlock3" onclick="editBlockBadge('badgeBlock3', 3)" title="Bấm vào để đổi tên đề mục 3">3</div>
 
-          <!-- KHUNG NƠI TÍNH KHOẢNG CÁCH DI CHUYỂN (2 HÀNG ĐỂ CHỌN) -->
+          <!-- KHUNG ĐIỂM XUẤT PHÁT (TRỤ SỞ CHÍNH & CƠ SỞ 2) -->
           <div class="depot-config-card" id="depotConfigCard" style="margin-bottom:14px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
               <div style="font-size:12px; font-weight:800; color:#005baa; display:flex; align-items:center; gap:6px;">
-                🏢 <span>Nơi tính khoảng cách di chuyển (Check-in & Phụ lục 4, 6):</span>
+                🏢 <span>Điểm xuất phát:</span>
               </div>
               <div style="font-size:11px; color:#64748b; font-style:italic;" id="lblDepotEditHint">
                 🔒 Admin/Mod mới được điền địa chỉ & km
@@ -1980,38 +1980,38 @@ chỗ<!DOCTYPE html>
             </div>
 
             <div style="display:flex; flex-direction:column; gap:8px;">
-              <!-- HÀNG 1: Số 441 đường 30 tháng 4... (Mặc định) -->
+              <!-- HÀNG 1: Trụ sở chính (Số 441 đường 30 tháng 4...) -->
               <label class="depot-row-label" id="depotRow1" style="display:flex; align-items:center; justify-content:space-between; background:#f0f9ff; border:1.5px solid #0284c7; border-radius:8px; padding:8px 12px; cursor:pointer; gap:10px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
                   <input type="radio" name="depotChoice" id="depotRadio1" value="1" checked onchange="onSelectDepot(1)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
-                  <span style="font-weight:700; color:#0369a1; font-size:12px; white-space:nowrap;">Hàng 1:</span>
+                  <span style="font-weight:700; color:#0369a1; font-size:12px; white-space:nowrap;">Trụ sở chính:</span>
                   <input type="text" id="depotAddr1" class="depot-addr-inp" value="Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
-                         readonly onchange="saveAllAdminData()" title="Địa chỉ cơ sở 1 (Admin điền)">
+                         readonly onchange="saveAllAdminData()" title="Địa chỉ Trụ sở chính (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
-                  <span style="font-size:11px; color:#64748b; font-weight:600;">Mặc định:</span>
+                  <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
                   <input type="number" id="depotKm1" class="depot-km-inp" value="15" min="0" step="1" 
                          style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#0284c7; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
-                         readonly onchange="onDepotKmChange(1)" title="Số km mặc định khi không check-in">
+                         readonly onchange="onDepotKmChange(1)" title="Khoảng cách đến Trụ sở chính (km)">
                   <span style="font-size:12px; font-weight:700; color:#0369a1;">km</span>
                 </div>
               </label>
 
-              <!-- HÀNG 2: Địa điểm 2 (Admin/Mod tự điền) -->
+              <!-- HÀNG 2: Cơ sở 2 -->
               <label class="depot-row-label" id="depotRow2" style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:8px; padding:8px 12px; cursor:pointer; gap:10px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
                   <input type="radio" name="depotChoice" id="depotRadio2" value="2" onchange="onSelectDepot(2)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
-                  <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Hàng 2:</span>
+                  <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Cơ sở 2:</span>
                   <input type="text" id="depotAddr2" class="depot-addr-inp" value="Cơ sở 2 - Trạm phụ trợ (Admin điền)" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
-                         readonly onchange="saveAllAdminData()" title="Địa chỉ cơ sở 2 (Admin điền)">
+                         readonly onchange="saveAllAdminData()" title="Địa chỉ Cơ sở 2 (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
-                  <span style="font-size:11px; color:#64748b; font-weight:600;">Mặc định:</span>
+                  <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
                   <input type="number" id="depotKm2" class="depot-km-inp" value="25" min="0" step="1" 
                          style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#475569; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
-                         readonly onchange="onDepotKmChange(2)" title="Số km mặc định khi không check-in">
+                         readonly onchange="onDepotKmChange(2)" title="Khoảng cách đến Cơ sở 2 (km)">
                   <span style="font-size:12px; font-weight:700; color:#475569;">km</span>
                 </div>
               </label>
@@ -4105,8 +4105,8 @@ chỗ<!DOCTYPE html>
         return {
           id: 2,
           name: document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
-          lat: 11.350000,
-          lng: 106.120000,
+          lat: 11.185000,
+          lng: 106.350000,
           defaultKm: parseInt(document.getElementById('depotKm2')?.value, 10) || 25
         };
       }
@@ -4118,16 +4118,18 @@ chỗ<!DOCTYPE html>
       if (choice === 1 && radio1) radio1.checked = true;
       if (choice === 2 && radio2) radio2.checked = true;
 
-      const depot = getSelectedDepotInfo();
       updateDepotRowStyles(choice);
 
-      // Nếu chưa check-in thì tự động lấy số km mặc định của hàng đó áp dụng cho Vị trí 1 (Phụ lục 4 & 6)
-      if (positions[0] && !positions[0].checkedIn) {
-        positions[0].distanceKm = depot.defaultKm;
-        showToast(`🚗 Đã chọn [Hàng ${choice}]: Áp dụng ${depot.defaultKm} km cho Phụ lục 4 & 6.`);
+      const targetKm = (choice === 1) ? 
+        (parseInt(document.getElementById('depotKm1')?.value, 10) || 15) : 
+        (parseInt(document.getElementById('depotKm2')?.value, 10) || 25);
+      const depotName = (choice === 1) ? "Trụ sở chính" : "Cơ sở 2";
+
+      // Áp dụng số km của điểm xuất phát đã chọn cho Vị trí 1 (Phụ lục 4 & 6)
+      if (positions[0]) {
+        positions[0].distanceKm = targetKm;
+        showToast(`🏢 Đã chọn điểm xuất phát [${depotName}]: Áp dụng ${targetKm} km cho Phụ lục 4 & 6.`);
         renderAll();
-      } else if (positions[0]) {
-        showToast(`🏢 Đã chọn [Hàng ${choice}] làm nơi tính khoảng cách di chuyển.`);
       }
       saveAllAdminData();
     }
@@ -4139,7 +4141,7 @@ chỗ<!DOCTYPE html>
       }
       const isCurrentChoice = (choice === 1 && document.getElementById('depotRadio1')?.checked) ||
                               (choice === 2 && document.getElementById('depotRadio2')?.checked);
-      if (isCurrentChoice && positions[0] && !positions[0].checkedIn) {
+      if (isCurrentChoice && positions[0]) {
         positions[0].distanceKm = parseInt(kmInp.value, 10) || 0;
         renderAll();
       }
@@ -4173,7 +4175,36 @@ chỗ<!DOCTYPE html>
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
 
-      const depot = getSelectedDepotInfo();
+      const depot1 = { lat: 11.324902, lng: 106.102019, name: "Trụ sở chính" };
+      const depot2 = { lat: 11.185000, lng: 106.350000, name: "Cơ sở 2" };
+
+      function applyCheckin(lat, lng, isSimulated = false) {
+        pos.checkedIn = true;
+        pos.gps = `${lat}, ${lng}`;
+
+        // Tính khoảng cách đường bộ đến Trụ sở chính và Cơ sở 2 (số nguyên chẵn, không lấy số lẻ sau dấu phẩy)
+        const kmToMain = calculateRoadDistanceKm(lat, lng, depot1.lat, depot1.lng);
+        const kmToBranch = calculateRoadDistanceKm(lat, lng, depot2.lat, depot2.lng);
+
+        pos.kmToMain = kmToMain;
+        pos.kmToBranch = kmToBranch;
+
+        // Cập nhật hiển thị km đến Trụ sở chính và Cơ sở 2 trên 2 ô Khoảng cách
+        const kmInp1 = document.getElementById('depotKm1');
+        const kmInp2 = document.getElementById('depotKm2');
+        if (kmInp1) kmInp1.value = kmToMain;
+        if (kmInp2) kmInp2.value = kmToBranch;
+
+        // Xác định khoảng cách áp dụng cho Phụ lục 4 & 6 theo điểm xuất phát đang được chọn
+        const isChoice2 = document.getElementById('depotRadio2')?.checked ?? false;
+        pos.distanceKm = isChoice2 ? kmToBranch : kmToMain;
+        const currentDepotName = isChoice2 ? 'Cơ sở 2' : 'Trụ sở chính';
+
+        const simText = isSimulated ? ' (Mô phỏng GPS Tây Ninh)' : '';
+        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công${simText}!\n• Đến Trụ sở chính: ${kmToMain} km\n• Đến Cơ sở 2: ${kmToBranch} km\n(Đang chọn: [${currentDepotName}] = ${pos.distanceKm} km)`);
+        renderAll();
+        saveAllAdminData();
+      }
 
       if ("geolocation" in navigator) {
         showToast("🛰️ Đang lấy tọa độ GPS từ thiết bị...");
@@ -4181,34 +4212,18 @@ chỗ<!DOCTYPE html>
           (position) => {
             const lat = parseFloat(position.coords.latitude.toFixed(6));
             const lng = parseFloat(position.coords.longitude.toFixed(6));
-            pos.checkedIn = true;
-            pos.gps = `${lat}, ${lng}`;
-            // Tính số km đường bộ đến nơi check-in (số nguyên chẵn, không lấy số lẻ sau dấu phẩy)
-            const calcKm = calculateRoadDistanceKm(lat, lng, depot.lat, depot.lng);
-            pos.distanceKm = calcKm;
-            showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công! Cách [${depot.name.slice(0, 30)}...] ${calcKm} km.`);
-            renderAll();
+            applyCheckin(lat, lng, false);
           },
           (error) => {
             // Giả lập tọa độ thực tế tại khu vực Tây Ninh nếu trình duyệt chặn GPS
-            const sampleLat = 11.3665 + (Math.random() - 0.5) * 0.04;
-            const sampleLng = 106.1362 + (Math.random() - 0.5) * 0.04;
-            pos.checkedIn = true;
-            pos.gps = `${sampleLat.toFixed(6)}, ${sampleLng.toFixed(6)}`;
-            const calcKm = calculateRoadDistanceKm(sampleLat, sampleLng, depot.lat, depot.lng);
-            pos.distanceKm = calcKm;
-            showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in định vị ${calcKm} km (Mô phỏng GPS Tây Ninh).`);
-            renderAll();
+            const sampleLat = parseFloat((11.3665 + (Math.random() - 0.5) * 0.04).toFixed(6));
+            const sampleLng = parseFloat((106.1362 + (Math.random() - 0.5) * 0.04).toFixed(6));
+            applyCheckin(sampleLat, sampleLng, true);
           },
           { timeout: 8000 }
         );
       } else {
-        pos.checkedIn = true;
-        pos.gps = "11.366500, 106.136200";
-        const calcKm = calculateRoadDistanceKm(11.3665, 106.1362, depot.lat, depot.lng);
-        pos.distanceKm = calcKm;
-        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công! ${calcKm} km`);
-        renderAll();
+        applyCheckin(11.366500, 106.136200, true);
       }
     }
 
