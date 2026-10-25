@@ -832,63 +832,79 @@
       background: #f0f9ff;
     }
 
-    /* Multi condition check box list inside position - Dàn trải dạng thẻ bấm chọn trực tiếp */
+    /* Multi condition check box list inside position - Bố trí kiểu thẻ Shopee không ô vuông */
     .cond-picker-area {
-      background: #fefce8; /* Màu vàng nhạt êm dịu, không gây nhầm lẫn */
-      border: 1.5px solid #fde047; /* Viền vàng nhạt tươi sáng rõ ràng */
-      border-radius: 8px;
-      padding: 8px 10px;
-      max-height: 220px;
-      overflow-y: auto;
+      background: #fafafa; /* Nền xám sáng sạch sẽ chuẩn Shopee */
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
       display: flex;
-      flex-wrap: wrap; /* Dàn trải các điều kiện tự động chia ô */
-      gap: 6px;
-      align-items: stretch;
-      width: 100%; /* Dài bằng đúng với ô định mức bên trên */
+      flex-wrap: wrap; /* Dàn trải các thẻ tự nhiên như Shopee */
+      gap: 8px 10px;
+      align-items: center;
+      width: 100%;
       box-sizing: border-box;
-      box-shadow: inset 0 1px 3px rgba(202, 138, 4, 0.06);
+      min-height: 48px;
     }
     .cond-check-item {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 11.5px;
-      color: #713f12;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #27272a; /* Màu chữ xám đen chuẩn Shopee */
       cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: #ffffff;
-      border: 1.5px solid #fde047;
+      padding: 7px 14px;
+      border-radius: 8px; /* Bo góc mềm mại như thẻ đánh giá Shopee */
+      background: #f4f4f5; /* Màu xám nhạt Shopee */
+      border: 1px solid #e4e4e7;
       transition: all 0.18s ease;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       user-select: none;
       max-width: 100%;
       box-sizing: border-box;
+      line-height: 1.35;
+      position: relative;
     }
     .cond-check-item:hover {
-      background: #fef9c3; /* Vàng đậm hơn khi hover */
-      border-color: #facc15;
+      background: #e4e4e7;
+      border-color: #d4d4d8;
       transform: translateY(-1px);
     }
+    /* ẨN HOÀN TOÀN Ô VUÔNG CHECKBOX NHƯ HÌNH SHOPEE */
     .cond-check-item input[type="checkbox"] {
-      cursor: pointer;
-      accent-color: #005DBB;
-      width: 14px;
-      height: 14px;
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
       margin: 0;
-      flex-shrink: 0;
+      padding: 0;
+      pointer-events: none;
     }
+    /* Dấu tích ✓ khi được chọn */
+    .cond-check-item .cond-check-mark {
+      display: none;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+    }
+    /* Trạng thái đã chọn (Active / Selected) */
     .cond-check-item.selected,
     .cond-check-item:has(input:checked) {
-      background: #005DBB !important; /* Xanh Cavansite nổi bật khi được bấm chọn */
+      background: #005DBB !important; /* Xanh Cavansite nổi bật khi chọn */
       border-color: #004d9b !important;
       color: #ffffff !important;
-      box-shadow: 0 2px 6px rgba(0, 93, 187, 0.35);
+      box-shadow: 0 3px 10px rgba(0, 93, 187, 0.35);
+      transform: translateY(-1px);
     }
-    .cond-check-item.selected span,
-    .cond-check-item:has(input:checked) span {
+    .cond-check-item.selected .cond-tag-text,
+    .cond-check-item:has(input:checked) .cond-tag-text {
       color: #ffffff !important;
-      font-weight: 600;
+      font-weight: 700;
+    }
+    .cond-check-item.selected .cond-check-mark,
+    .cond-check-item:has(input:checked) .cond-check-mark {
+      display: inline-block;
     }
     .cond-check-item.selected .k-pill,
     .cond-check-item:has(input:checked) .k-pill {
@@ -5393,7 +5409,7 @@
       });
 
       if (matched.length === 0) {
-        condPickerArea.innerHTML = `<div style="font-size:11px; color:#a16207; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+        condPickerArea.innerHTML = `<div style="font-size:12px; color:#64748b; font-style:italic; padding:6px 8px;">(Hạng mục này không có hệ số điều chỉnh đặc thù)</div>`;
         return;
       }
 
@@ -5401,7 +5417,8 @@
         return `
           <label class="cond-check-item">
             <input type="checkbox" name="condChk_${posId}" value="${c.id}" onchange="this.closest('.cond-check-item').classList.toggle('selected', this.checked)">
-            <span>${c.name}</span>
+            <span class="cond-check-mark">✓</span>
+            <span class="cond-tag-text">${c.name}</span>
             <span class="k-pills" style="margin-top:0;">
               ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
               ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
@@ -5656,7 +5673,7 @@
                 ${filteredTasks.map(t => `<option value="${t.id}">${t.name} (${t.unit})</option>`).join('')}
               </select>
 
-              <label style="font-size:11px; font-weight:700; color:#854d0e; margin-top:8px; margin-bottom:3px; display:flex; align-items:center; gap:4px;">
+              <label style="font-size:12px; font-weight:700; color:#334155; margin-top:10px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
                 <span>⚡ Chọn hệ số điều chỉnh - Kđc (Điều kiện):</span>
               </label>
               <div class="cond-picker-area" id="condArea_${pos.id}">
@@ -5668,12 +5685,13 @@
                     return (firstPrefix.length >= 5 && cPrefix === firstPrefix);
                   });
                   if (matched.length === 0) {
-                    return `<div style="font-size:11px; color:#a16207; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+                    return `<div style="font-size:12px; color:#64748b; font-style:italic; padding:6px 8px;">(Hạng mục này không có hệ số điều chỉnh đặc thù)</div>`;
                   }
                   return matched.map(c => `
                     <label class="cond-check-item">
                       <input type="checkbox" name="condChk_${pos.id}" value="${c.id}" onchange="this.closest('.cond-check-item').classList.toggle('selected', this.checked)">
-                      <span>${c.name}</span>
+                      <span class="cond-check-mark">✓</span>
+                      <span class="cond-tag-text">${c.name}</span>
                       <span class="k-pills" style="margin-top:0;">
                         ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
                         ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
