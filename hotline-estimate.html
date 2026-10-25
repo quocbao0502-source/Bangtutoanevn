@@ -1463,6 +1463,11 @@
           <button class="btn-add-pos" id="btnAddPosition" onclick="addNewPosition()">
             <span style="font-size:16px;">➕</span> Thêm vị trí tiếp theo (Tối đa 20 vị trí)
           </button>
+
+          <!-- Bảng Thành tiền Tổng các vị trí -->
+          <div id="totalPositionsBox" style="margin-top:14px;">
+            <!-- Rendered by JS -->
+          </div>
         </section>
 
         <!-- BỐ CỤC 4: CÁC PHỤ LỤC (4, 5, 6) -->
@@ -3116,6 +3121,9 @@
       const val = document.getElementById('quickEditVal').value;
       if (el) {
         el.innerText = val;
+        if (currentEditTargetId === 'lblTotalPositionsTitle') {
+          window._savedTotalPosTitle = val;
+        }
         showToast("Đã cập nhật mục!");
         saveAllAdminData();
       }
@@ -3825,6 +3833,58 @@
           </div>
         `;
       }).join('');
+
+      // Tính toán Thành tiền Tổng các vị trí (Tổng các vị trí 1..N hoặc chính là vị trí 1 nếu chỉ có 1 vị trí)
+      let allSubMat = 0;
+      let allHotMat = 0;
+      let allLabor = 0;
+      let allMachine = 0;
+
+      positions.forEach(p => {
+        const c = calculatePositionCost(p);
+        allSubMat += c.subMat;
+        allHotMat += c.hotMat;
+        allLabor += c.labor;
+        allMachine += c.machine;
+      });
+      const allTotal = allSubMat + allHotMat + allLabor + allMachine;
+
+      const totalBox = document.getElementById('totalPositionsBox');
+      if (totalBox) {
+        window._savedTotalPosTitle = window._savedTotalPosTitle || (document.getElementById('lblTotalPositionsTitle')?.innerText) || 'Thành tiền Tổng các vị trí (VNĐ):';
+        const titleText = window._savedTotalPosTitle;
+        totalBox.innerHTML = `
+          <div style="background:#f0fdf4; border:1.5px solid #16a34a; border-radius:8px; padding:12px; box-shadow:0 2px 6px rgba(22,163,74,0.08);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <div style="font-size:12px; font-weight:800; color:#15803d; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+                <span>📊</span>
+                <span class="editable-field" id="lblTotalPositionsTitle" onclick="adminQuickEdit('lblTotalPositionsTitle', 'Tiêu đề Tổng các vị trí:')">${titleText}</span>
+              </div>
+              <span style="font-size:11px; font-weight:700; color:#166534; background:#dcfce7; padding:2px 8px; border-radius:12px; border:1px solid #86efac;">
+                ${positions.length === 1 ? '1 vị trí' : `${positions.length} vị trí (Vị trí 1 - ${positions.length})`}
+              </span>
+            </div>
+            <div class="cost-grid" style="border-color:#16a34a;">
+              <div class="cost-cell-header" style="background:#dcfce7; color:#14532d; font-weight:800;">Vật liệu phụ</div>
+              <div class="cost-cell-header" style="background:#dcfce7; color:#14532d; font-weight:800;">Vật liệu hotline</div>
+              <div class="cost-cell-header" style="background:#dcfce7; color:#14532d; font-weight:800;">Nhân công</div>
+              <div class="cost-cell-header" style="background:#dcfce7; color:#14532d; font-weight:800;">Máy thi công</div>
+              <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allSubMat)}</div>
+              <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allHotMat)}</div>
+              <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allLabor)}</div>
+              <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allMachine)}</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:4px; padding-top:6px; border-top:1px dashed #bbf7d0;">
+              <span style="font-size:10px; color:#475569; font-style:italic;">
+                ${positions.length === 1 ? '* Thành tiền tổng chính là thành tiền của Vị trí 1' : `* Tổng các thành tiền từ Vị trí 1 đến Vị trí ${positions.length}`}
+              </span>
+              <div style="font-size:12px; font-weight:800; color:#15803d;">
+                Tổng các vị trí: <span style="font-size:13px; color:#15803d; font-weight:900;">${formatMoney(allTotal)} đ</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     }
 
     // --- 11. RENDER CÁC PHỤ LỤC (BLOCK 4) ---
@@ -4531,6 +4591,7 @@
         lblCat3: document.getElementById('lblCat3').innerHTML,
         lblCat4: document.getElementById('lblCat4').innerHTML,
         lblVoltageTitle: document.getElementById('lblVoltageTitle').innerText,
+        lblTotalPositionsTitle: window._savedTotalPosTitle || (document.getElementById('lblTotalPositionsTitle') ? document.getElementById('lblTotalPositionsTitle').innerText : 'Thành tiền Tổng các vị trí (VNĐ):'),
         lblAppx4Title: document.getElementById('lblAppx4Title').innerText,
         lblAppx5Title: document.getElementById('lblAppx5Title').innerText,
         lblAppx6Title: document.getElementById('lblAppx6Title').innerText,
@@ -4571,6 +4632,10 @@
         if (d.lblCat3) document.getElementById('lblCat3').innerHTML = d.lblCat3;
         if (d.lblCat4) document.getElementById('lblCat4').innerHTML = d.lblCat4;
         if (d.lblVoltageTitle) document.getElementById('lblVoltageTitle').innerText = d.lblVoltageTitle;
+        if (d.lblTotalPositionsTitle) {
+          window._savedTotalPosTitle = d.lblTotalPositionsTitle;
+          if (document.getElementById('lblTotalPositionsTitle')) document.getElementById('lblTotalPositionsTitle').innerText = d.lblTotalPositionsTitle;
+        }
         if (d.lblAppx4Title) document.getElementById('lblAppx4Title').innerText = d.lblAppx4Title;
         if (d.lblAppx5Title) document.getElementById('lblAppx5Title').innerText = d.lblAppx5Title;
         if (d.lblAppx6Title) document.getElementById('lblAppx6Title').innerText = d.lblAppx6Title;
@@ -4615,6 +4680,7 @@
       if (document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = '21500';
       if (document.getElementById('fuelTax')) document.getElementById('fuelTax').value = '0';
       if (document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = '1';
+      window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
 
       document.getElementById('appLogoTitle').innerText = 'EVNSPC';
       document.getElementById('appLogoSub').innerText = 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM';
