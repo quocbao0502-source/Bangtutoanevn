@@ -4607,10 +4607,7 @@
               <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allLabor)}</div>
               <div class="cost-cell-val" style="color:#15803d; font-weight:800; font-size:12px;">${formatMoney(allMachine)}</div>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:4px; padding-top:6px; border-top:1px dashed #bbf7d0;">
-              <span style="font-size:10px; color:#475569; font-style:italic;">
-                ${positions.length === 1 ? '* Thành tiền tổng chính là thành tiền của Vị trí 1' : `* Tổng các thành tiền từ Vị trí 1 đến Vị trí ${positions.length}`}
-              </span>
+            <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:8px; padding-top:6px; border-top:1px dashed #bbf7d0;">
               <div style="font-size:12px; font-weight:800; color:#15803d;">
                 Tổng các vị trí: <span style="font-size:13px; color:#15803d; font-weight:900;">${formatMoney(allTotal)} đ</span>
               </div>
