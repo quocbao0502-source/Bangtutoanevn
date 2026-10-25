@@ -2526,9 +2526,6 @@
               <div style="font-size:12px; font-weight:800; color:#005baa; display:flex; align-items:center; gap:6px;">
                 🏢 <span>Điểm xuất phát:</span>
               </div>
-              <div style="font-size:11px; color:#64748b; font-style:italic;" id="lblDepotEditHint">
-                🔒 Admin/Mod mới được điền địa chỉ & km
-              </div>
             </div>
 
             <div style="display:flex; flex-direction:column; gap:8px;">
@@ -4526,7 +4523,6 @@
       const dAddr2 = document.getElementById('depotAddr2');
       const dKm1 = document.getElementById('depotKm1');
       const dKm2 = document.getElementById('depotKm2');
-      const lblDepotHint = document.getElementById('lblDepotEditHint');
 
       [dAddr1, dAddr2].forEach(inp => {
         if (!inp) return;
@@ -4543,11 +4539,6 @@
         inp.style.borderColor = isAdm ? '#0284c7' : '#cbd5e1';
         inp.style.cursor = isAdm ? 'text' : 'default';
       });
-
-      if (lblDepotHint) {
-        lblDepotHint.innerHTML = isAdm ? '🔓 <strong>Admin/Mod:</strong> Có thể sửa địa chỉ & km 2 hàng' : '🔒 <em>Admin/Mod mới được điền địa chỉ & km</em>';
-        lblDepotHint.style.color = isAdm ? '#0284c7' : '#64748b';
-      }
 
       populateModals();
       renderAll();
