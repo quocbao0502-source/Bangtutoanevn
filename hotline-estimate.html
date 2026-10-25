@@ -651,33 +651,107 @@
       color: #334155;
     }
 
+    /* Search box inside task selector */
+    .task-search-wrapper {
+      position: relative;
+      margin-bottom: 6px;
+      width: 100%;
+    }
+    .task-search-input {
+      width: 100%;
+      padding: 7px 30px 7px 10px;
+      font-size: 12px;
+      border: 1.5px solid #93c5fd;
+      border-radius: 6px;
+      background: #eff6ff;
+      color: #0f172a;
+      box-sizing: border-box;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .task-search-input:focus {
+      background: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .task-search-clear {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: #cbd5e1;
+      color: #334155;
+      font-size: 14px;
+      line-height: 1;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 2;
+    }
+    .task-search-clear:hover {
+      background: #94a3b8;
+      color: #ffffff;
+    }
+    .task-search-suggestions {
+      position: absolute;
+      top: calc(100% + 3px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1.5px solid #0284c7;
+      border-radius: 6px;
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 60;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .task-suggest-item {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .task-suggest-item:last-child {
+      border-bottom: none;
+    }
+    .task-suggest-item:hover {
+      background: #f0f9ff;
+    }
+
     /* Multi condition check box list inside position */
     .cond-picker-area {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
+      background: #fefce8; /* Màu vàng nhạt êm dịu, không gây nhầm lẫn */
+      border: 1.5px solid #fde047; /* Viền vàng nhạt tươi sáng rõ ràng */
       border-radius: 6px;
-      padding: 6px 8px;
-      max-height: 110px;
+      padding: 6px 10px;
+      max-height: 125px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 4px;
-      width: 66.67%; /* Ô chọn nhỏ bằng 2/3 ô định mức */
+      width: 100%; /* Dài bằng đúng với ô định mức bên trên */
       box-sizing: border-box;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+      box-shadow: inset 0 1px 3px rgba(202, 138, 4, 0.06);
     }
     .cond-check-item {
       display: flex;
       align-items: flex-start;
       gap: 6px;
       font-size: 11px;
-      color: #334155;
+      color: #713f12;
       cursor: pointer;
-      padding: 3px;
+      padding: 4px 6px;
       border-radius: 4px;
+      transition: background 0.15s;
     }
     .cond-check-item:hover {
-      background: #e2e8f0;
+      background: #fef08a; /* Vàng đậm hơn khi hover */
     }
     .cond-match-badge {
       background: #dcfce7;
@@ -3120,12 +3194,119 @@
       });
     }
 
+    function removeVietnameseTones(str) {
+      if (!str) return '';
+      str = str.toLowerCase();
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str = str.replace(/ò|ó|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str = str.replace(/đ/g, "d");
+      str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, "");
+      str = str.replace(/\u02C6|\u0306|\u031B/g, "");
+      return str.trim();
+    }
+
+    function onTaskSearchInput(posId, query) {
+      const suggBox = document.getElementById(`taskSuggest_${posId}`);
+      const clearBtn = document.getElementById(`taskSearchClear_${posId}`);
+      if (!suggBox) return;
+
+      const q = (query || '').trim();
+      if (clearBtn) clearBtn.style.display = q ? 'flex' : 'none';
+
+      if (!q) {
+        suggBox.style.display = 'none';
+        suggBox.innerHTML = '';
+        return;
+      }
+
+      const normQ = removeVietnameseTones(q);
+      const qWords = normQ.split(/\s+/).filter(Boolean);
+
+      const filteredTasks = MASTER_TASKS.filter(t => t.volt === currentVoltage || !t.volt);
+      
+      const matches = filteredTasks.filter(t => {
+        const normName = removeVietnameseTones(t.name + ' ' + (t.unit || '') + ' ' + (t.id || ''));
+        return qWords.every(w => normName.includes(w));
+      });
+
+      if (matches.length === 0) {
+        suggBox.innerHTML = `
+          <div style="padding:10px 12px; font-size:11px; color:#64748b; text-align:center;">
+            Không tìm thấy định mức nào phù hợp với từ khóa "<strong>${q}</strong>"
+          </div>
+        `;
+        suggBox.style.display = 'block';
+        return;
+      }
+
+      suggBox.innerHTML = matches.map(t => {
+        return `
+          <div class="task-suggest-item" onclick="selectTaskFromSearch(${posId}, '${t.id}')">
+            <div style="font-weight:700; color:#0f172a; font-size:12px; line-height:1.4;">
+              ${t.name}
+            </div>
+            <div style="font-size:10px; color:#64748b; margin-top:3px; display:flex; gap:8px; flex-wrap:wrap;">
+              <span style="color:#0284c7; background:#e0f2fe; padding:1px 6px; border-radius:3px; font-weight:700;">ĐVT: ${t.unit}</span>
+              <span style="color:#0369a1; background:#f0f9ff; padding:1px 6px; border-radius:3px; font-weight:600;">⚡ Cấp: ${t.volt}</span>
+              <span style="color:#1d4ed8;">NC: <strong>${formatMoney(t.labor)}đ</strong></span>
+              <span style="color:#c2410c;">MTC: <strong>${formatMoney(t.machine)}đ</strong></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      suggBox.style.display = 'block';
+    }
+
+    function selectTaskFromSearch(posId, taskId) {
+      const taskSelect = document.getElementById(`selTask_${posId}`);
+      if (taskSelect) {
+        taskSelect.value = taskId;
+        onTaskSelectChange(posId);
+      }
+      const task = MASTER_TASKS.find(t => t.id === taskId);
+      const searchInput = document.getElementById(`taskSearch_${posId}`);
+      const clearBtn = document.getElementById(`taskSearchClear_${posId}`);
+      if (searchInput && task) {
+        searchInput.value = task.name;
+        if (clearBtn) clearBtn.style.display = 'flex';
+      }
+      const suggBox = document.getElementById(`taskSuggest_${posId}`);
+      if (suggBox) suggBox.style.display = 'none';
+    }
+
+    function clearTaskSearch(posId) {
+      const searchInput = document.getElementById(`taskSearch_${posId}`);
+      const clearBtn = document.getElementById(`taskSearchClear_${posId}`);
+      const suggBox = document.getElementById(`taskSuggest_${posId}`);
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (suggBox) {
+        suggBox.style.display = 'none';
+        suggBox.innerHTML = '';
+      }
+    }
+
     function onTaskSelectChange(posId) {
       const taskSelect = document.getElementById(`selTask_${posId}`);
       if (!taskSelect) return;
       const taskId = taskSelect.value;
       const task = MASTER_TASKS.find(t => t.id === taskId);
       const prefix10 = get10Prefix(task ? task.name : '');
+
+      // Đồng bộ ô tìm kiếm khi đổi dropdown
+      const searchInput = document.getElementById(`taskSearch_${posId}`);
+      const clearBtn = document.getElementById(`taskSearchClear_${posId}`);
+      if (searchInput && task) {
+        searchInput.value = task.name;
+        if (clearBtn) clearBtn.style.display = 'flex';
+      }
 
       const condPickerArea = document.getElementById(`condArea_${posId}`);
       if (!condPickerArea) return;
@@ -3139,7 +3320,7 @@
       });
 
       if (matched.length === 0) {
-        condPickerArea.innerHTML = `<div style="font-size:11px; color:#94a3b8; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+        condPickerArea.innerHTML = `<div style="font-size:11px; color:#a16207; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
         return;
       }
 
@@ -3148,7 +3329,7 @@
           <label class="cond-check-item">
             <input type="checkbox" name="condChk_${posId}" value="${c.id}" checked>
             <div>
-              <span>${c.name}</span>
+              <span style="color:#713f12; font-weight:600;">${c.name}</span>
               <div class="k-pills">
                 ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
                 ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
@@ -3306,13 +3487,35 @@
 
             <!-- Khung chọn định mức công việc & hệ số điều chỉnh -->
             <div class="work-selector-box">
-              <label style="font-size:11px; font-weight:700; color:#475569;">Hạng mục công việc:</label>
+              <label style="font-size:11px; font-weight:700; color:#475569; display:block; margin-bottom:3px;">Hạng mục công việc:</label>
+              
+              <!-- Ô TÌM KIẾM GỢI Ý ĐỊNH MỨC TƯƠNG ĐỒNG -->
+              <div class="task-search-wrapper">
+                <div style="position:relative; display:flex; align-items:center;">
+                  <input type="text" 
+                         class="task-search-input" 
+                         id="taskSearch_${pos.id}" 
+                         placeholder="🔍 Gõ từ tương đồng/từ khóa để tìm nhanh định mức..." 
+                         autocomplete="off"
+                         oninput="onTaskSearchInput(${pos.id}, this.value)"
+                         onfocus="onTaskSearchInput(${pos.id}, this.value)">
+                  <button type="button" 
+                          class="task-search-clear" 
+                          id="taskSearchClear_${pos.id}" 
+                          onclick="clearTaskSearch(${pos.id})" 
+                          style="display:none;" 
+                          title="Xóa tìm kiếm">&times;</button>
+                </div>
+                <div class="task-search-suggestions" id="taskSuggest_${pos.id}" style="display:none;"></div>
+              </div>
+
+              <!-- Ô CHỌN ĐỊNH MỨC HIỆN TẠI (GIỮ NGUYÊN BÊN DƯỚI) -->
               <select class="select-dropdown" id="selTask_${pos.id}" onchange="onTaskSelectChange(${pos.id})">
                 ${filteredTasks.map(t => `<option value="${t.id}">${t.name} (${t.unit})</option>`).join('')}
               </select>
 
-              <label style="font-size:11px; font-weight:700; color:#475569;">
-                Chọn hệ số điều chỉnh - Kđc (Điều kiện):
+              <label style="font-size:11px; font-weight:700; color:#854d0e; margin-top:8px; margin-bottom:3px; display:flex; align-items:center; gap:4px;">
+                <span>⚡ Chọn hệ số điều chỉnh - Kđc (Điều kiện):</span>
               </label>
               <div class="cond-picker-area" id="condArea_${pos.id}">
                 ${(() => {
@@ -3323,13 +3526,13 @@
                     return (firstPrefix.length >= 5 && cPrefix === firstPrefix);
                   });
                   if (matched.length === 0) {
-                    return `<div style="font-size:11px; color:#94a3b8; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
+                    return `<div style="font-size:11px; color:#a16207; font-style:italic; padding:6px 4px;">(Không có điều kiện đặc thù cho hạng mục này)</div>`;
                   }
                   return matched.map(c => `
                     <label class="cond-check-item">
                       <input type="checkbox" name="condChk_${pos.id}" value="${c.id}" checked>
                       <div>
-                        <span>${c.name}</span>
+                        <span style="color:#713f12; font-weight:600;">${c.name}</span>
                         <div class="k-pills">
                           ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
                           ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
@@ -4206,6 +4409,15 @@
       renderAppendix();
       renderSummary();
     }
+
+    // Đóng danh sách gợi ý khi nhấp ra ngoài ô tìm kiếm
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.task-search-wrapper')) {
+        document.querySelectorAll('.task-search-suggestions').forEach(el => {
+          el.style.display = 'none';
+        });
+      }
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedAdminData();
