@@ -1336,13 +1336,13 @@
           <div class="category-grid">
             <button class="btn-cat" onclick="openModal('modalCongViec')">
               <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-              <span class="editable-field" id="lblCat1" onclick="adminQuickEdit('lblCat1', 'Tiêu đề Bảng 1:')">Bảng định mức<br>công việc</span>
+              <span class="editable-field" id="lblCat1" onclick="adminQuickEdit('lblCat1', 'Tiêu đề Bảng 1:')">Bảng định mức đơn giá vật liệu - nhân công - máy thi công công việc</span>
             </button>
             
             <!-- Bảng 2: Hệ số điều chỉnh (Đã đổi tên theo yêu cầu) -->
             <button class="btn-cat" onclick="openModal('modalDieuKien')" style="border-color:#f59e0b; background:#fffbeb;">
               <svg viewBox="0 0 24 24" style="color:#d97706;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-              <span class="editable-field" id="lblCat2" style="color:#b45309; font-weight:700;" onclick="adminQuickEdit('lblCat2', 'Tiêu đề Bảng 2:')">Hệ số điều chỉnh<br>(Kvlp, Kvlhl, Knc, Kmtc)</span>
+              <span class="editable-field" id="lblCat2" style="color:#b45309; font-weight:700;" onclick="adminQuickEdit('lblCat2', 'Tiêu đề Bảng 2:')">Bảng hệ số điều chỉnh công tác (Kđc)</span>
             </button>
 
             <button class="btn-cat" onclick="openModal('modalNhienLieu')">
@@ -1808,107 +1808,989 @@
   <script>
     // --- 1. DỮ LIỆU ĐỊNH MỨC CÔNG VIỆC MẪU (CHUẨN 10 KÝ TỰ ĐẦU EVN) ---
     const DEFAULT_MASTER_TASKS = [
-      { id: '16.01.01-1.0', name: '16.01.01-1.0 - Thay sứ đứng hotline 22kV', unit: 'Quả', volt: '22kV', matSub: 45000, matHotline: 120000, labor: 380000, machine: 190000 },
-      { id: '16.01.01-2', name: '16.01.01-2 Thay thế (lắp mới/tháo gỡ) cách điện đứng, chống sét van', unit: 'Bộ', volt: '22kV', matSub: 45000, matHotline: 120000, labor: 450000, machine: 220000 },
-      { id: '16.01.02-1.0', name: '16.01.02-1.0 - Vệ sinh cách điện hotline bằng nước áp lực cao', unit: 'Trụ', volt: '22kV', matSub: 30000, matHotline: 80000, labor: 320000, machine: 250000 },
-      { id: '16.01.03-1.0', name: '16.01.03-1.0 - Bọc cách điện dây dẫn hotline 22kV', unit: 'Khoảng', volt: '22kV', matSub: 60000, matHotline: 350000, labor: 420000, machine: 210000 },
-      { id: '16.01.04-1.0', name: '16.01.04-1.0 - Thay FCO / Chống sét van hotline 22kV', unit: 'Bộ', volt: '22kV', matSub: 50000, matHotline: 180000, labor: 410000, machine: 200000 },
-      { id: '16.01.05-1.0', name: '16.01.05-1.0 - Đấu nối lèo hotline / Nhánh rẽ 22kV', unit: 'Mối', volt: '22kV', matSub: 35000, matHotline: 90000, labor: 290000, machine: 180000 },
-      { id: '16.01.06-1.0', name: '16.01.06-1.0 - Thay xà đà trung thế hotline 22kV', unit: 'Bộ', volt: '22kV', matSub: 80000, matHotline: 450000, labor: 680000, machine: 350000 },
-      { id: '16.02.01-1.0', name: '16.02.01-1.0 - Thay sứ đứng hotline 12,7kV', unit: 'Quả', volt: '12,7kV', matSub: 40000, matHotline: 95000, labor: 320000, machine: 160000 },
-      { id: '16.02.02-1.0', name: '16.02.02-1.0 - Bọc cách điện dây dẫn 12,7kV', unit: 'Khoảng', volt: '12,7kV', matSub: 50000, matHotline: 280000, labor: 360000, machine: 180000 },
-      { id: '16.02.03-1.0', name: '16.02.03-1.0 - Đấu nối lèo hotline 12,7kV', unit: 'Mối', volt: '12,7kV', matSub: 30000, matHotline: 75000, labor: 250000, machine: 150000 }
-    ];
+  {
+    "id": "CV4824",
+    "name": "16.01.01-2 Thay thế (lắp mới/tháo gỡ) cách điện đứng, chân sứ đỉnh trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1237423,
+    "matHotline": 155131,
+    "matSub": 276250,
+    "machine": 2920434
+  },
+  {
+    "id": "CV3592",
+    "name": "16.01.01-1 Thay thế (lắp mới/tháo gỡ) cách điện đứng, chân sứ đỉnh, uclevis đỡ dây chống sét trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1237423,
+    "matHotline": 155131,
+    "matSub": 276250,
+    "machine": 2920434
+  },
+  {
+    "id": "CV5648",
+    "name": "16.01.02-1 Thay thế (lắp mới/tháo gỡ) chuỗi cách điện đỡ/néo dây chống sét Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 866196,
+    "matHotline": 192763,
+    "matSub": 276250,
+    "machine": 2044304
+  },
+  {
+    "id": "CV9488",
+    "name": "16.02.01-1 Thay thế (lắp mới/tháo gỡ) giáp buộc cách điện trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 629269,
+    "matHotline": 112902,
+    "matSub": 111000,
+    "machine": 1488849
+  },
+  {
+    "id": "CV5088",
+    "name": "16.02.01-2 Thay thế (lắp mới/tháo gỡ) giáp buộc cách điện trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 629269,
+    "matHotline": 112902,
+    "matSub": 111000,
+    "machine": 1488849
+  },
+  {
+    "id": "CV2903",
+    "name": "16.02.02-1 Thay thế (lắp mới/tháo gỡ) bộ gồm 01 khung định vị compact-line trên Đd 3 pha (1 mạch/ 2 mạch/ 3 mạch)",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 629269,
+    "matHotline": 92645,
+    "matSub": 111000,
+    "machine": 1488849
+  },
+  {
+    "id": "CV6313",
+    "name": "16.02.04-1 Thay thế (lắp mới/tháo gỡ) bộ dây hỗ trợ chống rơi dây dẫn Đd 3 pha",
+    "unit": "10m",
+    "volt": "22kV",
+    "labor": 75512,
+    "matHotline": 15268,
+    "matSub": 1000,
+    "machine": 178662
+  },
+  {
+    "id": "CV1423",
+    "name": "16.03.01-1 Thay thế (lắp mới/tháo gỡ) cách điện treo, kẹp dừng, giáp níu, thanh nối trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 785531,
+    "matHotline": 180636,
+    "matSub": 276250,
+    "machine": 1832429
+  },
+  {
+    "id": "CV7119",
+    "name": "16.03.01-2 Thay thế (lắp mới/tháo gỡ) cách điện treo, kẹp dừng, giáp níu, thanh nối trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 549872,
+    "matHotline": 72254,
+    "matSub": 110500,
+    "machine": 1832429
+  },
+  {
+    "id": "CV6304",
+    "name": "16.03.02-1 Thay thế (lắp mới/tháo gỡ) kẹp quai, kẹp hotline, kẹp IPC, kẹp néo cáp, đèn báo pha trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 706978,
+    "matHotline": 150316,
+    "matSub": 276250,
+    "machine": 1649186
+  },
+  {
+    "id": "CV8199",
+    "name": "16.03.02-2 Thay thế (lắp mới/tháo gỡ) kẹp quai, kẹp hotline, kẹp IPC, kẹp néo cáp, đèn báo pha trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 706978,
+    "matHotline": 150316,
+    "matSub": 276250,
+    "machine": 1649186
+  },
+  {
+    "id": "CV1368",
+    "name": "16.04.01-1 Thay thế (lắp mới/tháo gỡ) cò lèo trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1237423,
+    "matHotline": 189149,
+    "matSub": 272000,
+    "machine": 2920434
+  },
+  {
+    "id": "CV6905",
+    "name": "16.04.01-2 Thay thế (lắp mới/tháo gỡ) cò lèo trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 866196,
+    "matHotline": 75660,
+    "matSub": 108800,
+    "machine": 2920434
+  },
+  {
+    "id": "CV3672",
+    "name": "16.05.02-1 Thay thế (lắp mới/tháo gỡ) nắp chụp đầu cực thiết bị trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 401212,
+    "matHotline": 106834,
+    "matSub": 70600,
+    "machine": 635624
+  },
+  {
+    "id": "CV7920",
+    "name": "16.05.02-2 Thay thế (lắp mới/tháo gỡ) nắp chụp đầu cực thiết bị trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 280848,
+    "matHotline": 42734,
+    "matSub": 28240,
+    "machine": 635624
+  },
+  {
+    "id": "CV5720",
+    "name": "16.06.01-2 Xử lý (thay thế/lắp mới) dây trung hòa, giá đỡ đầu cáp, cần thao tác trên Đd 1 pha",
+    "unit": "1 vị trí",
+    "volt": "12,7kV",
+    "labor": 582813,
+    "matHotline": 115471,
+    "matSub": 276250,
+    "machine": 1374322
+  },
+  {
+    "id": "CV7224",
+    "name": "16.06.01-1 Xử lý (thay thế/lắp mới) dây trung hòa, giá đỡ đầu cáp, cần thao tác trên Đd 3 pha",
+    "unit": "1 vị trí",
+    "volt": "22kV",
+    "labor": 582813,
+    "matHotline": 115471,
+    "matSub": 276250,
+    "machine": 1374322
+  },
+  {
+    "id": "CV0088",
+    "name": "16.06.02-1 Thay thế (lắp mới/tháo gỡ) dây chằng trụ trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 582813,
+    "matHotline": 84665,
+    "matSub": 117250,
+    "machine": 1374322
+  },
+  {
+    "id": "CV1207",
+    "name": "16.06.02-2 Thay thế (lắp mới/tháo gỡ) dây chằng trụ trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 407969,
+    "matHotline": 33866,
+    "matSub": 46900,
+    "machine": 1374322
+  },
+  {
+    "id": "CV5088",
+    "name": "16.06.03-1 Thay thế (lắp mới) tiếp địa dây chống sét, tiếp địa LA trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 582813,
+    "matHotline": 115471,
+    "matSub": 276250,
+    "machine": 1374322
+  },
+  {
+    "id": "CV3104",
+    "name": "16.06.03-2 Thay thế (lắp mới) tiếp địa dây chống sét, tiếp địa LA trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 407969,
+    "matHotline": 46188,
+    "matSub": 110500,
+    "machine": 1374322
+  },
+  {
+    "id": "CV7594",
+    "name": "16.06.11-1 Thay thế (lắp mới/tháo gỡ) dây chống sét (AC) trên Đd 3 pha",
+    "unit": "10m",
+    "volt": "22kV",
+    "labor": 147731,
+    "matHotline": 69990,
+    "matSub": 55250,
+    "machine": 274864
+  },
+  {
+    "id": "CV5815",
+    "name": "16.06.11-2 Thay thế (lắp mới/tháo gỡ) dây chống sét (AC) trên Đd 1 pha",
+    "unit": "10m",
+    "volt": "12,7kV",
+    "labor": 118184,
+    "matHotline": 34995,
+    "matSub": 27625,
+    "machine": 274864
+  },
+  {
+    "id": "CV3254",
+    "name": "16.06.12-1 Căng lại (lắp mới/tháo gỡ) dây dẫn trên Đd 3 pha (cho 10m chiều dài đầu tiên)",
+    "unit": "10m",
+    "volt": "22kV",
+    "labor": 160231,
+    "matHotline": 115078,
+    "matSub": 55250,
+    "machine": 274864
+  },
+  {
+    "id": "CV9518",
+    "name": "16.06.12-3 Căng lại (lắp mới/tháo gỡ) dây dẫn trên Đd 1 pha (cho 10m chiều dài đầu tiên)",
+    "unit": "10m",
+    "volt": "12,7kV",
+    "labor": 128185,
+    "matHotline": 57539,
+    "matSub": 27625,
+    "machine": 274864
+  },
+  {
+    "id": "CV1904",
+    "name": "16.07.01-1 Thay thế (lắp mới/tháo gỡ) FCO, LBFCO, LA, LTD trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1110724,
+    "matHotline": 155115,
+    "matSub": 329250,
+    "machine": 2576853
+  },
+  {
+    "id": "CV5507",
+    "name": "16.07.01-2 Thay thế (lắp mới/tháo gỡ) FCO, LBFCO, LA, LTD trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 777507,
+    "matHotline": 62046,
+    "matSub": 131700,
+    "machine": 2576853
+  },
+  {
+    "id": "CV0125",
+    "name": "16.08.01-1 Thay thế (lắp mới/tháo gỡ) DS, LBS, REC, MBA, TU, TI, tụ bù TA trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1769556,
+    "matHotline": 273025,
+    "matSub": 329250,
+    "machine": 4480879
+  },
+  {
+    "id": "CV2615",
+    "name": "16.08.01-2 Thay thế (lắp mới/tháo gỡ) DS, LBS, REC, MBA, TU, TI, tụ bù TA trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1238689,
+    "matHotline": 109210,
+    "matSub": 131700,
+    "machine": 4480879
+  },
+  {
+    "id": "CV0763",
+    "name": "16.09.01-1 Thay thế (lắp mới/tháo gỡ) xà lắp đối xứng trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1283879,
+    "matHotline": 356698,
+    "matSub": 276250,
+    "machine": 3951175
+  },
+  {
+    "id": "CV4243",
+    "name": "16.09.01-2 Thay thế (lắp mới/tháo gỡ) xà lắp đối xứng trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1027103,
+    "matHotline": 178349,
+    "matSub": 138125,
+    "machine": 3951175
+  },
+  {
+    "id": "CV7640",
+    "name": "16.10.01-1 Thay thế (lắp mới/tháo gỡ) xà lắp lệch trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1338781,
+    "matHotline": 389084,
+    "matSub": 223250,
+    "machine": 3149488
+  },
+  {
+    "id": "CV1903",
+    "name": "16.10.01-2 Thay thế (lắp mới/tháo gỡ) xà lắp lệch trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1071025,
+    "matHotline": 194542,
+    "matSub": 111625,
+    "machine": 3149488
+  },
+  {
+    "id": "CV4136",
+    "name": "16.11.01-1 Thay thế (lắp mới/tháo gỡ) xà kép lắp trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 2145429,
+    "matHotline": 428143,
+    "matSub": 223250,
+    "machine": 5153707
+  },
+  {
+    "id": "CV6128",
+    "name": "16.11.01-2 Thay thế (lắp mới/tháo gỡ) xà kép lắp trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1716343,
+    "matHotline": 214072,
+    "matSub": 111625,
+    "machine": 5153707
+  },
+  {
+    "id": "CV7879",
+    "name": "16.12.01-1 Thay thế (lắp mới/tháo gỡ) xà thẳng đứng (xà 3 tầng) trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1334558,
+    "matHotline": 188378,
+    "matSub": 435250,
+    "machine": 3149488
+  },
+  {
+    "id": "CV3081",
+    "name": "16.12.01-2 Thay thế (lắp mới/tháo gỡ) xà thẳng đứng trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1334558,
+    "matHotline": 188378,
+    "matSub": 435250,
+    "machine": 3149488
+  },
+  {
+    "id": "CV7044",
+    "name": "16.12.02-1 Thay thế (lắp mới/tháo gỡ) thanh chống xà trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 513551,
+    "matHotline": 201083,
+    "matSub": 82950,
+    "machine": 1185353
+  },
+  {
+    "id": "CV8255",
+    "name": "16.12.02-2 Thay thế (lắp mới/tháo gỡ) thanh chống xà trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 359486,
+    "matHotline": 80433,
+    "matSub": 33180,
+    "machine": 1185353
+  },
+  {
+    "id": "CV1353",
+    "name": "16.12.03-1 Thay thế (lắp mới/tháo gỡ) tháp đầu trụ trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 898715,
+    "matHotline": 316380,
+    "matSub": 276250,
+    "machine": 2765823
+  },
+  {
+    "id": "CV1604",
+    "name": "16.12.03-2 Thay thế (lắp mới/tháo gỡ) tháp đầu trụ trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 629101,
+    "matHotline": 126552,
+    "matSub": 110500,
+    "machine": 2765823
+  },
+  {
+    "id": "CV8842",
+    "name": "16.13.01-1 Thay thế (trồng mới/nhổ trụ) trụ trên Đd 3 pha",
+    "unit": "1 Bộ trụ",
+    "volt": "22kV",
+    "labor": 2495961,
+    "matHotline": 612566,
+    "matSub": 429000,
+    "machine": 7511573
+  },
+  {
+    "id": "CV1773",
+    "name": "16.13.01-2 Thay thế (trồng mới/nhổ trụ) trụ trên Đd 1 pha",
+    "unit": "1 Bộ trụ",
+    "volt": "12,7kV",
+    "labor": 2246365,
+    "matHotline": 612566,
+    "matSub": 429000,
+    "machine": 7511573
+  },
+  {
+    "id": "CV0368",
+    "name": "16.14.01-1 Thay thế (lắp mới/tháo gỡ) ngọn trụ (loại trụ 2 đoạn dùng mặt bích) trên Đd 3 pha",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 1212083,
+    "matHotline": 607777,
+    "matSub": 323000,
+    "machine": 3772253
+  },
+  {
+    "id": "CV9153",
+    "name": "16.14.01-2 Thay thế (lắp mới/tháo gỡ) ngọn trụ (loại trụ 2 đoạn dùng mặt bích) trên Đd 1 pha",
+    "unit": "1 Bộ",
+    "volt": "12,7kV",
+    "labor": 1090875,
+    "matHotline": 607777,
+    "matSub": 323000,
+    "machine": 3772253
+  },
+  {
+    "id": "CV1372",
+    "name": "16.15.11-1 Bọc dây trung áp 3 pha tại khoảng giao chéo với Đd >= 110kV",
+    "unit": "1 vị trí",
+    "volt": "22kV",
+    "labor": 1976497,
+    "matHotline": 115672,
+    "matSub": 651000,
+    "machine": 4638336
+  },
+  {
+    "id": "CV5737",
+    "name": "16.15.11-2 Bọc dây trung áp 1 pha tại khoảng giao chéo với Đd >= 110kV",
+    "unit": "1 vị trí",
+    "volt": "12,7kV",
+    "labor": 1383548,
+    "matHotline": 57836,
+    "matSub": 325500,
+    "machine": 3246835
+  },
+  {
+    "id": "CV9475",
+    "name": "16.16.01-1 Bọc điểm hở dây, lắp thiết bị chống động vật trên Đd 3 pha 1 mạch",
+    "unit": "1 điểm/dây",
+    "volt": "22kV",
+    "labor": 971356,
+    "matHotline": 144065,
+    "matSub": 217000,
+    "machine": 2290536
+  },
+  {
+    "id": "CV4823",
+    "name": "16.16.02-1 Bọc điểm hở dây, lắp thiết bị chống động vật trên Đd 3 pha 2 mạch",
+    "unit": "1 điểm/dây",
+    "volt": "22kV",
+    "labor": 1165627,
+    "matHotline": 240123,
+    "matSub": 217000,
+    "machine": 2290536
+  },
+  {
+    "id": "CV3603",
+    "name": "16.16.03-1 Bọc điểm hở dây, lắp thiết bị chống động vật trên Đd 3 pha 3 mạch",
+    "unit": "1 điểm/dây",
+    "volt": "22kV",
+    "labor": 971356,
+    "matHotline": 336368,
+    "matSub": 217000,
+    "machine": 2290536
+  },
+  {
+    "id": "CV3405",
+    "name": "16.16.05-1 Công tác cắt vỏ dây bọc cách điện tạo điểm hở trên Đd",
+    "unit": "1 Bộ",
+    "volt": "22kV",
+    "labor": 291407,
+    "matHotline": 59787,
+    "matSub": 6250,
+    "machine": 635624
+  },
+  {
+    "id": "CV2650",
+    "name": "16.16.04-1 Bọc điểm hở dây, lắp thiết bị chống động vật trên Đd 1 pha",
+    "unit": "1 điểm/dây",
+    "volt": "12,7kV",
+    "labor": 777084,
+    "matHotline": 92797,
+    "matSub": 111000,
+    "machine": 2290536
+  },
+  {
+    "id": "CV5157",
+    "name": "16.16.05-1 Công tác cắt vỏ dây bọc cách điện tạo điểm hở trên Đd",
+    "unit": "Bộ",
+    "volt": "12,7kV",
+    "labor": 291407,
+    "matHotline": 59787,
+    "matSub": 6250,
+    "machine": 635624
+  }
+];
 
     // --- BẢNG HỆ SỐ ĐIỀU CHỈNH (CÓ 4 HỆ SỐ: Kvlp, Kvlhl, Knc, Kmtc & CẤP ĐIỆN ÁP) ---
     // 10 ký tự đầu tiên trùng khớp với công việc để tự tìm tới nhau!
     const DEFAULT_MASTER_CONDITIONS = [
-      {
-        id: 'DK01',
-        name: '16.01.01-1.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,3)',
-        volt: '22kV',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.3,
-        kmtc: 1.0
-      },
-      {
-        id: 'DK02',
-        name: '16.01.01-1.2 - Thi công tại cột góc / néo dây tăng cường an toàn (Knc=1,15, Kmtc=1,1)',
-        volt: '22kV',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.15,
-        kmtc: 1.1
-      },
-      {
-        id: 'DK_16_01_01_2_1',
-        name: '16.01.01-2.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,3)',
-        volt: '22kV',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.3,
-        kmtc: 1.0
-      },
-      {
-        id: 'DK_16_01_01_2_2',
-        name: '16.01.01-2.2 - Nếu trên trụ có máy biến áp (liên quan đến thực hiện an toàn thi công hotline) (Knc=1,4)',
-        volt: '22kV',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.4,
-        kmtc: 1.0
-      },
-      {
-        id: 'DK03',
-        name: '16.01.02-1.1 - Vệ sinh cách điện trong vùng bụi bẩn công nghiệp, nhiễm mặn (Kvlp=1,2, Knc=1,25)',
-        volt: '22kV',
-        kvlp: 1.2,
-        kvlhl: 1.0,
-        knc: 1.25,
-        kmtc: 1.0
-      },
-      {
-        id: 'DK04',
-        name: '16.02.01-1.1 - Thay sứ 12,7kV tại trụ có nhiều nhánh rẽ phức tạp (Knc=1,2, Kmtc=1,15)',
-        volt: '12,7kV',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.2,
-        kmtc: 1.15
-      },
-      {
-        id: 'DK05',
-        name: 'CHUNG-01 - Thi công ban đêm / thời tiết sương mù ẩm ướt (Knc=1,3, Kmtc=1,2)',
-        volt: 'Tất cả',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.3,
-        kmtc: 1.2
-      },
-      {
-        id: 'DK06',
-        name: 'CHUNG-02 - Địa hình sình lầy, ngập nước khó thao tác cơ giới (Kmtc=1,25, Knc=1,15)',
-        volt: 'Tất cả',
-        kvlp: 1.0,
-        kvlhl: 1.0,
-        knc: 1.15,
-        kmtc: 1.25
-      }
-    ];
+  {
+    "id": "DK01",
+    "name": "16.01.01-1.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "factor": 1,
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7184",
+    "name": "16.01.01-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9096",
+    "name": "16.01.01-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4128",
+    "name": "16.01.01-1.4  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại đơn) (Knc=0,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9992",
+    "name": "16.01.01-1.5  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại kép) (Knc=0,7)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1192",
+    "name": "16.01.01-1.6  - Nếu thay 1 cách điện pha ngoài cùng (Kvl=0,7, Knc=0,7, Kmtc=0,5)",
+    "volt": "22kV",
+    "kvlp": 0.7,
+    "kvlhl": 0.7,
+    "knc": 0.7,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK2888",
+    "name": "16.01.01-1.7  - Nếu thay 1 cách điện pha giữa (Knc=0,9, Kmtc=0,7)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.7
+  },
+  {
+    "id": "DK8896",
+    "name": "16.01.01-1.9  - Nếu thay 2 cách điện trên đường dây (Knc=0,9, Kmtc=0,9)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.9
+  },
+  {
+    "id": "DK0432",
+    "name": "16.01.01-1.10  - Nếu thay 3 cách điện trên đường dây (Knc=1,0, Kmtc=1,0)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6624",
+    "name": "16.01.01-1.11  - Nếu thay 1 Uclevis + sứ ống chỉ trên đường dây 3 pha (để treo dây chống sét) (Knc=0,5, Kmtc=0,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.5,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK2208",
+    "name": "16.01.01-1.12  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8128",
+    "name": "16.01.01-1.13  - Nếu phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK5520",
+    "name": "16.01.01-1.14  - Nếu chỉ lắp mới (Knc=0,8)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4184",
+    "name": "16.01.01-1.15  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3472",
+    "name": "16.01.01-2.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6312",
+    "name": "16.01.01-2.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3568",
+    "name": "16.01.01-2.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5481",
+    "name": "16.01.01-2.5 - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại kép) (Knc=0,7)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7968",
+    "name": "16.01.01-2.4  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại đơn) (Knc=0,5)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9936",
+    "name": "16.01.01-2.6  - Nếu chỉ thay 1 cách điện (Kvl=0,4, Knc=0,7)",
+    "volt": "12,7kV",
+    "kvlp": 0.4,
+    "kvlhl": 0.4,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2576",
+    "name": "16.01.01-2.7  - Nếu thay 2 cách điện (Knc=0,9, Kmtc=0,9)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.9
+  },
+  {
+    "id": "DK7264",
+    "name": "16.01.01-2.8  - Nếu thay 3 cách điện (Knc=1,0, Kmtc=1,0)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0056",
+    "name": "16.01.01-2.9  - Nếu chỉ lắp mới (Knc=0,8)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5504",
+    "name": "16.01.01-2.10  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK7664",
+    "name": "16.01.02-1.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9912",
+    "name": "16.01.02-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9880",
+    "name": "16.01.02-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1776",
+    "name": "16.01.02-1.4  - Nếu thay chuỗi cách điện néo dây chống sét (Knc=1,1)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5000",
+    "name": "16.01.02-1.5  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3097",
+    "name": "16.01.02-1.6  - Nếu phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK2233",
+    "name": "16.01.02-1.7  - Nếu chỉ lắp mới (Knc=0,8)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9496",
+    "name": "16.01.02-1.8  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK5849",
+    "name": "16.02.01-1.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0801",
+    "name": "16.02.01-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1825",
+    "name": "16.02.01-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0137",
+    "name": "16.02.01-1.4  - Nếu thay giáp buộc 1 cách điện pha ngoài cùng (Kvl=0,7, Knc=0,7, Kmtc=0,5)",
+    "volt": "22kV",
+    "kvlp": 0.7,
+    "kvlhl": 0.7,
+    "knc": 0.7,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK8153",
+    "name": "16.02.01-1.5  - Nếu thay giáp buộc 1 cách điện pha giữa (Knc=0,9, Kmtc=0,7)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.7
+  },
+  {
+    "id": "DK8753",
+    "name": "16.02.01-1.6  - Nếu thay giáp buộc 1 cách điện pha trong cùng (Knc=0,8, Kmtc=0,6)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 0.6
+  },
+  {
+    "id": "DK9569",
+    "name": "16.02.01-1.7  - Nếu thay giáp buộc 2 cách điện cùng vị trí trụ (Knc=0,9, Kmtc=0,9)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.9
+  },
+  {
+    "id": "DK4122",
+    "name": "16.02.01-1.8  - Nếu thay giáp buộc 3 cách điện cùng vị trí trụ (Knc=1,0, Kmtc=1,0)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8937",
+    "name": "16.02.01-1.9  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8794",
+    "name": "16.02.01-1.10  - Nếu đường dây nhiều mạch, phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK2282",
+    "name": "16.02.01-1.11  - Nếu buộc cách điện bằng dây nhôm (Knc=0,7, Kmtc=0,5)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK7746",
+    "name": "16.02.01-1.12  - Nếu chỉ lắp mới (Knc=0,8)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7649",
+    "name": "16.02.01-1.13  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  }
+];
 
     const DEFAULT_FUEL_NORMS = [
-      { id: 'F01', name: 'Xe bán tải phục vụ', rate: 9.5 },
-      { id: 'F02', name: 'Xe gàu cách điện Hotline', rate: 24.0 },
-      { id: 'F03', name: 'Xe cẩu chuyên dùng', rate: 28.0 }
-    ];
+  {
+    "id": "F01",
+    "name": "Xe bán tải phục vụ",
+    "rate": 12.5
+  },
+  {
+    "id": "F02",
+    "name": "Xe gàu cách điện Hotline",
+    "rate": 16
+  },
+  {
+    "id": "F03",
+    "name": "Xe cẩu chuyên dùng",
+    "rate": 25
+  }
+];
 
     const DEFAULT_LABOR_NORMS = [
-      { id: 'L01', title: 'Thợ Hotline Bậc 3/7', wage: 450000 },
-      { id: 'L02', title: 'Thợ Hotline Bậc 4/7', wage: 540000 },
-      { id: 'L03', title: 'Thợ Hotline Bậc 5/7', wage: 650000 },
-      { id: 'L04', title: 'Chỉ huy trực tiếp Hotline', wage: 750000 }
-    ];
+  {
+    "id": "L01",
+    "title": "Thợ Hotline Bậc 3/7",
+    "wage": 298431
+  },
+  {
+    "id": "L02",
+    "title": "Thợ Hotline Bậc 4/7",
+    "wage": 394809
+  },
+  {
+    "id": "L03",
+    "title": "Thợ Hotline Bậc 5/7",
+    "wage": 650000
+  },
+  {
+    "id": "L04",
+    "title": "Chỉ huy trực tiếp Hotline",
+    "wage": 750000
+  }
+];
 
     // Khởi tạo các biến dữ liệu
     let MASTER_TASKS = JSON.parse(JSON.stringify(DEFAULT_MASTER_TASKS));
@@ -1921,10 +2803,10 @@
 
     // Cấu hình tỷ lệ % chi phí
     let COST_RATES = {
-      otherDirectRate: 0.025,
-      generalCostRate: 0.055,
-      vatRate: 0.08
-    };
+  "otherDirectRate": 0.025,
+  "generalCostRate": 0.055,
+  "vatRate": 0.08
+};
 
     // --- 2. TRẠNG THÁI ỨNG DỤNG (STATE) ---
     let isAdminMode = false;
@@ -1933,24 +2815,53 @@
 
     // Danh sách vị trí
     let positions = [
+  {
+    "id": 1,
+    "title": "Vị trí 1",
+    "address": "Ấp Ninh Trung, Xã Ninh Sơn, TP Tây Ninh",
+    "checkedIn": false,
+    "gps": "",
+    "distanceKm": 15,
+    "tasks": [
       {
-        id: 1,
-        title: 'Vị trí 1',
-        address: 'Ấp Ninh Trung, Xã Ninh Sơn, TP Tây Ninh',
-        checkedIn: false,
-        gps: '',
-        distanceKm: 15,
-        tasks: [
-          { 
-            taskId: '16.01.01-1.0', 
-            condIds: ['DK01'], 
-            qty: 3 
-          }
+        "taskId": "CV3592",
+        "condIds": [
+          "DK01",
+          "DK7184",
+          "DK9096",
+          "DK4128",
+          "DK9992",
+          "DK1192",
+          "DK2888",
+          "DK8896",
+          "DK0432",
+          "DK6624",
+          "DK2208",
+          "DK8128",
+          "DK5520",
+          "DK4184"
         ],
-        factors: [1.0, 0.8, 0.7, 0.6],
-        similarCount: 1
+        "qty": 1
+      },
+      {
+        "taskId": "CV3592",
+        "condIds": [
+          "DK01",
+          "DK8896",
+          "DK5520"
+        ],
+        "qty": 1
       }
-    ];
+    ],
+    "factors": [
+      1,
+      0.8,
+      0.7,
+      0.6
+    ],
+    "similarCount": 1
+  }
+];
 
     // Hàm lấy 10 ký tự đầu tiên tính từ trái qua
     function get10Prefix(str) {
@@ -2171,7 +3082,7 @@
         gps: '',
         distanceKm: 15,
         tasks: [
-          { taskId: '16.01.01-1.0', condIds: ['DK01'], qty: 2 }
+          { taskId: (MASTER_TASKS[0] ? MASTER_TASKS[0].id : 'CV3592'), condIds: (MASTER_CONDITIONS[0] ? [MASTER_CONDITIONS[0].id] : []), qty: 1 }
         ],
         factors: [1.0, 0.8, 0.7, 0.6],
         similarCount: 1
