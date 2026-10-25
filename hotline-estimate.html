@@ -1339,13 +1339,491 @@
     /* Print styles */
     @media print {
       body { background: white; padding: 0; }
-      .top-toolbar, .admin-banner, .btn-mode, .btn-add-pos, .btn-pos-action, .btn-add-task, .summary-actions { display: none !important; }
+      .top-toolbar, .admin-banner, .btn-mode, .btn-add-pos, .btn-pos-action, .btn-add-task, .summary-actions, .cover-portal-overlay { display: none !important; }
       .phone-container { max-width: 100%; box-shadow: none; border-radius: 0; }
       .block-card { page-break-inside: avoid; }
+    }
+
+    /* --- STYLES TRANG BÌA (COVER PORTAL) --- */
+    .cover-portal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 25%, #0c356a 0%, #03172c 70%, #010c17 100%);
+      background-image: radial-gradient(circle at 50% 25%, rgba(12, 53, 106, 0.95) 0%, rgba(3, 23, 44, 0.98) 70%, #010c17 100%),
+                        linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+    }
+
+    .cover-portal-card {
+      background: rgba(15, 23, 42, 0.93);
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 620px;
+      width: 100%;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 91, 170, 0.35);
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+      animation: coverFadeIn 0.35s ease-out;
+    }
+
+    @keyframes coverFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .cover-logo-badge {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #005baa 0%, #0284c7 100%);
+      border: 2px solid #38bdf8;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+      margin-bottom: 12px;
+    }
+
+    .cover-corp-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .cover-corp-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .cover-main-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .cover-desc {
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cover-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cover-role-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .cover-role-card {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1.5px solid #334155;
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-role-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .cover-role-card.role-user {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .cover-role-card.role-user:hover {
+      border-color: #38bdf8;
+      background: rgba(14, 116, 144, 0.2);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+
+    .cover-role-card.role-admin {
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .cover-role-card.role-admin:hover {
+      border-color: #f59e0b;
+      background: rgba(180, 83, 9, 0.2);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+    }
+
+    .role-card-icon {
+      font-size: 30px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .role-user .role-card-icon {
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .role-admin .role-card-icon {
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .role-card-info {
+      flex: 1;
+    }
+
+    .role-card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .role-user .role-card-title {
+      color: #38bdf8;
+    }
+
+    .role-admin .role-card-title {
+      color: #fbbf24;
+    }
+
+    .role-card-desc {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .role-card-action {
+      flex-shrink: 0;
+    }
+
+    .btn-role-select {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-role-user {
+      background: #005baa;
+      color: #ffffff;
+    }
+
+    .btn-role-user:hover {
+      background: #0284c7;
+    }
+
+    .btn-role-admin {
+      background: #d97706;
+      color: #ffffff;
+    }
+
+    .btn-role-admin:hover {
+      background: #f59e0b;
+    }
+
+    /* Khung đăng nhập Admin */
+    .cover-login-box {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1.5px solid #f59e0b;
+      border-radius: 14px;
+      padding: 22px 20px;
+      margin-bottom: 20px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: coverFadeIn 0.25s ease-out;
+    }
+
+    .login-box-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .login-box-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+
+    .login-box-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fbbf24;
+      margin: 0 0 4px 0;
+    }
+
+    .login-box-header p {
+      font-size: 12px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .login-error-alert {
+      background: #7f1d1d;
+      border: 1px solid #ef4444;
+      color: #fecaca;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .login-input-group {
+      margin-bottom: 12px;
+    }
+
+    .login-input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 5px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .inp-icon {
+      position: absolute;
+      left: 10px;
+      font-size: 14px;
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    .cover-inp {
+      width: 100%;
+      background: #0f172a;
+      border: 1.5px solid #475569;
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 9px 38px 9px 34px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .cover-inp:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-toggle-eye {
+      position: absolute;
+      right: 8px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+    }
+
+    .login-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-cover-submit {
+      flex: 2;
+      background: #005baa;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cover-submit:hover {
+      background: #0284c7;
+    }
+
+    .btn-cover-back {
+      flex: 1;
+      background: #334155;
+      color: #e2e8f0;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cover-back:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .cover-footer {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 12px;
     }
   </style>
 </head>
 <body>
+
+  <!-- TRANG BÌA (COVER PORTAL - CHỌN VAI TRÒ NGƯỜI DÙNG HOẶC QUẢN TRỊ VIÊN) -->
+  <div id="coverPortal" class="cover-portal-overlay">
+    <div class="cover-portal-card">
+      
+      <!-- Logo EVN & Tiêu đề hệ thống -->
+      <div class="cover-header">
+        <div class="cover-logo-badge">
+          ⚡
+        </div>
+        <div class="cover-corp-title">TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM</div>
+        <div class="cover-corp-sub">EVNSPC • DỰ TOÁN SỬA CHỮA ĐIỆN NÓNG HOTLINE</div>
+        <h1 class="cover-main-title">HỆ THỐNG DỰ TOÁN CÔNG TÁC THI CÔNG HOTLINE</h1>
+        <p class="cover-desc">
+          Tính toán chi tiết định mức công tác, vật liệu phụ, vật liệu hotline, nhân công, ca máy và dự toán chi phí theo công thức quy định EVN (12,7kV & 22kV).
+        </p>
+      </div>
+
+      <!-- Khung 1: Chọn vai trò truy cập -->
+      <div id="roleSelectBox" class="cover-role-box">
+        <div class="cover-section-label">Vui lòng chọn vai trò để truy cập hệ thống:</div>
+        
+        <div class="cover-role-grid">
+          <!-- Nút NGƯỜI DÙNG -->
+          <div class="cover-role-card role-user" onclick="applyUserRole('user')" title="Truy cập với vai trò Người dùng">
+            <div class="role-card-icon">👤</div>
+            <div class="role-card-info">
+              <div class="role-card-title">NGƯỜI DÙNG</div>
+              <div class="role-card-desc">Truy cập nhanh để tra cứu định mức, chọn vị trí thi công, lập dự toán công tác và xuất file Excel (Không hiển thị mục 1 định mức gốc).</div>
+            </div>
+            <div class="role-card-action">
+              <button type="button" class="btn-role-select btn-role-user">
+                Vào sử dụng ngay ➔
+              </button>
+            </div>
+          </div>
+
+          <!-- Nút QUẢN TRỊ VIÊN -->
+          <div class="cover-role-card role-admin" onclick="showAdminLoginForm()" title="Đăng nhập với vai trò Quản trị viên">
+            <div class="role-card-icon">🛡️</div>
+            <div class="role-card-info">
+              <div class="role-card-title">QUẢN TRỊ VIÊN</div>
+              <div class="role-card-desc">Toàn quyền quản trị hệ thống: Hiển thị Mục 1 để cấu hình đơn giá, định mức công tác, hệ số Kđc, định mức xe và nhân công.</div>
+            </div>
+            <div class="role-card-action">
+              <button type="button" class="btn-role-select btn-role-admin">
+                Đăng nhập Admin 🔒
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khung 2: Form đăng nhập Admin/Mod (Ẩn ban đầu) -->
+      <div id="adminLoginBox" class="cover-login-box" style="display:none;">
+        <div class="login-box-header">
+          <div class="login-box-icon">🔐</div>
+          <h3>ĐĂNG NHẬP QUẢN TRỊ VIÊN</h3>
+          <p>Nhập tài khoản và mật khẩu quản trị để vào hệ thống:</p>
+        </div>
+
+        <div id="adminLoginError" class="login-error-alert" style="display:none;">
+          ❌ Tài khoản hoặc mật khẩu không chính xác!
+        </div>
+
+        <form onsubmit="event.preventDefault(); submitAdminLogin();" class="login-form">
+          <div class="login-input-group">
+            <label for="adminLoginUser">Tài khoản (ID):</label>
+            <div class="input-with-icon">
+              <span class="inp-icon">👤</span>
+              <input type="text" id="adminLoginUser" class="cover-inp" value="Admin" placeholder="Nhập tài khoản Admin..." autocomplete="username">
+            </div>
+          </div>
+
+          <div class="login-input-group">
+            <label for="adminLoginPass">Mật khẩu (Password):</label>
+            <div class="input-with-icon">
+              <span class="inp-icon">🔑</span>
+              <input type="password" id="adminLoginPass" class="cover-inp" placeholder="Nhập mật khẩu..." autocomplete="current-password">
+              <button type="button" class="btn-toggle-eye" onclick="toggleAdminPassVisibility()" title="Ẩn/Hiện mật khẩu">
+                <span id="eyeIconAdmin">👁️</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="login-actions">
+            <button type="submit" class="btn-cover-submit">
+              ✅ Đăng nhập
+            </button>
+            <button type="button" class="btn-cover-back" onclick="hideAdminLoginForm()">
+              ↩️ Quay lại
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="cover-footer">
+        © 2026 TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM (EVNSPC) • PHẦN MỀM DỰ TOÁN HOTLINE
+      </div>
+
+    </div>
+  </div>
 
   <!-- Top Toolbar -->
   <div class="top-toolbar">
@@ -1372,8 +1850,14 @@
         <button class="btn-mode" id="btnTopVolt12" onclick="setVoltage('12,7kV')" style="padding:3px 8px;">12,7kV</button>
         <button class="btn-mode active" id="btnTopVolt22" onclick="setVoltage('22kV')" style="padding:3px 8px;">22kV</button>
       </div>
-      <button class="btn-admin-toggle" id="btnAdminToggle" onclick="toggleAdminMode()">
-        🛡️ Quyền Admin: <span id="adminStatusText">TẮT</span>
+      <div id="topUserRoleBadge" style="font-size:11px; font-weight:700; background:#1e293b; color:#38bdf8; border:1px solid #38bdf8; border-radius:6px; padding:4px 8px; display:inline-flex; align-items:center; gap:4px;">
+        👤 Người dùng
+      </div>
+      <button class="btn-mode" id="btnAdminAction" onclick="showAdminLoginModal()" style="padding:4px 10px; font-weight:600; color:#fbbf24; border-color:#f59e0b;" title="Đăng nhập Quản trị viên để cấu hình định mức">
+        🔐 Đăng nhập Admin
+      </button>
+      <button class="btn-mode" onclick="showCoverPortal()" style="padding:4px 10px; font-weight:600; background:#0f172a; border-color:#64748b;" title="Quay lại trang bìa chọn vai trò">
+        🚪 Trang bìa
       </button>
     </div>
   </div>
@@ -1415,7 +1899,7 @@
       <div class="main-column">
 
         <!-- BỐ CỤC 1: 4 BẢNG ĐỊNH MỨC & HỆ SỐ ĐIỀU CHỈNH -->
-        <section class="block-card">
+        <section class="block-card" id="sectionBlock1">
           <div class="block-badge-num editable-field" id="badgeBlock1" onclick="editBlockBadge('badgeBlock1', 1)" title="Bấm vào để đổi tên đề mục 1">1</div>
           <div class="category-grid">
             <button class="btn-cat" onclick="openModal('modalCongViec')">
@@ -3040,6 +3524,7 @@
 };
 
     // --- 2. TRẠNG THÁI ỨNG DỤNG (STATE) ---
+    let currentUserRole = null; // 'user' | 'admin' | null
     let isAdminMode = false;
     let currentVoltage = '22kV';
     let hasCrane = false;
@@ -3087,39 +3572,169 @@
       return str.trim().slice(0, 10).toLowerCase();
     }
 
-    // --- 3. ĐIỀU HƯỚNG QUYỀN ADMIN / MOD & CHẾ ĐỘ XEM ---
-    function toggleAdminMode() {
-      isAdminMode = !isAdminMode;
-      document.body.classList.toggle('admin-mode', isAdminMode);
-      const btn = document.getElementById('btnAdminToggle');
-      const statusText = document.getElementById('adminStatusText');
+    // --- 3. ĐIỀU HƯỚNG QUYỀN TRANG BÌA, ADMIN / MOD & NGƯỜI DÙNG ---
+    function applyUserRole(role) {
+      currentUserRole = role;
+      try {
+        sessionStorage.setItem('evn_current_role', role);
+      } catch(e) {}
+
+      const cover = document.getElementById('coverPortal');
+      const secBlock1 = document.getElementById('sectionBlock1');
       const banner = document.getElementById('adminBanner');
-
-      if (isAdminMode) {
-        btn.classList.add('is-admin');
-        statusText.innerText = 'BẬT (MOD)';
-        banner.classList.add('show');
-        showToast("👑 Đã BẬT quyền Admin/Mod! Bạn có thể thêm, sửa, xóa hệ số điều chỉnh và các mục.");
-      } else {
-        btn.classList.remove('is-admin');
-        statusText.innerText = 'TẮT';
-        banner.classList.remove('show');
-        showToast("Đã chuyển về chế độ Xem thông thường.");
-      }
-
+      const topRoleBadge = document.getElementById('topUserRoleBadge');
+      const btnAdminAction = document.getElementById('btnAdminAction');
       const machinePriceInp = document.getElementById('machineShiftPrice');
       const lockMachineLbl = document.getElementById('lblLockMachinePrice');
-      if (machinePriceInp) {
-        machinePriceInp.readOnly = !isAdminMode;
-        machinePriceInp.style.background = isAdminMode ? '#ffffff' : '#f1f5f9';
-        machinePriceInp.style.cursor = isAdminMode ? 'text' : 'not-allowed';
-      }
-      if (lockMachineLbl) {
-        lockMachineLbl.innerText = isAdminMode ? '🔓 Admin (Được sửa)' : '🔒 Admin';
+
+      if (role === 'admin') {
+        isAdminMode = true;
+        document.body.classList.add('admin-mode');
+        if (cover) cover.style.display = 'none';
+        if (secBlock1) secBlock1.style.display = 'block'; // MỤC 1 HIỂN THỊ ĐẦY ĐỦ CHO ADMIN
+        if (banner) {
+          banner.style.display = 'flex';
+          banner.classList.add('show');
+        }
+        if (topRoleBadge) {
+          topRoleBadge.innerHTML = '👑 <strong>Quản trị viên</strong>';
+          topRoleBadge.style.background = '#d97706';
+          topRoleBadge.style.borderColor = '#fbbf24';
+          topRoleBadge.style.color = '#ffffff';
+        }
+        if (btnAdminAction) {
+          btnAdminAction.innerHTML = '👤 Về Người dùng';
+          btnAdminAction.title = 'Chuyển về giao diện Người dùng (Ẩn mục 1)';
+          btnAdminAction.onclick = () => applyUserRole('user');
+        }
+        if (machinePriceInp) {
+          machinePriceInp.readOnly = false;
+          machinePriceInp.style.background = '#ffffff';
+          machinePriceInp.style.cursor = 'text';
+        }
+        if (lockMachineLbl) {
+          lockMachineLbl.innerText = '🔓 Admin (Được sửa)';
+        }
+        showToast("👑 Chào mừng Quản trị viên (Admin/Mod)!");
+      } else {
+        // NGƯỜI DÙNG
+        isAdminMode = false;
+        document.body.classList.remove('admin-mode');
+        if (cover) cover.style.display = 'none';
+        if (secBlock1) secBlock1.style.display = 'none'; // MỤC 1 BỊ ẨN HOÀN TOÀN CHO NGƯỜI DÙNG!
+        if (banner) {
+          banner.style.display = 'none';
+          banner.classList.remove('show');
+        }
+        if (topRoleBadge) {
+          topRoleBadge.innerHTML = '👤 <strong>Người dùng</strong>';
+          topRoleBadge.style.background = '#1e293b';
+          topRoleBadge.style.borderColor = '#38bdf8';
+          topRoleBadge.style.color = '#38bdf8';
+        }
+        if (btnAdminAction) {
+          btnAdminAction.innerHTML = '🔐 Đăng nhập Admin';
+          btnAdminAction.title = 'Đăng nhập quyền Quản trị viên để thấy Mục 1 và chỉnh sửa';
+          btnAdminAction.onclick = () => showAdminLoginModal();
+        }
+        if (machinePriceInp) {
+          machinePriceInp.readOnly = true;
+          machinePriceInp.style.background = '#f1f5f9';
+          machinePriceInp.style.cursor = 'not-allowed';
+        }
+        if (lockMachineLbl) {
+          lockMachineLbl.innerText = '🔒 Admin';
+        }
+        showToast("👤 Đang sử dụng với vai trò Người dùng.");
       }
 
       populateModals();
       renderAll();
+    }
+
+    function showCoverPortal() {
+      try {
+        sessionStorage.removeItem('evn_current_role');
+      } catch(e) {}
+      currentUserRole = null;
+      const cover = document.getElementById('coverPortal');
+      if (cover) {
+        cover.style.display = 'flex';
+        hideAdminLoginForm();
+      }
+    }
+
+    function showAdminLoginForm() {
+      const roleBox = document.getElementById('roleSelectBox');
+      const loginBox = document.getElementById('adminLoginBox');
+      if (roleBox) roleBox.style.display = 'none';
+      if (loginBox) {
+        loginBox.style.display = 'block';
+        const err = document.getElementById('adminLoginError');
+        if (err) err.style.display = 'none';
+        const passInp = document.getElementById('adminLoginPass');
+        if (passInp) {
+          passInp.value = '';
+          setTimeout(() => passInp.focus(), 150);
+        }
+      }
+    }
+
+    function hideAdminLoginForm() {
+      const roleBox = document.getElementById('roleSelectBox');
+      const loginBox = document.getElementById('adminLoginBox');
+      if (loginBox) loginBox.style.display = 'none';
+      if (roleBox) roleBox.style.display = 'block';
+      const err = document.getElementById('adminLoginError');
+      if (err) err.style.display = 'none';
+    }
+
+    function showAdminLoginModal() {
+      const cover = document.getElementById('coverPortal');
+      if (cover) {
+        cover.style.display = 'flex';
+        showAdminLoginForm();
+      }
+    }
+
+    function submitAdminLogin() {
+      const u = (document.getElementById('adminLoginUser')?.value || '').trim();
+      const p = (document.getElementById('adminLoginPass')?.value || '');
+      const err = document.getElementById('adminLoginError');
+
+      if (u.toLowerCase() === 'admin' && p === 'Abc@12345') {
+        if (err) err.style.display = 'none';
+        applyUserRole('admin');
+      } else {
+        if (err) {
+          err.innerHTML = '❌ Tài khoản hoặc mật khẩu không chính xác!<br><span style="font-size:11px; font-weight:normal; opacity:0.9;">Gợi ý: ID: <b>Admin</b> - Mật khẩu: <b>Abc@12345</b></span>';
+          err.style.display = 'block';
+        } else {
+          alert('Sai tài khoản hoặc mật khẩu!');
+        }
+      }
+    }
+
+    function toggleAdminPassVisibility() {
+      const p = document.getElementById('adminLoginPass');
+      const icon = document.getElementById('eyeIconAdmin');
+      if (p) {
+        if (p.type === 'password') {
+          p.type = 'text';
+          if (icon) icon.innerText = '🙈';
+        } else {
+          p.type = 'password';
+          if (icon) icon.innerText = '👁️';
+        }
+      }
+    }
+
+    function toggleAdminMode() {
+      if (isAdminMode) {
+        applyUserRole('user');
+      } else {
+        showAdminLoginModal();
+      }
     }
 
     function setAppViewMode(mode) {
@@ -3198,6 +3813,7 @@
     }
 
     function editBlockBadge(badgeId, num) {
+      if (!isAdminMode) return;
       const el = document.getElementById(badgeId);
       if (!el) return;
       const currentVal = el.innerText.trim();
@@ -4939,6 +5555,11 @@
 
     // --- 17. MODAL UTILITIES ---
     function openModal(modalId) {
+      const adminModals = ['modalCongViec', 'modalDieuKien', 'modalNhienLieu', 'modalNhanCong', 'modalEditMasterTask', 'modalMasterCondition', 'modalEditFuel', 'modalEditLabor'];
+      if (adminModals.includes(modalId) && !isAdminMode) {
+        showToast("🔒 Chỉ Quản trị viên (Admin/Mod) mới có quyền mở mục này!");
+        return;
+      }
       const modal = document.getElementById(modalId);
       if (modal) modal.classList.add('open');
     }
@@ -5179,6 +5800,14 @@
       renderAll();
       const savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
       setAppViewMode(savedMode);
+
+      // Khởi tạo vai trò Người dùng / Quản trị viên
+      const savedRole = sessionStorage.getItem('evn_current_role');
+      if (savedRole === 'admin' || savedRole === 'user') {
+        applyUserRole(savedRole);
+      } else {
+        showCoverPortal();
+      }
     });
   </script>
 </body>
