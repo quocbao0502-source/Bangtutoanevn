@@ -286,30 +286,40 @@
     }
 
     .btn-refresh-project {
-      background: #005DBB; /* Màu xanh Cavansite */
+      background: linear-gradient(135deg, #0ea5e9 0%, #005DBB 100%);
       color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      font-size: 11px;
+      border: 1.5px solid #7dd3fc;
+      font-size: 11.5px;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 18px;
+      padding: 4px 12px;
+      border-radius: 20px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 6px rgba(0, 93, 187, 0.4);
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.45);
       transition: all 0.2s ease;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.5px;
       user-select: none;
+      white-space: nowrap;
     }
     .btn-refresh-project:hover {
-      background: #004d9b;
+      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+      border-color: #ffffff;
       transform: translateY(-1px);
-      box-shadow: 0 3px 10px rgba(0, 93, 187, 0.55);
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.65);
     }
     .btn-refresh-project:active {
       transform: translateY(0);
+    }
+    .btn-refresh-project .btn-spin-icon {
+      font-size: 13px;
+      display: inline-block;
+      transition: transform 0.4s ease;
+    }
+    .btn-refresh-project:hover .btn-spin-icon {
+      transform: rotate(180deg);
     }
 
     /* Định dạng tất cả các ô cần điền theo màu xanh Cavansite (#005DBB) */
@@ -2452,8 +2462,9 @@
       </div>
       <div class="estimate-title">
         <div style="display:inline-flex; align-items:center; gap:6px;">
-          <button type="button" class="btn-refresh-project" id="btnRefreshProject" onclick="resetProjectToNew()" title="Làm mới dự toán (New): Xóa dữ liệu các Phụ lục (1, 2, 4, 5, 6) & Check-in để lập dự toán mới">
-            🔄 Refresh
+          <button type="button" class="btn-refresh-project" id="btnRefreshProject" onclick="resetProjectToNew()" title="Làm mới dự toán: Đặt lại các thông số người dùng điền, giữ nguyên các cài đặt của Quản trị viên">
+            <span class="btn-spin-icon">🔄</span>
+            <span>Refresh</span>
           </button>
           <div class="badge editable-field" id="appBadgeText" onclick="adminQuickEdit('appBadgeText', 'Nhãn Estimate:')">ESTIMATE</div>
         </div>
@@ -5170,13 +5181,17 @@
       }
     }
 
-    // --- LÀM MỚI DỰ TOÁN (NEW / REFRESH DỰ ÁN) ---
+    // --- LÀM MỚI DỰ TOÁN (NEW / REFRESH DỰ ÁN CHO NGƯỜI DÙNG & QUẢN TRỊ VIÊN) ---
     function resetProjectToNew() {
-      if (!confirm("Bắt đầu lập dự toán mới (New Project)?\nToàn bộ công tác đã chọn, các vị trí thi công, check-in và số liệu tính toán ở các Phụ lục (1, 2, 4, 5, 6) sẽ được làm mới về ban đầu.")) {
+      if (!confirm("Bắt đầu lập dự toán mới (Làm mới dữ liệu)?\n\nToàn bộ công tác đã chọn, các vị trí thi công, kết quả check-in và số liệu người dùng điền tại các Phụ lục (1, 2, 4, 5, 6) sẽ được làm mới về ban đầu.\n\n(Lưu ý: Toàn bộ đơn giá, định mức và địa chỉ do Quản trị viên cài đặt vẫn được giữ nguyên hoàn toàn).")) {
         return;
       }
 
-      // 1. Phụ lục 1 & 2: Đưa danh sách vị trí về 1 vị trí ban đầu (Vị trí 1, công tác mẫu đầu tiên)
+      // Lấy khoảng cách km mặc định hiện có của Điểm xuất phát (do Admin cài đặt, không ghi đè giá trị Admin)
+      const adminDepotKm1 = parseFloat(document.getElementById('depotKm1')?.value) || 15;
+      const initialKm = Math.round(adminDepotKm1);
+
+      // 1. Phụ lục 1 & 2: Đưa danh sách vị trí về 1 vị trí ban đầu (Vị trí 1, 1 công tác mẫu, chưa tick điều kiện nào)
       positions = [
         {
           id: 1,
@@ -5184,56 +5199,65 @@
           address: '',
           checkedIn: false,
           gps: '',
-          distanceKm: 15,
+          distanceKm: initialKm,
           tasks: [
             {
               taskId: (MASTER_TASKS[0] ? MASTER_TASKS[0].id : 'CV3592'),
-              condIds: (MASTER_CONDITIONS[0] ? [MASTER_CONDITIONS[0].id] : []),
+              condIds: [],
               qty: 1
             }
           ],
-          factors: [1.0, 0.8, 0.7, 0.6],
+          factors: getAutoFactors(1),
+          isCustomFactors: false,
           similarCount: 1
         }
       ];
 
-      // 2. Điểm xuất phát & Check-in: Trở về ban đầu
+      // 2. Điểm xuất phát: Chọn lại Trụ sở chính (Hàng 1), GIỮ NGUYÊN địa chỉ & km do Quản trị viên đã cài đặt
       const radio1 = document.getElementById('depotRadio1');
       if (radio1) radio1.checked = true;
       updateDepotRowStyles(1);
-      const km1 = document.getElementById('depotKm1');
-      const km2 = document.getElementById('depotKm2');
-      if (km1) km1.value = 15;
-      if (km2) km2.value = 25;
 
-      // 3. Phụ lục 4: Giá dầu (21.500) & Thuế dầu (0%)
-      const fuelP = document.getElementById('fuelPrice');
-      const fuelT = document.getElementById('fuelTax');
-      if (fuelP) fuelP.value = 21500;
-      if (fuelT) fuelT.value = 0;
+      // 3. Phụ lục 4: Chỉ đặt lại số chuyến vận chuyển về 1 chuyến; GIỮ NGUYÊN giá dầu và thuế GTGT của Quản trị viên
+      const fTrips = document.getElementById('fuelTrips');
+      if (fTrips) fTrips.value = 1;
 
-      // 4. Phụ lục 5: Đơn giá ca máy (1.250.000) & Reset số ca máy tự động
-      const shiftP = document.getElementById('machineShiftPrice');
-      if (shiftP) shiftP.value = 1250000;
+      // 4. Phụ lục 5: Xóa trạng thái gõ tay số ca máy để tự động tính theo công việc mới; GIỮ NGUYÊN đơn giá ca máy của Quản trị viên
       const countInp = document.getElementById('machineShiftCount');
       if (countInp && countInp.dataset) {
         delete countInp.dataset.userEdited;
       }
 
-      // 5. Phụ lục 6: Rào chắn (1 lần) & Khảo sát (0.5 công)
+      // 5. Phụ lục 6: Đặt lại số lần rào chắn về 1 lần & khảo sát về 0.5 công; GIỮ NGUYÊN định mức nhân công của Quản trị viên
       const barrier = document.getElementById('barrierTimes');
       if (barrier) barrier.value = 1;
       const survey = document.getElementById('surveyWorkDays');
       if (survey) survey.value = 0.5;
 
-      // 6. Cấp điện áp & Dự án: Trở về 22kV, Lắp mới (k=1), VAT 8%
+      // 6. Cấp điện áp & Loại dự án: Trở về 22kV, Lắp mới (k=1), VAT 8%
       setVoltage('22kV');
       setProjectType('lap_moi', true);
       updateSummaryVat(8, true);
 
+      // 7. Cập nhật lại toàn bộ giao diện & lưu an toàn danh sách vị trí mới (không ghi đè cấu hình đơn giá Admin)
       renderAll();
-      saveAllAdminData();
-      showToast("✨ Đã làm mới toàn bộ dự toán (New)! Các phụ lục & check-in đã sẵn sàng cho dự toán mới.");
+
+      try {
+        const raw = localStorage.getItem('evn_hotline_admin_saved');
+        if (raw) {
+          const d = JSON.parse(raw);
+          d.positions = positions;
+          d.fuelTrips = 1;
+          d.barrierTimes = 1;
+          d.surveyWorkDays = 0.5;
+          d.depotChoice = 1;
+          localStorage.setItem('evn_hotline_admin_saved', JSON.stringify(d));
+        }
+      } catch (e) {
+        console.warn("Lưu trạng thái làm mới dự toán", e);
+      }
+
+      showToast("✨ Đã làm mới dự toán thành công! Dữ liệu người dùng đã được đặt lại, các cấu hình của Quản trị viên vẫn được giữ nguyên.");
     }
 
     // --- 8. THÊM / CẬP NHẬT CÔNG TÁC & HỆ SỐ ĐIỀU CHỈNH VÀO VỊ TRÍ ---
