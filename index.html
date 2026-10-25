@@ -1963,6 +1963,57 @@ chỗ<!DOCTYPE html>
         <!-- BỐ CỤC 3: CÁC VỊ TRÍ (VỊ TRÍ 1 .. VỊ TRÍ 20) -->
         <section class="block-card">
           <div class="block-badge-num editable-field" id="badgeBlock3" onclick="editBlockBadge('badgeBlock3', 3)" title="Bấm vào để đổi tên đề mục 3">3</div>
+
+          <!-- KHUNG NƠI TÍNH KHOẢNG CÁCH DI CHUYỂN (2 HÀNG ĐỂ CHỌN) -->
+          <div class="depot-config-card" id="depotConfigCard" style="margin-bottom:14px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <div style="font-size:12px; font-weight:800; color:#005baa; display:flex; align-items:center; gap:6px;">
+                🏢 <span>Nơi tính khoảng cách di chuyển (Check-in & Phụ lục 4, 6):</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; font-style:italic;" id="lblDepotEditHint">
+                🔒 Admin/Mod mới được điền địa chỉ & km
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <!-- HÀNG 1: Số 441 đường 30 tháng 4... (Mặc định) -->
+              <label class="depot-row-label" id="depotRow1" style="display:flex; align-items:center; justify-content:space-between; background:#f0f9ff; border:1.5px solid #0284c7; border-radius:8px; padding:8px 12px; cursor:pointer; gap:10px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
+                  <input type="radio" name="depotChoice" id="depotRadio1" value="1" checked onchange="onSelectDepot(1)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
+                  <span style="font-weight:700; color:#0369a1; font-size:12px; white-space:nowrap;">Hàng 1:</span>
+                  <input type="text" id="depotAddr1" class="depot-addr-inp" value="Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh" 
+                         style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
+                         readonly onchange="saveAllAdminData()" title="Địa chỉ cơ sở 1 (Admin điền)">
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:11px; color:#64748b; font-weight:600;">Mặc định:</span>
+                  <input type="number" id="depotKm1" class="depot-km-inp" value="15" min="0" step="1" 
+                         style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#0284c7; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
+                         readonly onchange="onDepotKmChange(1)" title="Số km mặc định khi không check-in">
+                  <span style="font-size:12px; font-weight:700; color:#0369a1;">km</span>
+                </div>
+              </label>
+
+              <!-- HÀNG 2: Địa điểm 2 (Admin/Mod tự điền) -->
+              <label class="depot-row-label" id="depotRow2" style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:8px; padding:8px 12px; cursor:pointer; gap:10px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
+                  <input type="radio" name="depotChoice" id="depotRadio2" value="2" onchange="onSelectDepot(2)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
+                  <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Hàng 2:</span>
+                  <input type="text" id="depotAddr2" class="depot-addr-inp" value="Cơ sở 2 - Trạm phụ trợ (Admin điền)" 
+                         style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
+                         readonly onchange="saveAllAdminData()" title="Địa chỉ cơ sở 2 (Admin điền)">
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:11px; color:#64748b; font-weight:600;">Mặc định:</span>
+                  <input type="number" id="depotKm2" class="depot-km-inp" value="25" min="0" step="1" 
+                         style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#475569; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
+                         readonly onchange="onDepotKmChange(2)" title="Số km mặc định khi không check-in">
+                  <span style="font-size:12px; font-weight:700; color:#475569;">km</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
           <div class="position-container" id="positionList">
             <!-- Position items will be dynamically generated by JS -->
           </div>
@@ -3709,6 +3760,35 @@ chỗ<!DOCTYPE html>
         showToast("👤 Đang sử dụng với vai trò Người dùng.");
       }
 
+      // Cập nhật phân quyền cho 2 hàng nơi tính khoảng cách di chuyển
+      const isAdm = (role === 'admin');
+      const dAddr1 = document.getElementById('depotAddr1');
+      const dAddr2 = document.getElementById('depotAddr2');
+      const dKm1 = document.getElementById('depotKm1');
+      const dKm2 = document.getElementById('depotKm2');
+      const lblDepotHint = document.getElementById('lblDepotEditHint');
+
+      [dAddr1, dAddr2].forEach(inp => {
+        if (!inp) return;
+        inp.readOnly = !isAdm;
+        inp.style.background = isAdm ? '#ffffff' : 'transparent';
+        inp.style.borderColor = isAdm ? '#94a3b8' : 'transparent';
+        inp.style.cursor = isAdm ? 'text' : 'default';
+      });
+
+      [dKm1, dKm2].forEach(inp => {
+        if (!inp) return;
+        inp.readOnly = !isAdm;
+        inp.style.background = isAdm ? '#ffffff' : '#f8fafc';
+        inp.style.borderColor = isAdm ? '#0284c7' : '#cbd5e1';
+        inp.style.cursor = isAdm ? 'text' : 'default';
+      });
+
+      if (lblDepotHint) {
+        lblDepotHint.innerHTML = isAdm ? '🔓 <strong>Admin/Mod:</strong> Có thể sửa địa chỉ & km 2 hàng' : '🔒 <em>Admin/Mod mới được điền địa chỉ & km</em>';
+        lblDepotHint.style.color = isAdm ? '#0284c7' : '#64748b';
+      }
+
       populateModals();
       renderAll();
     }
@@ -3981,43 +4061,144 @@ chỗ<!DOCTYPE html>
     }
 
     // --- 6. CHECK-IN GPS & KHOẢNG CÁCH ---
+    function calculateRoadDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Bán kính trái đất (km)
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const straightDist = R * c;
+      const roadDist = straightDist * 1.25; // Ước lượng cung đường bộ thực tế (hệ số uốn lượn 1.25)
+      return Math.max(1, Math.round(roadDist)); // Làm tròn số nguyên chẵn không lấy số lẻ sau dấu phẩy
+    }
+
+    function getSelectedDepotInfo() {
+      const isChoice1 = document.getElementById('depotRadio1')?.checked ?? true;
+      if (isChoice1) {
+        return {
+          id: 1,
+          name: document.getElementById('depotAddr1')?.value || "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh",
+          lat: 11.324902,
+          lng: 106.102019,
+          defaultKm: parseInt(document.getElementById('depotKm1')?.value, 10) || 15
+        };
+      } else {
+        return {
+          id: 2,
+          name: document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
+          lat: 11.350000,
+          lng: 106.120000,
+          defaultKm: parseInt(document.getElementById('depotKm2')?.value, 10) || 25
+        };
+      }
+    }
+
+    function onSelectDepot(choice) {
+      const radio1 = document.getElementById('depotRadio1');
+      const radio2 = document.getElementById('depotRadio2');
+      if (choice === 1 && radio1) radio1.checked = true;
+      if (choice === 2 && radio2) radio2.checked = true;
+
+      const depot = getSelectedDepotInfo();
+      updateDepotRowStyles(choice);
+
+      // Nếu chưa check-in thì tự động lấy số km mặc định của hàng đó áp dụng cho Vị trí 1 (Phụ lục 4 & 6)
+      if (positions[0] && !positions[0].checkedIn) {
+        positions[0].distanceKm = depot.defaultKm;
+        showToast(`🚗 Đã chọn [Hàng ${choice}]: Áp dụng ${depot.defaultKm} km cho Phụ lục 4 & 6.`);
+        renderAll();
+      } else if (positions[0]) {
+        showToast(`🏢 Đã chọn [Hàng ${choice}] làm nơi tính khoảng cách di chuyển.`);
+      }
+      saveAllAdminData();
+    }
+
+    function onDepotKmChange(choice) {
+      const kmInp = document.getElementById('depotKm' + choice);
+      if (kmInp) {
+        kmInp.value = Math.max(0, Math.round(parseFloat(kmInp.value) || 0));
+      }
+      const isCurrentChoice = (choice === 1 && document.getElementById('depotRadio1')?.checked) ||
+                              (choice === 2 && document.getElementById('depotRadio2')?.checked);
+      if (isCurrentChoice && positions[0] && !positions[0].checkedIn) {
+        positions[0].distanceKm = parseInt(kmInp.value, 10) || 0;
+        renderAll();
+      }
+      saveAllAdminData();
+    }
+
+    function updateDepotRowStyles(choice) {
+      const row1 = document.getElementById('depotRow1');
+      const row2 = document.getElementById('depotRow2');
+      if (row1) {
+        if (choice === 1) {
+          row1.style.borderColor = '#0284c7';
+          row1.style.background = '#f0f9ff';
+        } else {
+          row1.style.borderColor = '#e2e8f0';
+          row1.style.background = '#ffffff';
+        }
+      }
+      if (row2) {
+        if (choice === 2) {
+          row2.style.borderColor = '#0284c7';
+          row2.style.background = '#f0f9ff';
+        } else {
+          row2.style.borderColor = '#e2e8f0';
+          row2.style.background = '#ffffff';
+        }
+      }
+    }
+
     function checkInPosition(posId) {
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
 
+      const depot = getSelectedDepotInfo();
+
       if ("geolocation" in navigator) {
-        showToast("Đang lấy tọa độ GPS từ vệ tinh...");
+        showToast("🛰️ Đang lấy tọa độ GPS từ thiết bị...");
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            const lat = position.coords.latitude.toFixed(6);
-            const lng = position.coords.longitude.toFixed(6);
+            const lat = parseFloat(position.coords.latitude.toFixed(6));
+            const lng = parseFloat(position.coords.longitude.toFixed(6));
             pos.checkedIn = true;
             pos.gps = `${lat}, ${lng}`;
-            showToast(`${pos.title || 'Vị trí ' + posId}: Check-in thành công! (${pos.gps})`);
-            renderPositions();
+            // Tính số km đường bộ đến nơi check-in (số nguyên chẵn, không lấy số lẻ sau dấu phẩy)
+            const calcKm = calculateRoadDistanceKm(lat, lng, depot.lat, depot.lng);
+            pos.distanceKm = calcKm;
+            showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công! Cách [${depot.name.slice(0, 30)}...] ${calcKm} km.`);
+            renderAll();
           },
           (error) => {
-            const sampleLat = (11.3665 + (Math.random() - 0.5) * 0.05).toFixed(6);
-            const sampleLng = (106.1362 + (Math.random() - 0.5) * 0.05).toFixed(6);
+            // Giả lập tọa độ thực tế tại khu vực Tây Ninh nếu trình duyệt chặn GPS
+            const sampleLat = 11.3665 + (Math.random() - 0.5) * 0.04;
+            const sampleLng = 106.1362 + (Math.random() - 0.5) * 0.04;
             pos.checkedIn = true;
-            pos.gps = `${sampleLat}, ${sampleLng}`;
-            showToast(`${pos.title || 'Vị trí ' + posId}: Check-in mô phỏng (${pos.gps})`);
-            renderPositions();
+            pos.gps = `${sampleLat.toFixed(6)}, ${sampleLng.toFixed(6)}`;
+            const calcKm = calculateRoadDistanceKm(sampleLat, sampleLng, depot.lat, depot.lng);
+            pos.distanceKm = calcKm;
+            showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in định vị ${calcKm} km (Mô phỏng GPS Tây Ninh).`);
+            renderAll();
           },
           { timeout: 8000 }
         );
       } else {
         pos.checkedIn = true;
         pos.gps = "11.366500, 106.136200";
-        showToast(`${pos.title || 'Vị trí ' + posId}: Check-in thành công!`);
-        renderPositions();
+        const calcKm = calculateRoadDistanceKm(11.3665, 106.1362, depot.lat, depot.lng);
+        pos.distanceKm = calcKm;
+        showToast(`📍 ${pos.title || 'Vị trí ' + posId}: Check-in thành công! ${calcKm} km`);
+        renderAll();
       }
     }
 
     function promptDistance(posId) {
       const pos = positions.find(p => p.id === posId);
       if (!pos) return;
-      const val = prompt(`Nhập khoảng cách di chuyển từ đơn vị đến ${pos.title || 'Vị trí ' + posId} (km):`, pos.distanceKm || 15);
+      const val = prompt(`Nhập khoảng cách di chuyển từ đơn vị đến ${pos.title || 'Vị trí ' + posId} (km số chẵn):`, pos.distanceKm || 15);
       if (val !== null) {
         const num = parseFloat(val);
         if (!isNaN(num) && num >= 0) {
@@ -5482,7 +5663,12 @@ chỗ<!DOCTYPE html>
         fuelTrips: document.getElementById('fuelTrips') ? document.getElementById('fuelTrips').value : '1',
         machineShiftPrice: document.getElementById('machineShiftPrice') ? document.getElementById('machineShiftPrice').value : '1250000',
         barrierTimes: document.getElementById('barrierTimes') ? document.getElementById('barrierTimes').value : '1',
-        surveyWorkDays: document.getElementById('surveyWorkDays') ? document.getElementById('surveyWorkDays').value : '2',
+        surveyWorkDays: document.getElementById('surveyWorkDays') ? document.getElementById('surveyWorkDays').value : '0.5',
+        depotChoice: document.getElementById('depotRadio2')?.checked ? 2 : 1,
+        depotAddr1: document.getElementById('depotAddr1') ? document.getElementById('depotAddr1').value : "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh",
+        depotKm1: document.getElementById('depotKm1') ? document.getElementById('depotKm1').value : "15",
+        depotAddr2: document.getElementById('depotAddr2') ? document.getElementById('depotAddr2').value : "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
+        depotKm2: document.getElementById('depotKm2') ? document.getElementById('depotKm2').value : "25",
         appLogoTitle: document.getElementById('appLogoTitle').innerText,
         appLogoSub: document.getElementById('appLogoSub').innerText,
         appBadgeText: document.getElementById('appBadgeText').innerText,
@@ -5528,6 +5714,18 @@ chỗ<!DOCTYPE html>
         if (d.machineShiftPrice && document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = d.machineShiftPrice;
         if (d.barrierTimes && document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = d.barrierTimes;
         if (d.surveyWorkDays && document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = d.surveyWorkDays;
+
+        if (d.depotAddr1 && document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = d.depotAddr1;
+        if (d.depotKm1 && document.getElementById('depotKm1')) document.getElementById('depotKm1').value = d.depotKm1;
+        if (d.depotAddr2 && document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = d.depotAddr2;
+        if (d.depotKm2 && document.getElementById('depotKm2')) document.getElementById('depotKm2').value = d.depotKm2;
+        if (d.depotChoice === 2) {
+          if (document.getElementById('depotRadio2')) document.getElementById('depotRadio2').checked = true;
+          updateDepotRowStyles(2);
+        } else {
+          if (document.getElementById('depotRadio1')) document.getElementById('depotRadio1').checked = true;
+          updateDepotRowStyles(1);
+        }
 
         if (d.appLogoTitle) document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
         if (d.appLogoSub && d.appLogoSub !== 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM') {
@@ -5600,6 +5798,12 @@ chỗ<!DOCTYPE html>
       if (document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = '1250000';
       if (document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = '1';
       if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '0.5';
+      if (document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
+      if (document.getElementById('depotKm1')) document.getElementById('depotKm1').value = "15";
+      if (document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = "Cơ sở 2 - Trạm phụ trợ (Admin điền)";
+      if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = "25";
+      if (document.getElementById('depotRadio1')) document.getElementById('depotRadio1').checked = true;
+      updateDepotRowStyles(1);
       const countInpReset = document.getElementById('machineShiftCount');
       if (countInpReset && countInpReset.dataset) delete countInpReset.dataset.userEdited;
       window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
