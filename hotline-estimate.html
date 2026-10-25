@@ -2070,7 +2070,7 @@
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Km khảo sát (Vị trí 1):</label>
-              <input type="text" class="fuel-price-input" style="width:100%; background:#f1f5f9; font-weight:700; color:#334155;" id="surveyKmText" value="15.0 km" readonly>
+              <input type="text" class="fuel-price-input" style="width:100%; background:#f1f5f9; font-weight:700; color:#334155;" id="surveyKmText" value="15 km" readonly>
             </div>
           </div>
           <div class="table-responsive-wrapper">
@@ -3994,8 +3994,8 @@
       if (val !== null) {
         const num = parseFloat(val);
         if (!isNaN(num) && num >= 0) {
-          pos.distanceKm = num;
-          showToast(`${pos.title || 'Vị trí ' + posId}: Đã cập nhật ${num} km`);
+          pos.distanceKm = Math.round(num);
+          showToast(`${pos.title || 'Vị trí ' + posId}: Đã cập nhật ${Math.round(num)} km`);
           renderAll();
         }
       }
@@ -4672,7 +4672,7 @@
           <tr>
             <td><strong>${r.name}</strong></td>
             <td style="text-align:center; font-weight:700;">${r.rate} lít / 100km</td>
-            <td style="text-align:center;">${totalKmPerVeh.toFixed(1)} km</td>
+            <td style="text-align:center;">${Math.round(totalKmPerVeh)} km</td>
             <td class="num">${formatMoney(cost)}</td>
           </tr>
         `;
@@ -4747,7 +4747,7 @@
       // Phụ lục 6: Khảo sát hiện trường
       const surveyWorkDays = parseFloat(document.getElementById('surveyWorkDays')?.value) || 2;
       const surveyKmInp = document.getElementById('surveyKmText');
-      if (surveyKmInp) surveyKmInp.value = `${pos1Km.toFixed(1)} km`;
+      if (surveyKmInp) surveyKmInp.value = `${Math.round(pos1Km)} km`;
 
       // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7) (không làm tròn lên)
       const surveyLabor = LABOR_NORMS.find(l => (l.title || '').includes('4/7')) || LABOR_NORMS[1] || LABOR_NORMS[0];
@@ -4771,7 +4771,7 @@
         <tr>
           <td><strong>Vận chuyển phục vụ khảo sát</strong> (Xe bán tải ${pickupRate} L/100km)</td>
           <td style="text-align:center;">km</td>
-          <td style="text-align:center; font-weight:700;">${pos1Km.toFixed(1)}</td>
+          <td style="text-align:center; font-weight:700;">${Math.round(pos1Km)}</td>
           <td class="num">${formatMoney(costSurveyTransport)}</td>
         </tr>
         <tr style="background:#eff6ff; font-weight:700;">
@@ -4935,7 +4935,7 @@
       const elStatDist = document.getElementById('statDistTotal');
       if (elStatDist) {
         const totalKm = positions.reduce((acc, p) => acc + (parseFloat(p.distanceKm) || 0), 0);
-        elStatDist.innerText = totalKm + ' km';
+        elStatDist.innerText = Math.round(totalKm) + ' km';
       }
 
       const elStatShift = document.getElementById('statMachineShifts');
