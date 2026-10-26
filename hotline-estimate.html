@@ -2297,6 +2297,8 @@
       }
     }
   </style>
+  <!-- html2pdf library for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -2809,9 +2811,9 @@
               </div>
             </button>
             <div style="text-align:center;">
-              <button type="button" onclick="exportToExcel()" class="btn-subtle-excel" title="Xuất file bảng tính Excel nếu cần">
-                📥 Xuất bảng tính Excel (.xls)
-              </button>
+              <button type="button" onclick="exportToPDF()" class="btn-subtle-excel" style="background: #ffffff; color: #dc2626; border-color: #fca5a5; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.06);" title="Xuất Bảng tổng hợp dự toán ra tệp PDF">
+    📄 Xuất bảng tính PDF
+  </button>
             </div>
           </div>
 
@@ -10315,7 +10317,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261026_05";
+    const APP_CONFIG_VERSION = "20261026_06";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10670,7 +10672,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261026_v7').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261026_v8').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -10758,7 +10760,286 @@
       return result.charAt(0).toUpperCase() + result.slice(1);
     }
 
-    // --- 19. EXPORT EXCEL (.xls) ---
+    // --- 19. EXPORT PDF (BẢNG TỔNG HỢP DỰ TOÁN - KHÔNG HIỆN Ô MÀU ĐEN) ---
+    function exportToPDF() {
+      const data = getSummaryCalculationData();
+      const words = data.words;
+      const today = new Date();
+      const dateStr = `Tây Ninh, ngày ${today.getDate()} tháng ${today.getMonth() + 1} năm ${today.getFullYear()}`;
+
+      const companyTitle = document.getElementById('appLogoTitle')?.innerText || 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+      const deptTitle = document.getElementById('appLogoSub')?.innerText || 'ĐỘI THI CÔNG SỬA CHỮA ĐIỆN NÓNG';
+      const mainTitle = document.getElementById('lblSummaryTitle')?.innerText || 'BẢNG TỔNG HỢP';
+      const subTitle = document.getElementById('lblSummarySub')?.innerText || 'DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE';
+
+      // Tạo các dòng theo đúng hình mẫu (Loại bỏ hoàn toàn ô màu đen: Loại hình công trình & Thuế suất)
+      const rowsHtml = data.summaryRows.map(r => {
+        let rowStyle = '';
+        let textStyle = '';
+        if (r.stt === 'A') {
+          rowStyle = 'background-color:#f0f9ff; font-weight:800; color:#0284c7;';
+          textStyle = 'color:#0284c7;';
+        } else if (r.stt === 'C') {
+          rowStyle = 'background-color:#fef3c7; font-weight:800; color:#b45309;';
+          textStyle = 'color:#b45309;';
+        } else if (r.stt === 'E') {
+          rowStyle = 'background-color:#e0f2fe; font-weight:800; color:#005baa; font-size:12px;';
+          textStyle = 'color:#005baa;';
+        } else if (r.isHeader) {
+          rowStyle = 'background-color:#f8fafc; font-weight:700;';
+        } else if (r.stt === 'D' || r.stt === 'B') {
+          rowStyle = 'font-weight:700;';
+        }
+
+        const isSubItem = r.name.trim().startsWith('-');
+        const indent = isSubItem ? 'padding-left:18px; color:#475569;' : '';
+
+        return `
+          <tr style="${rowStyle}">
+            <td style="text-align:center; padding:6px 4px; border:1px solid #cbd5e1; font-weight:${r.isHeader || r.isGrand || r.isMajor ? '800' : '500'};">${r.stt}</td>
+            <td style="text-align:left; padding:6px 8px; border:1px solid #cbd5e1; ${indent} ${textStyle}">${r.name.trim()}</td>
+            <td style="text-align:center; padding:6px 4px; border:1px solid #cbd5e1;">${r.code}</td>
+            <td style="text-align:center; padding:6px 6px; border:1px solid #cbd5e1;">${r.formula}</td>
+            <td style="text-align:right; padding:6px 8px; border:1px solid #cbd5e1; font-weight:${r.isHeader || r.isGrand || r.isMajor ? '800' : '600'}; ${textStyle}">${formatMoney(r.val)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const printableHtml = `
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+          <meta charset="UTF-8">
+          <title>BẢNG TỔNG HỢP DỰ TOÁN THI CÔNG HOTLINE</title>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 12mm 10mm 12mm 10mm;
+            }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              color: #0f172a;
+              background: #ffffff;
+              padding: 12px;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .pdf-card {
+              max-width: 800px;
+              margin: 0 auto;
+              background: #ffffff;
+              border: 1.5px solid #005baa;
+              border-radius: 8px;
+              padding: 16px 20px 24px 20px;
+            }
+            .pdf-header {
+              text-align: center;
+              margin-bottom: 14px;
+            }
+            .pdf-title-company {
+              font-size: 13px;
+              font-weight: 800;
+              color: #005baa;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            .pdf-subtitle-dept {
+              font-size: 11px;
+              font-weight: 700;
+              color: #334155;
+              text-transform: uppercase;
+              margin-top: 2px;
+            }
+            .pdf-divider {
+              width: 60px;
+              height: 2px;
+              background: #005baa;
+              margin: 6px auto 10px auto;
+            }
+            .pdf-main-title {
+              font-size: 18px;
+              font-weight: 900;
+              color: #005baa;
+              margin: 0;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            .pdf-sub-title {
+              font-size: 11.5px;
+              font-weight: 700;
+              color: #475569;
+              text-transform: uppercase;
+              margin-top: 3px;
+              letter-spacing: 0.3px;
+            }
+            table.pdf-table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 11.5px;
+              margin-top: 12px;
+              border: 1.5px solid #0284c7;
+              border-radius: 6px;
+            }
+            table.pdf-table th {
+              background: #f8fafc;
+              color: #005baa;
+              font-weight: 800;
+              text-align: center;
+              border: 1px solid #cbd5e1;
+              padding: 8px 6px;
+            }
+            .words-box {
+              margin-top: 12px;
+              padding: 8px 12px;
+              background: #f8fafc;
+              border-left: 3.5px solid #005baa;
+              border-radius: 4px;
+              font-size: 11.5px;
+              line-height: 1.4;
+            }
+            .pdf-signatures {
+              margin-top: 26px;
+              display: flex;
+              justify-content: space-between;
+              text-align: center;
+              font-size: 11px;
+              page-break-inside: avoid;
+            }
+            .sig-block { width: 31%; }
+            .sig-title { font-weight: 800; color: #0f172a; text-transform: uppercase; }
+            .sig-sub { font-size: 9.5px; color: #64748b; font-style: italic; margin-top: 1px; }
+            .sig-space { height: 60px; }
+            @media print {
+              body { padding: 0; }
+              .pdf-card { border: none; padding: 0; }
+              .no-print { display: none !important; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="pdf-card" id="pdfCaptureArea">
+            <div class="pdf-header">
+              <div class="pdf-title-company">${companyTitle}</div>
+              <div class="pdf-subtitle-dept">${deptTitle}</div>
+              <div class="pdf-divider"></div>
+              <h1 class="pdf-main-title">${mainTitle}</h1>
+              <div class="pdf-sub-title">${subTitle}</div>
+            </div>
+
+            <!-- BỎ HOÀN TOÀN Ô MÀU ĐEN (LOẠI HÌNH CÔNG TRÌNH & THUẾ SUẤT GTGT) THEO YÊU CẦU -->
+
+            <table class="pdf-table">
+              <thead>
+                <tr>
+                  <th style="width: 7%;">STT</th>
+                  <th style="width: 43%; text-align: left; padding-left: 8px;">KHOẢN MỤC CHI PHÍ</th>
+                  <th style="width: 10%;">KÝ HIỆU</th>
+                  <th style="width: 20%;">CÁCH TÍNH</th>
+                  <th style="width: 20%; text-align: right; padding-right: 8px;">THÀNH TIỀN (đ)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+
+            <div class="words-box">
+              <strong>Số tiền bằng chữ:</strong> <em>${words}</em>
+            </div>
+
+            <div class="pdf-signatures">
+              <div class="sig-block">
+                <div class="sig-title">NGƯỜI LẬP BẢNG</div>
+                <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
+                <div class="sig-space"></div>
+              </div>
+              <div class="sig-block">
+                <div class="sig-title">ĐỘI TRƯỞNG HOTLINE</div>
+                <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
+                <div class="sig-space"></div>
+              </div>
+              <div class="sig-block">
+                <div style="font-size: 10.5px; font-style: italic; color: #475569; margin-bottom: 2px;">${dateStr}</div>
+                <div class="sig-title">QUẢN ĐỐC XÍ NGHIỆP</div>
+                <div class="sig-sub">(Ký, đóng dấu, ghi rõ họ tên)</div>
+                <div class="sig-space"></div>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // 1. Thử dùng thư viện html2pdf để tải tệp PDF về máy trực tiếp
+      if (typeof html2pdf !== 'undefined') {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        tempDiv.style.top = '0';
+        tempDiv.style.width = '790px';
+        tempDiv.innerHTML = printableHtml;
+        document.body.appendChild(tempDiv);
+        const element = tempDiv.querySelector('#pdfCaptureArea');
+        const opt = {
+          margin: [8, 8, 8, 8],
+          filename: `Bang-Tong-Hop-Du-Toan-Hotline-${Date.now()}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        showToast("📄 Đang tạo file PDF...");
+        html2pdf().set(opt).from(element).save().then(() => {
+          document.body.removeChild(tempDiv);
+          showToast("🎉 Đã xuất tệp PDF thành công!");
+        }).catch((err) => {
+          console.warn("html2pdf error, fallback to print window:", err);
+          document.body.removeChild(tempDiv);
+          openPrintWindow(printableHtml);
+        });
+      } else {
+        // 2. Fallback: Mở cửa sổ in / Lưu PDF trực tiếp của trình duyệt
+        openPrintWindow(printableHtml);
+      }
+    }
+
+    function openPrintWindow(printableHtml) {
+      const printWin = window.open('', '_blank');
+      if (printWin) {
+        printWin.document.open();
+        printWin.document.write(printableHtml);
+        printWin.document.close();
+        printWin.focus();
+        setTimeout(() => {
+          printWin.print();
+        }, 500);
+        showToast("📄 Đang mở hộp thoại In / Lưu dưới dạng PDF!");
+      } else {
+        let iframe = document.getElementById('printPdfIframe');
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.id = 'printPdfIframe';
+          iframe.style.position = 'fixed';
+          iframe.style.right = '0';
+          iframe.style.bottom = '0';
+          iframe.style.width = '0';
+          iframe.style.height = '0';
+          iframe.style.border = '0';
+          document.body.appendChild(iframe);
+        }
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(printableHtml);
+        doc.close();
+        iframe.contentWindow.focus();
+        setTimeout(() => {
+          iframe.contentWindow.print();
+        }, 500);
+        showToast("📄 Đang mở hộp thoại In / Lưu dưới dạng PDF!");
+      }
+    }
+
+    // --- 19b. EXPORT EXCEL (.xls) (DỰ PHÒNG) ---
     function exportToExcel() {
       const data = getSummaryCalculationData();
       const grandTotal = formatMoney(data.Gdt) + ' đ';
