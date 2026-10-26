@@ -10317,7 +10317,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261026_07";
+    const APP_CONFIG_VERSION = "20261026_08";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10672,7 +10672,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261026_v9').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261026_v10').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -10760,7 +10760,7 @@
       return result.charAt(0).toUpperCase() + result.slice(1);
     }
 
-    // --- 19. EXPORT PDF (BẢNG TỔNG HỢP DỰ TOÁN - KHÔNG HIỆN Ô MÀU ĐEN) ---
+    // --- 19. EXPORT PDF (BẢNG TỔNG HỢP DỰ TOÁN - KHÔNG HIỆN Ô MÀU ĐEN, VỪA VẶN 1 TRANG A4) ---
     function exportToPDF() {
       const data = getSummaryCalculationData();
       const words = data.words;
@@ -10774,38 +10774,96 @@
 
       // Tạo các dòng theo đúng hình mẫu (Loại bỏ hoàn toàn ô màu đen: Loại hình công trình & Thuế suất)
       const rowsHtml = data.summaryRows.map(r => {
-        let rowStyle = '';
-        let textStyle = '';
+        let rowBg = '';
+        let rowFontWeight = '500';
+        let textColor = '#0f172a';
+        let fontSize = '10px';
+
         if (r.stt === 'A') {
-          rowStyle = 'background-color:#f0f9ff; font-weight:800; color:#0284c7;';
-          textStyle = 'color:#0284c7;';
+          rowBg = 'background-color:#f0f9ff;';
+          rowFontWeight = '800';
+          textColor = '#0284c7';
         } else if (r.stt === 'C') {
-          rowStyle = 'background-color:#fef3c7; font-weight:800; color:#b45309;';
-          textStyle = 'color:#b45309;';
+          rowBg = 'background-color:#fef3c7;';
+          rowFontWeight = '800';
+          textColor = '#b45309';
         } else if (r.stt === 'E') {
-          rowStyle = 'background-color:#e0f2fe; font-weight:800; color:#005baa; font-size:12px;';
-          textStyle = 'color:#005baa;';
+          rowBg = 'background-color:#e0f2fe;';
+          rowFontWeight = '800';
+          textColor = '#005baa';
+          fontSize = '11px';
         } else if (r.isHeader) {
-          rowStyle = 'background-color:#f8fafc; font-weight:700;';
+          rowBg = 'background-color:#f8fafc;';
+          rowFontWeight = '700';
         } else if (r.stt === 'D' || r.stt === 'B') {
-          rowStyle = 'font-weight:700;';
+          rowFontWeight = '700';
         }
 
         const isSubItem = r.name.trim().startsWith('-');
-        const indent = isSubItem ? 'padding-left:18px; color:#475569;' : '';
+        const indent = isSubItem ? 'padding-left:14px; color:#475569;' : '';
+        const nameStyle = `${indent} color:${textColor}; font-weight:${rowFontWeight};`;
 
         return `
-          <tr style="${rowStyle}">
-            <td style="text-align:center; padding:6px 4px; border:1px solid #cbd5e1; font-weight:${r.isHeader || r.isGrand || r.isMajor ? '800' : '500'};">${r.stt}</td>
-            <td style="text-align:left; padding:6px 8px; border:1px solid #cbd5e1; ${indent} ${textStyle}">${r.name.trim()}</td>
-            <td style="text-align:center; padding:6px 4px; border:1px solid #cbd5e1;">${r.code}</td>
-            <td style="text-align:center; padding:6px 4px; border:1px solid #cbd5e1; white-space:nowrap; font-size:10.5px;">${r.formula}</td>
-            <td style="text-align:right; padding:6px 8px; border:1px solid #cbd5e1; font-weight:${r.isHeader || r.isGrand || r.isMajor ? '800' : '600'}; ${textStyle}">${formatMoney(r.val)}</td>
+          <tr style="${rowBg}">
+            <td style="text-align:center; padding:4px 3px; border:1px solid #cbd5e1; font-weight:${rowFontWeight}; font-size:${fontSize}; color:${textColor};">${r.stt}</td>
+            <td style="text-align:left; padding:4px 6px; border:1px solid #cbd5e1; ${nameStyle} font-size:${fontSize}; line-height:1.2;">${r.name.trim()}</td>
+            <td style="text-align:center; padding:4px 3px; border:1px solid #cbd5e1; font-weight:${rowFontWeight}; font-size:${fontSize}; color:${textColor};">${r.code}</td>
+            <td style="text-align:center; padding:4px 3px; border:1px solid #cbd5e1; white-space:nowrap; font-size:9.5px; color:${isSubItem ? '#475569' : textColor};">${r.formula}</td>
+            <td style="text-align:right; padding:4px 6px; border:1px solid #cbd5e1; font-weight:${rowFontWeight}; font-size:${fontSize}; color:${textColor};">${formatMoney(r.val)}</td>
           </tr>
         `;
       }).join('');
 
-      const printableHtml = `
+      const innerContentHtml = `
+        <div style="text-align: center; margin-bottom: 10px;">
+          <div style="font-size: 12.5px; font-weight: 800; color: #005baa; text-transform: uppercase; letter-spacing: 0.5px;">${companyTitle}</div>
+          <div style="font-size: 10.5px; font-weight: 700; color: #334155; text-transform: uppercase; margin-top: 2px;">${deptTitle}</div>
+          <div style="width: 50px; height: 1.5px; background: #005baa; margin: 4px auto 6px auto;"></div>
+          <h1 style="font-size: 15px; font-weight: 900; color: #005baa; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">${mainTitle}</h1>
+          <div style="font-size: 10.5px; font-weight: 700; color: #475569; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.3px;">${subTitle}</div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 10px; line-height: 1.2; border: 1.5px solid #0284c7;">
+          <thead>
+            <tr style="background: #f8fafc; color: #005baa;">
+              <th style="width: 6%; text-align: center; padding: 5px 3px; border: 1px solid #cbd5e1; font-weight: 800;">STT</th>
+              <th style="width: 44%; text-align: left; padding: 5px 6px; border: 1px solid #cbd5e1; font-weight: 800;">KHOẢN MỤC CHI PHÍ</th>
+              <th style="width: 8%; text-align: center; padding: 5px 3px; border: 1px solid #cbd5e1; font-weight: 800;">KÝ HIỆU</th>
+              <th style="width: 22%; text-align: center; padding: 5px 3px; border: 1px solid #cbd5e1; font-weight: 800; white-space: nowrap;">CÁCH TÍNH</th>
+              <th style="width: 20%; text-align: right; padding: 5px 6px; border: 1px solid #cbd5e1; font-weight: 800;">THÀNH TIỀN (đ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+
+        <div style="margin-top: 8px; padding: 5px 8px; background: #f8fafc; border-left: 3.5px solid #005baa; border-radius: 4px; font-size: 10px; line-height: 1.3; color: #0f172a;">
+          <strong>Số tiền bằng chữ:</strong> <em>${words}</em>
+        </div>
+
+        <div style="margin-top: 12px; display: flex; justify-content: space-between; text-align: center; font-size: 10px; page-break-inside: avoid;">
+          <div style="width: 31%;">
+            <div style="font-weight: 800; color: #0f172a; text-transform: uppercase;">NGƯỜI LẬP BẢNG</div>
+            <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: 1px;">(Ký, ghi rõ họ tên)</div>
+            <div style="height: 42px;"></div>
+          </div>
+          <div style="width: 31%;">
+            <div style="font-weight: 800; color: #0f172a; text-transform: uppercase;">ĐỘI TRƯỞNG HOTLINE</div>
+            <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: 1px;">(Ký, ghi rõ họ tên)</div>
+            <div style="height: 42px;"></div>
+          </div>
+          <div style="width: 33%;">
+            <div style="font-size: 9.5px; font-style: italic; color: #475569; margin-bottom: 2px;">${dateStr}</div>
+            <div style="font-weight: 800; color: #0f172a; text-transform: uppercase;">QUẢN ĐỐC XÍ NGHIỆP</div>
+            <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: 1px;">(Ký, đóng dấu, ghi rõ họ tên)</div>
+            <div style="height: 42px;"></div>
+          </div>
+        </div>
+      `;
+
+      // Full HTML dành riêng cho Fallback in trực tiếp bằng Print Window / Iframe
+      const printableFullDoc = `
         <!DOCTYPE html>
         <html lang="vi">
         <head>
@@ -10814,192 +10872,103 @@
           <style>
             @page {
               size: A4 portrait;
-              margin: 12mm 10mm 12mm 10mm;
+              margin: 8mm 6mm;
             }
             *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
             body {
               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
               color: #0f172a;
               background: #ffffff;
-              padding: 12px;
+              padding: 0;
+              margin: 0;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
             }
-            .pdf-card {
-              max-width: 800px;
+            .pdf-card-print {
+              width: 100%;
+              max-width: 760px;
               margin: 0 auto;
               background: #ffffff;
               border: 1.5px solid #005baa;
               border-radius: 8px;
-              padding: 16px 20px 24px 20px;
-            }
-            .pdf-header {
-              text-align: center;
-              margin-bottom: 14px;
-            }
-            .pdf-title-company {
-              font-size: 13px;
-              font-weight: 800;
-              color: #005baa;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            .pdf-subtitle-dept {
-              font-size: 11px;
-              font-weight: 700;
-              color: #334155;
-              text-transform: uppercase;
-              margin-top: 2px;
-            }
-            .pdf-divider {
-              width: 60px;
-              height: 2px;
-              background: #005baa;
-              margin: 6px auto 10px auto;
-            }
-            .pdf-main-title {
-              font-size: 18px;
-              font-weight: 900;
-              color: #005baa;
-              margin: 0;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            .pdf-sub-title {
-              font-size: 11.5px;
-              font-weight: 700;
-              color: #475569;
-              text-transform: uppercase;
-              margin-top: 3px;
-              letter-spacing: 0.3px;
-            }
-            table.pdf-table {
-              width: 100%;
-              border-collapse: collapse;
-              font-size: 11.5px;
-              margin-top: 12px;
-              border: 1.5px solid #0284c7;
-              border-radius: 6px;
-            }
-            table.pdf-table th {
-              background: #f8fafc;
-              color: #005baa;
-              font-weight: 800;
-              text-align: center;
-              border: 1px solid #cbd5e1;
-              padding: 8px 6px;
-            }
-            .words-box {
-              margin-top: 12px;
-              padding: 8px 12px;
-              background: #f8fafc;
-              border-left: 3.5px solid #005baa;
-              border-radius: 4px;
-              font-size: 11.5px;
-              line-height: 1.4;
-            }
-            .pdf-signatures {
-              margin-top: 26px;
-              display: flex;
-              justify-content: space-between;
-              text-align: center;
-              font-size: 11px;
-              page-break-inside: avoid;
-            }
-            .sig-block { width: 31%; }
-            .sig-title { font-weight: 800; color: #0f172a; text-transform: uppercase; }
-            .sig-sub { font-size: 9.5px; color: #64748b; font-style: italic; margin-top: 1px; }
-            .sig-space { height: 60px; }
-            @media print {
-              body { padding: 0; }
-              .pdf-card { border: none; padding: 0; }
-              .no-print { display: none !important; }
+              padding: 12px 14px;
             }
           </style>
         </head>
         <body>
-          <div class="pdf-card" id="pdfCaptureArea">
-            <div class="pdf-header">
-              <div class="pdf-title-company">${companyTitle}</div>
-              <div class="pdf-subtitle-dept">${deptTitle}</div>
-              <div class="pdf-divider"></div>
-              <h1 class="pdf-main-title">${mainTitle}</h1>
-              <div class="pdf-sub-title">${subTitle}</div>
-            </div>
-
-            <!-- BỎ HOÀN TOÀN Ô MÀU ĐEN (LOẠI HÌNH CÔNG TRÌNH & THUẾ SUẤT GTGT) THEO YÊU CẦU -->
-
-            <table class="pdf-table">
-              <thead>
-                <tr>
-                  <th style="width: 7%;">STT</th>
-                  <th style="width: 43%; text-align: left; padding-left: 8px;">KHOẢN MỤC CHI PHÍ</th>
-                  <th style="width: 10%;">KÝ HIỆU</th>
-                  <th style="width: 24%; white-space: nowrap;">CÁCH TÍNH</th>
-                  <th style="width: 20%; text-align: right; padding-right: 8px;">THÀNH TIỀN (đ)</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rowsHtml}
-              </tbody>
-            </table>
-
-            <div class="words-box">
-              <strong>Số tiền bằng chữ:</strong> <em>${words}</em>
-            </div>
-
-            <div class="pdf-signatures">
-              <div class="sig-block">
-                <div class="sig-title">NGƯỜI LẬP BẢNG</div>
-                <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
-                <div class="sig-space"></div>
-              </div>
-              <div class="sig-block">
-                <div class="sig-title">ĐỘI TRƯỞNG HOTLINE</div>
-                <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
-                <div class="sig-space"></div>
-              </div>
-              <div class="sig-block">
-                <div style="font-size: 10.5px; font-style: italic; color: #475569; margin-bottom: 2px;">${dateStr}</div>
-                <div class="sig-title">QUẢN ĐỐC XÍ NGHIỆP</div>
-                <div class="sig-sub">(Ký, đóng dấu, ghi rõ họ tên)</div>
-                <div class="sig-space"></div>
-              </div>
-            </div>
+          <div class="pdf-card-print">
+            ${innerContentHtml}
           </div>
         </body>
         </html>
       `;
 
-      // 1. Thử dùng thư viện html2pdf để tải tệp PDF về máy trực tiếp
+      // 1. Thử dùng thư viện html2pdf để tải trực tiếp tệp PDF
       if (typeof html2pdf !== 'undefined') {
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'fixed';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '0';
-        tempDiv.style.width = '790px';
-        tempDiv.innerHTML = printableHtml;
-        document.body.appendChild(tempDiv);
-        const element = tempDiv.querySelector('#pdfCaptureArea');
+        const savedScrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
+        const savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+        // Cuộn về (0,0) tạm thời để html2canvas không bị tính bù scroll offset làm trắng nửa trang PDF
+        window.scrollTo(0, 0);
+
+        // Tạo overlay hiển thị trạng thái chuyên nghiệp
+        const overlay = document.createElement('div');
+        overlay.id = 'pdfGeneratingOverlay';
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.5); backdrop-filter:blur(2px); z-index:999999; display:flex; align-items:center; justify-content:center;';
+        overlay.innerHTML = `
+          <div style="background:#ffffff; color:#0f172a; padding:18px 24px; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,0.25); text-align:center; font-family:sans-serif;">
+            <div style="font-size:26px; margin-bottom:6px;">📄</div>
+            <div style="font-size:14px; font-weight:800; color:#005baa;">Đang xuất tệp PDF Bảng tổng hợp...</div>
+            <div style="font-size:11px; color:#64748b; margin-top:4px;">Đang căn chỉnh trang A4 chuẩn xác, vui lòng đợi...</div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Tạo thẻ div render chuẩn xác không bị tràn lề
+        const exportCard = document.createElement('div');
+        exportCard.id = 'pdfExportCard';
+        exportCard.style.cssText = 'position:absolute; top:0; left:0; width:740px; background:#ffffff; box-sizing:border-box; padding:12px 14px; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color:#0f172a; border:1.5px solid #005baa; border-radius:8px; z-index:999990;';
+        exportCard.innerHTML = innerContentHtml;
+        document.body.appendChild(exportCard);
+
+        const filename = `Bang-Tong-Hop-Du-Toan-Hotline-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}.pdf`;
         const opt = {
-          margin: [8, 8, 8, 8],
-          filename: `Bang-Tong-Hop-Du-Toan-Hotline-${Date.now()}.pdf`,
+          margin: [6, 6, 6, 6],
+          filename: filename,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            windowWidth: 780,
+            logging: false
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
-        showToast("📄 Đang tạo file PDF...");
-        html2pdf().set(opt).from(element).save().then(() => {
-          document.body.removeChild(tempDiv);
-          showToast("🎉 Đã xuất tệp PDF thành công!");
-        }).catch((err) => {
-          console.warn("html2pdf error, fallback to print window:", err);
-          document.body.removeChild(tempDiv);
-          openPrintWindow(printableHtml);
-        });
+
+        const cleanup = () => {
+          if (overlay.parentNode) document.body.removeChild(overlay);
+          if (exportCard.parentNode) document.body.removeChild(exportCard);
+          window.scrollTo(savedScrollX, savedScrollY);
+        };
+
+        setTimeout(() => {
+          html2pdf().set(opt).from(exportCard).save().then(() => {
+            cleanup();
+            showToast("🎉 Đã xuất tệp PDF thành công trọn vẹn 1 trang!");
+          }).catch((err) => {
+            console.warn("html2pdf error, fallback to print window:", err);
+            cleanup();
+            openPrintWindow(printableFullDoc);
+          });
+        }, 120);
       } else {
-        // 2. Fallback: Mở cửa sổ in / Lưu PDF trực tiếp của trình duyệt
-        openPrintWindow(printableHtml);
+        // 2. Fallback: Mở hộp thoại in / Lưu PDF của trình duyệt
+        openPrintWindow(printableFullDoc);
       }
     }
 
