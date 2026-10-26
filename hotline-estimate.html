@@ -2458,6 +2458,7 @@
       </div>
       <div class="admin-banner-actions">
         <button class="admin-pill-btn" onclick="saveAllAdminData()">💾 Lưu</button>
+        <button class="admin-pill-btn" onclick="openSyncModal()" style="background:#0284c7; border-color:#38bdf8;">📲 Đồng bộ thiết bị</button>
         <button class="admin-pill-btn" onclick="resetDefaultConfig()">🔄 Mặc định</button>
       </div>
     </div>
@@ -2477,8 +2478,8 @@
           </svg>
         </div>
         <div class="logo-text">
-          <h1 class="editable-field" id="appLogoTitle" onclick="adminQuickEdit('appLogoTitle', 'Tên tập đoàn / Đơn vị:')">EVNSPC</h1>
-          <span class="editable-field" id="appLogoSub" onclick="adminQuickEdit('appLogoSub', 'Tên đơn vị chủ quản:')">XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH</span>
+          <h1 class="editable-field" id="appLogoTitle" onclick="adminQuickEdit('appLogoTitle', 'Tên tập đoàn / Đơn vị:')">XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH</h1>
+          <span class="editable-field" id="appLogoSub" onclick="adminQuickEdit('appLogoSub', 'Tên đơn vị chủ quản:')">ĐỘI THI CÔNG SỬA CHỮA ĐIỆN NÓNG</span>
         </div>
       </div>
       <div class="estimate-title">
@@ -2489,7 +2490,7 @@
           </button>
           <div class="badge editable-field" id="appBadgeText" onclick="adminQuickEdit('appBadgeText', 'Nhãn Estimate:')">ESTIMATE</div>
         </div>
-        <div style="font-size: 11px; color: #cbd5e1; margin-top: 3px;" class="editable-field" id="appSubTitleText" onclick="adminQuickEdit('appSubTitleText', 'Phụ đề dự toán:')">DỰ TOÁN CÔNG TÁC HOTLINE</div>
+        <div style="font-size: 11px; color: #cbd5e1; margin-top: 3px;" class="editable-field" id="appSubTitleText" onclick="adminQuickEdit('appSubTitleText', 'Phụ đề dự toán:')">DỰ TOÁN THI CÔNG HOTLINE</div>
       </div>
     </header>
 
@@ -2573,13 +2574,13 @@
                 <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
                   <input type="radio" name="depotChoice" id="depotRadio2" value="2" onchange="onSelectDepot(2)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
                   <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Cơ sở 2:</span>
-                  <input type="text" id="depotAddr2" class="depot-addr-inp" value="Cơ sở 2 - Trạm phụ trợ (Admin điền)" 
+                  <input type="text" id="depotAddr2" class="depot-addr-inp" value="Phường Long An, tỉnh Tây Ninh" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
                          readonly onchange="onDepotAddrChange(2)" title="Địa chỉ Cơ sở 2 (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
-                  <input type="number" id="depotKm2" class="depot-km-inp" value="25" min="0" step="1" 
+                  <input type="number" id="depotKm2" class="depot-km-inp" value="38" min="0" step="1" 
                          style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#475569; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
                          readonly onchange="onDepotKmChange(2)" title="Khoảng cách đến Cơ sở 2 (km)">
                   <span style="font-size:12px; font-weight:700; color:#475569;">km</span>
@@ -2835,6 +2836,76 @@
     <div class="mob-actions">
       <button class="btn-mob-act add" onclick="addNewPosition()">➕ Vị trí</button>
       <button class="btn-mob-act view" onclick="scrollToSummary()">📊 Tổng hợp</button>
+    </div>
+  </div>
+
+  <!-- MODAL ĐỒNG BỘ CẤU HÌNH ĐA THIẾT BỊ (QUÉT QR, SAO CHÉP LINK, XUẤT NHẬP FILE) -->
+  <div class="modal-overlay" id="modalSyncDevices">
+    <div class="modal-content" style="max-width: 520px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+      <div style="background: linear-gradient(135deg, #005baa 0%, #0284c7 100%); color: #ffffff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+          <span>📲</span>
+          <span>ĐỒNG BỘ CẤU HÌNH ĐA THIẾT BỊ</span>
+        </div>
+        <button class="modal-close" style="color: #ffffff; font-size: 24px; cursor: pointer; background: transparent; border: none; line-height: 1;" onclick="closeModal('modalSyncDevices')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px; display: flex; flex-direction: column; gap: 14px; max-height: 80vh; overflow-y: auto;">
+        <p style="font-size: 12px; color: #475569; line-height: 1.5; margin: 0;">
+          Chuyển nhanh toàn bộ cài đặt Quản trị viên (đơn giá, định mức, hệ số Kđc, địa chỉ & cự ly xuất phát) sang điện thoại, máy tính bảng hoặc máy tính khác:
+        </p>
+
+        <!-- Cách 1: Quét mã QR bằng Điện thoại / iPad -->
+        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; text-align: center;">
+          <div style="font-weight: 700; color: #0284c7; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>📷</span>
+            <span>Cách 1: Quét mã QR bằng Camera điện thoại</span>
+          </div>
+          <div style="font-size: 11px; color: #64748b; margin-bottom: 10px;">
+            Dùng Camera iPhone/Android quét mã này để mở ngay trên điện thoại với cài đặt mới nhất:
+          </div>
+          <div id="syncQrContainer" style="display: inline-block; background: #ffffff; padding: 8px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+            <img id="syncQrImage" src="" alt="Mã QR đồng bộ cấu hình" style="width: 170px; height: 170px; display: block; border-radius: 6px; margin: 0 auto;">
+          </div>
+        </div>
+
+        <!-- Cách 2: Sao chép link gửi qua Zalo / Tin nhắn -->
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px;">
+          <div style="font-weight: 700; color: #16a34a; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <span>🔗</span>
+            <span>Cách 2: Gửi Link đồng bộ qua Zalo / Tin nhắn</span>
+          </div>
+          <div style="font-size: 11px; color: #4b5563; margin-bottom: 8px;">
+            Bấm sao chép và gửi qua Zalo/iMessage, thiết bị khác chỉ cần bấm vào link là tự động đồng bộ:
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <input type="text" id="syncLinkInput" readonly style="flex: 1; font-size: 11px; padding: 7px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff; color: #1e293b;">
+            <button type="button" onclick="copySyncLink()" style="background: #16a34a; color: #ffffff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+              📋 Sao chép
+            </button>
+          </div>
+        </div>
+
+        <!-- Cách 3: Xuất / Nhập tệp cấu hình JSON -->
+        <div style="background: #faf5ff; border: 1.5px solid #d8b4fe; border-radius: 12px; padding: 12px;">
+          <div style="font-weight: 700; color: #7e22ce; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <span>💾</span>
+            <span>Cách 3: Sao lưu / Nạp tệp cấu hình (.json)</span>
+          </div>
+          <div style="font-size: 11px; color: #6b21a8; margin-bottom: 8px;">
+            Lưu trữ cấu hình thành tệp hoặc nhập tệp cấu hình đã lưu trước đó:
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" onclick="exportAdminConfigFile()" style="flex: 1; min-width: 140px; background: #9333ea; color: #ffffff; border: none; border-radius: 6px; padding: 8px 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
+              📥 Tải tệp cấu hình (.json)
+            </button>
+            <label style="flex: 1; min-width: 140px; background: #ffffff; color: #9333ea; border: 1.5px solid #9333ea; border-radius: 6px; padding: 7px 12px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; display: inline-block; margin-bottom: 0;">
+              📤 Nạp tệp cấu hình
+              <input type="file" id="importConfigFileInp" accept=".json" onchange="importAdminConfigFile(event)" style="display: none;">
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -4968,10 +5039,10 @@
       } else {
         return {
           id: 2,
-          name: document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
+          name: document.getElementById('depotAddr2')?.value || "Phường Long An, tỉnh Tây Ninh",
           lat: 10.536000,
           lng: 106.408000,
-          defaultKm: parseInt(document.getElementById('depotKm2')?.value, 10) || 25
+          defaultKm: parseInt(document.getElementById('depotKm2')?.value, 10) || 38
         };
       }
     }
@@ -5127,7 +5198,7 @@
       if (kmInp2 && !kmInp2.dataset.defaultKm) kmInp2.dataset.defaultKm = kmInp2.value;
 
       const addr1 = document.getElementById('depotAddr1')?.value || "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
-      const addr2 = document.getElementById('depotAddr2')?.value || "Cơ sở 2 - Trạm phụ trợ";
+      const addr2 = document.getElementById('depotAddr2')?.value || "Phường Long An, tỉnh Tây Ninh";
 
       // Xác định tọa độ thực tế theo đúng địa chỉ người dùng/admin đã nhập
       const depot1 = await resolveCoordsForAddress(addr1) || { lat: 11.324902, lng: 106.102019 };
@@ -6682,8 +6753,8 @@
         depotChoice: document.getElementById('depotRadio2')?.checked ? 2 : 1,
         depotAddr1: document.getElementById('depotAddr1') ? document.getElementById('depotAddr1').value : "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh",
         depotKm1: document.getElementById('depotKm1') ? document.getElementById('depotKm1').value : "15",
-        depotAddr2: document.getElementById('depotAddr2') ? document.getElementById('depotAddr2').value : "Cơ sở 2 - Trạm phụ trợ (Admin điền)",
-        depotKm2: document.getElementById('depotKm2') ? document.getElementById('depotKm2').value : "25",
+        depotAddr2: document.getElementById('depotAddr2') ? document.getElementById('depotAddr2').value : "Phường Long An, tỉnh Tây Ninh",
+        depotKm2: document.getElementById('depotKm2') ? document.getElementById('depotKm2').value : "38",
         appLogoTitle: document.getElementById('appLogoTitle').innerText,
         appLogoSub: document.getElementById('appLogoSub').innerText,
         appBadgeText: document.getElementById('appBadgeText').innerText,
@@ -6732,8 +6803,16 @@
 
         if (d.depotAddr1 && document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = d.depotAddr1;
         if (d.depotKm1 && document.getElementById('depotKm1')) document.getElementById('depotKm1').value = d.depotKm1;
-        if (d.depotAddr2 && document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = d.depotAddr2;
-        if (d.depotKm2 && document.getElementById('depotKm2')) document.getElementById('depotKm2').value = d.depotKm2;
+        if (d.depotAddr2 && document.getElementById('depotAddr2') && !d.depotAddr2.includes('Trạm phụ trợ') && !d.depotAddr2.includes('Admin điền')) {
+          document.getElementById('depotAddr2').value = d.depotAddr2;
+        } else if (document.getElementById('depotAddr2')) {
+          document.getElementById('depotAddr2').value = "Phường Long An, tỉnh Tây Ninh";
+        }
+        if (d.depotKm2 && document.getElementById('depotKm2') && parseInt(d.depotKm2, 10) !== 25) {
+          document.getElementById('depotKm2').value = d.depotKm2;
+        } else if (document.getElementById('depotKm2')) {
+          document.getElementById('depotKm2').value = "38";
+        }
         if (d.depotChoice === 2) {
           if (document.getElementById('depotRadio2')) document.getElementById('depotRadio2').checked = true;
           updateDepotRowStyles(2);
@@ -6742,14 +6821,22 @@
           updateDepotRowStyles(1);
         }
 
-        if (d.appLogoTitle) document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
-        if (d.appLogoSub && d.appLogoSub !== 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM') {
+        if (d.appLogoTitle && d.appLogoTitle !== 'EVNSPC') {
+          document.getElementById('appLogoTitle').innerText = d.appLogoTitle;
+        } else {
+          document.getElementById('appLogoTitle').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+        }
+        if (d.appLogoSub && d.appLogoSub !== 'TỔNG CÔNG TY ĐIỆN LỰC MIỀN NAM' && d.appLogoSub !== 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH') {
           document.getElementById('appLogoSub').innerText = d.appLogoSub;
         } else {
-          document.getElementById('appLogoSub').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+          document.getElementById('appLogoSub').innerText = 'ĐỘI THI CÔNG SỬA CHỮA ĐIỆN NÓNG';
         }
         if (d.appBadgeText) document.getElementById('appBadgeText').innerText = d.appBadgeText;
-        if (d.appSubTitleText) document.getElementById('appSubTitleText').innerText = d.appSubTitleText;
+        if (d.appSubTitleText && d.appSubTitleText !== 'DỰ TOÁN CÔNG TÁC HOTLINE' && d.appSubTitleText !== 'DỰ TOÁN HOTLINE') {
+          document.getElementById('appSubTitleText').innerText = d.appSubTitleText;
+        } else {
+          document.getElementById('appSubTitleText').innerText = 'DỰ TOÁN THI CÔNG HOTLINE';
+        }
         if (d.lblCat1) document.getElementById('lblCat1').innerHTML = d.lblCat1;
         if (d.lblCat2) document.getElementById('lblCat2').innerHTML = d.lblCat2;
         if (d.lblCat3) document.getElementById('lblCat3').innerHTML = d.lblCat3;
@@ -6815,20 +6902,20 @@
       if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '0.5';
       if (document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
       if (document.getElementById('depotKm1')) document.getElementById('depotKm1').value = "15";
-      if (document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = "Cơ sở 2 - Trạm phụ trợ (Admin điền)";
-      if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = "25";
+      if (document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = "Phường Long An, tỉnh Tây Ninh";
+      if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = "38";
       if (document.getElementById('depotRadio1')) document.getElementById('depotRadio1').checked = true;
       updateDepotRowStyles(1);
       const countInpReset = document.getElementById('machineShiftCount');
       if (countInpReset && countInpReset.dataset) delete countInpReset.dataset.userEdited;
       window._savedTotalPosTitle = 'Thành tiền Tổng các vị trí (VNĐ):';
 
-      document.getElementById('appLogoTitle').innerText = 'EVNSPC';
-      document.getElementById('appLogoSub').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+      document.getElementById('appLogoTitle').innerText = 'XÍ NGHIỆP DỊCH VỤ ĐIỆN LỰC TÂY NINH';
+      document.getElementById('appLogoSub').innerText = 'ĐỘI THI CÔNG SỬA CHỮA ĐIỆN NÓNG';
       document.getElementById('appBadgeText').innerText = 'ESTIMATE';
-      document.getElementById('appSubTitleText').innerText = 'DỰ TOÁN HOTLINE';
-      document.getElementById('lblCat1').innerHTML = 'Bảng định mức<br>công việc';
-      document.getElementById('lblCat2').innerHTML = 'Hệ số điều chỉnh<br>(Kvlp, Kvlhl, Knc, Kmtc)';
+      document.getElementById('appSubTitleText').innerText = 'DỰ TOÁN THI CÔNG HOTLINE';
+      document.getElementById('lblCat1').innerHTML = 'Bảng định mức đơn giá vật liệu - nhân công - máy thi công công việc';
+      document.getElementById('lblCat2').innerHTML = 'Bảng hệ số điều chỉnh công tác (Kđc)';
       document.getElementById('lblCat3').innerHTML = 'Bảng định mức<br>nhiên liệu';
       document.getElementById('lblCat4').innerHTML = 'Bảng định mức<br>nhân công';
       document.getElementById('lblVoltageTitle').innerText = '⚡ Cấp điện áp:';
@@ -6841,7 +6928,7 @@
       setProjectType('lap_moi', true);
       updateSummaryVat(8, true);
 
-      showToast("Đã khôi phục cài đặt gốc EVNSPC thành công!");
+      showToast("Đã khôi phục cài đặt gốc Tây Ninh thành công!");
       populateModals();
       renderAll();
     }
@@ -6921,10 +7008,140 @@
       }
     }
 
-    // Đăng ký Service Worker
+    // --- 17c. ĐỒNG BỘ CẤU HÌNH ĐA THIẾT BỊ (QUÉT QR, SAO CHÉP LINK, XUẤT NHẬP FILE) ---
+    function openSyncModal() {
+      // Đảm bảo dữ liệu mới nhất được lưu vào localStorage
+      saveAllAdminData();
+      const raw = localStorage.getItem('evn_hotline_admin_saved');
+      if (!raw) {
+        showToast("⚠️ Chưa có cấu hình để đồng bộ!");
+        return;
+      }
+
+      // Tạo chuỗi base64 an toàn cho URL UTF-8
+      let encoded = '';
+      try {
+        encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(raw))));
+      } catch (e) {
+        encoded = encodeURIComponent(raw);
+      }
+
+      const syncUrl = `${window.location.origin}${window.location.pathname}?cfg=${encoded}`;
+      const linkInp = document.getElementById('syncLinkInput');
+      if (linkInp) linkInp.value = syncUrl;
+
+      // Sinh mã QR sử dụng dịch vụ QR API
+      const qrImg = document.getElementById('syncQrImage');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(syncUrl)}`;
+      }
+
+      openModal('modalSyncDevices');
+    }
+
+    function copySyncLink() {
+      const linkInp = document.getElementById('syncLinkInput');
+      if (!linkInp) return;
+      linkInp.select();
+      linkInp.setSelectionRange(0, 99999);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(linkInp.value).then(() => {
+          showToast("📋 Đã sao chép link đồng bộ! Bạn có thể dán vào Zalo/Tin nhắn để mở trên thiết bị khác.");
+        }).catch(() => {
+          document.execCommand('copy');
+          showToast("📋 Đã sao chép link đồng bộ!");
+        });
+      } else {
+        document.execCommand('copy');
+        showToast("📋 Đã sao chép link đồng bộ!");
+      }
+    }
+
+    function exportAdminConfigFile() {
+      saveAllAdminData();
+      const raw = localStorage.getItem('evn_hotline_admin_saved');
+      if (!raw) {
+        showToast("⚠️ Không có cấu hình để tải về!");
+        return;
+      }
+      const blob = new Blob([raw], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `EVN-Hotline-Config-TayNinh-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("📥 Đã tải tệp cấu hình (.json) về máy!");
+    }
+
+    function importAdminConfigFile(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && typeof parsed === 'object') {
+            localStorage.setItem('evn_hotline_admin_saved', JSON.stringify(parsed));
+            loadSavedAdminData();
+            populateModals();
+            renderAll();
+            closeModal('modalSyncDevices');
+            showToast("✅ Đã nạp thành công cấu hình từ tệp tin!");
+          } else {
+            alert("Định dạng tệp không hợp lệ!");
+          }
+        } catch(err) {
+          alert("Lỗi đọc tệp JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function checkUrlSyncConfig() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cfgData = urlParams.get('cfg') || urlParams.get('sync');
+        if (cfgData) {
+          let jsonStr = '';
+          try {
+            jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(cfgData))));
+          } catch (e1) {
+            try {
+              jsonStr = decodeURIComponent(cfgData);
+            } catch (e2) {
+              jsonStr = atob(cfgData);
+            }
+          }
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && typeof parsed === 'object') {
+            localStorage.setItem('evn_hotline_admin_saved', JSON.stringify(parsed));
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+            showToast("🎉 Đã đồng bộ toàn bộ cài đặt Quản trị viên mới nhất vào thiết bị này!", 5000);
+          }
+        }
+      } catch (err) {
+        console.warn("Lỗi đồng bộ cấu hình từ URL:", err);
+      }
+    }
+
+    // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=20261026_v4').then((reg) => {
+          reg.update();
+          let refreshing = false;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+              refreshing = true;
+              console.log('Phát hiện bản cập nhật mới, đang tải lại...');
+              window.location.reload();
+            }
+          });
+        }).catch(() => {});
       });
     }
     window.onclick = function(e) {
@@ -7155,6 +7372,7 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      checkUrlSyncConfig();
       loadSavedAdminData();
       populateModals();
       renderAll();
