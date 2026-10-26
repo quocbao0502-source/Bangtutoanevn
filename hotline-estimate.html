@@ -2502,7 +2502,7 @@
 
         <!-- BỐ CỤC 1: 4 BẢNG ĐỊNH MỨC & HỆ SỐ ĐIỀU CHỈNH -->
         <section class="block-card" id="sectionBlock1">
-          <div class="block-badge-num editable-field" id="badgeBlock1" onclick="editBlockBadge('badgeBlock1', 1)" title="Bấm vào để đổi tên đề mục 1">1</div>
+          <div class="block-badge-num editable-field" id="badgeBlock1" onclick="editBlockBadge('badgeBlock1', 1)" title="Bấm vào để đổi tên đề mục 1">DỰ LIỆU ĐƠN GIÁ VÀ CÁC ĐỊNH MỨC</div>
           <div class="category-grid">
             <button class="btn-cat" onclick="openModal('modalCongViec')">
               <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
@@ -2528,7 +2528,7 @@
 
         <!-- BỐ CỤC 2: CẤP ĐIỆN ÁP (12,7kV / 22kV) -->
         <section class="block-card">
-          <div class="block-badge-num editable-field" id="badgeBlock2" onclick="editBlockBadge('badgeBlock2', 2)" title="Bấm vào để đổi tên đề mục 2">2</div>
+          <div class="block-badge-num editable-field" id="badgeBlock2" onclick="editBlockBadge('badgeBlock2', 2)" title="Bấm vào để đổi tên đề mục 2">CẤP ĐIỆN ÁP</div>
           <div class="voltage-row">
             <div class="voltage-label editable-field" id="lblVoltageTitle" onclick="adminQuickEdit('lblVoltageTitle', 'Tiêu đề Cấp điện áp:')">⚡ Cấp điện áp:</div>
             <div class="voltage-options">
@@ -2540,7 +2540,7 @@
 
         <!-- BỐ CỤC 3: CÁC VỊ TRÍ (VỊ TRÍ 1 .. VỊ TRÍ 20) -->
         <section class="block-card">
-          <div class="block-badge-num editable-field" id="badgeBlock3" onclick="editBlockBadge('badgeBlock3', 3)" title="Bấm vào để đổi tên đề mục 3">3</div>
+          <div class="block-badge-num editable-field" id="badgeBlock3" onclick="editBlockBadge('badgeBlock3', 3)" title="Bấm vào để đổi tên đề mục 3">PHỤ LỤC 1; PHỤ LỤC 2</div>
 
           <!-- KHUNG ĐIỂM XUẤT PHÁT (TRỤ SỞ CHÍNH & CƠ SỞ 2) -->
           <div class="depot-config-card" id="depotConfigCard" style="margin-bottom:14px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px;">
@@ -2562,7 +2562,7 @@
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
-                  <input type="number" id="depotKm1" class="depot-km-inp" value="15" min="0" step="1" 
+                  <input type="number" id="depotKm1" class="depot-km-inp" value="3" min="0" step="1" 
                          style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#0284c7; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
                          readonly onchange="onDepotKmChange(1)" title="Khoảng cách đến Trụ sở chính (km)">
                   <span style="font-size:12px; font-weight:700; color:#0369a1;">km</span>
@@ -2574,13 +2574,13 @@
                 <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:240px;">
                   <input type="radio" name="depotChoice" id="depotRadio2" value="2" onchange="onSelectDepot(2)" style="cursor:pointer; width:16px; height:16px; accent-color:#0284c7;">
                   <span style="font-weight:700; color:#475569; font-size:12px; white-space:nowrap;">Cơ sở 2:</span>
-                  <input type="text" id="depotAddr2" class="depot-addr-inp" value="Phường Long An, tỉnh Tây Ninh" 
+                  <input type="text" id="depotAddr2" class="depot-addr-inp" value="Tỉnh lộ 833, ấp Bình Trung 1, phường Tân An, tỉnh Tây Ninh" 
                          style="flex:1; font-size:12px; font-weight:600; color:#1e293b; border:1px solid transparent; background:transparent; padding:4px 6px; border-radius:4px;" 
                          readonly onchange="onDepotAddrChange(2)" title="Địa chỉ Cơ sở 2 (Admin điền)">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span style="font-size:11px; color:#64748b; font-weight:600;">Khoảng cách:</span>
-                  <input type="number" id="depotKm2" class="depot-km-inp" value="38" min="0" step="1" 
+                  <input type="number" id="depotKm2" class="depot-km-inp" value="119" min="0" step="1" 
                          style="width:65px; font-weight:800; font-size:13px; text-align:center; color:#475569; border:1px solid #cbd5e1; background:#ffffff; border-radius:6px; padding:4px 6px;" 
                          readonly onchange="onDepotKmChange(2)" title="Khoảng cách đến Cơ sở 2 (km)">
                   <span style="font-size:12px; font-weight:700; color:#475569;">km</span>
@@ -2601,14 +2601,14 @@
 
         <!-- BỐ CỤC 4: CÁC PHỤ LỤC (4, 5, 6) -->
         <section class="block-card">
-          <div class="block-badge-num editable-field" id="badgeBlock4" onclick="editBlockBadge('badgeBlock4', 4)" title="Bấm vào để đổi tên đề mục 4">4</div>
+          <div class="block-badge-num editable-field" id="badgeBlock4" onclick="editBlockBadge('badgeBlock4', 4)" title="Bấm vào để đổi tên đề mục 4">PHỤ LỤC 4-5-6</div>
 
           <!-- Phụ lục 4: Bảng tính vận chuyển hotline -->
-          <div class="appendix-title editable-field" id="lblAppx4Title" onclick="adminQuickEdit('lblAppx4Title', 'Tiêu đề Phụ lục 4:')">Phụ lục 4: Bảng tính vận chuyển hotline</div>
+          <div class="appendix-title editable-field" id="lblAppx4Title" onclick="adminQuickEdit('lblAppx4Title', 'Tiêu đề Phụ lục 4:')">PHỤ LỤC 4: BẢNG TÍNH VẬN CHUYỂN HOTLINE</div>
           <div class="fuel-params-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Giá dầu (VNĐ/lít):</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="fuelPrice" value="21500" step="500" onchange="renderAll()">
+              <input type="number" class="fuel-price-input" style="width:100%" id="fuelPrice" value="30650" step="500" onchange="renderAll()">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thuế dầu (%):</label>
@@ -2649,7 +2649,7 @@
           </div>
 
           <!-- Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông -->
-          <div class="appendix-title editable-field" id="lblAppx5Title" onclick="adminQuickEdit('lblAppx5Title', 'Tiêu đề Phụ lục 5:')">Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông</div>
+          <div class="appendix-title editable-field" id="lblAppx5Title" onclick="adminQuickEdit('lblAppx5Title', 'Tiêu đề Phụ lục 5:')">PHỤ LỤC 5: BẢNG TÍNH LẬP RÀO CHẮN VÀ CẢNH GIỚI GIAO THÔNG</div>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
@@ -2683,7 +2683,7 @@
           </div>
 
           <!-- Phụ lục 6: Bảng tính chi phí khảo sát -->
-          <div class="appendix-title editable-field" id="lblAppx6Title" onclick="adminQuickEdit('lblAppx6Title', 'Tiêu đề Phụ lục 6:')">Phụ lục 6: Bảng tính chi phí khảo sát</div>
+          <div class="appendix-title editable-field" id="lblAppx6Title" onclick="adminQuickEdit('lblAppx6Title', 'Tiêu đề Phụ lục 6:')">PHỤ LỤC 6: BẢNG TÍNH CHI PHÍ KHẢO SÁT</div>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:10px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
@@ -2740,10 +2740,10 @@
 
         <!-- BỐ CỤC 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE -->
         <section class="summary-card" id="summarySection">
-          <div class="block-badge-num editable-field" id="badgeBlock5" onclick="editBlockBadge('badgeBlock5', 5)" title="Bấm vào để đổi tên đề mục 5">5</div>
+          <div class="block-badge-num editable-field" id="badgeBlock5" onclick="editBlockBadge('badgeBlock5', 5)" title="Bấm vào để đổi tên đề mục 5">TỔNG QUAN</div>
           <div class="summary-header">
-            <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</h2>
-            <p class="editable-field" id="lblSummarySub" onclick="adminQuickEdit('lblSummarySub', 'Ghi chú công thức:')">BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN</p>
+            <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP</h2>
+            <p class="editable-field" id="lblSummarySub" onclick="adminQuickEdit('lblSummarySub', 'Ghi chú công thức:')">DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</p>
           </div>
 
           <!-- Thanh điều khiển: Loại công trình (Gpa2) & Thuế GTGT -->
@@ -3219,7 +3219,7 @@
             <p style="font-size:11px; color:#64748b; margin:0;">Áp dụng để tính Số ca máy max và chi phí ca máy rào chắn tại Phụ lục 5.</p>
           </div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" class="fuel-price-input" id="machineShiftPrice" value="1250000" step="50000" min="0" style="width:140px; font-weight:800; font-size:13px; text-align:right; color:#0284c7; background:#ffffff; border:1.5px solid #0284c7; border-radius:6px; padding:6px 10px;" onchange="renderAll(); saveAllAdminData();" title="Giá ca máy thi công Hotline (Admin cấu hình)">
+            <input type="number" class="fuel-price-input" id="machineShiftPrice" value="8732839" step="50000" min="0" style="width:140px; font-weight:800; font-size:13px; text-align:right; color:#0284c7; background:#ffffff; border:1.5px solid #0284c7; border-radius:6px; padding:6px 10px;" onchange="renderAll(); saveAllAdminData();" title="Giá ca máy thi công Hotline (Admin cấu hình)">
             <span style="font-size:12px; font-weight:700; color:#0369a1;">đ/ca</span>
           </div>
         </div>
@@ -4006,7 +4006,7 @@
     const DEFAULT_MASTER_CONDITIONS = [
   {
     "id": "DK01",
-    "name": "16.01.01-1.1 - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "name": "16.01.01-1.1 - Có thiết bị bảo vệ",
     "factor": 1,
     "volt": "22kV",
     "kvlp": 1,
@@ -4016,7 +4016,7 @@
   },
   {
     "id": "DK7184",
-    "name": "16.01.01-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "name": "16.01.01-1.2  - Có máy biến áp",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4025,7 +4025,7 @@
   },
   {
     "id": "DK9096",
-    "name": "16.01.01-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "name": "16.01.01-1.3  - Có nhánh rẽ hoặc góc < 15˚",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4034,7 +4034,7 @@
   },
   {
     "id": "DK4128",
-    "name": "16.01.01-1.4  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại đơn) (Knc=0,5)",
+    "name": "16.01.01-1.4  - Sứ đỉnh đỡ thẳng, đỡ góc (loại đơn)",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4043,7 +4043,7 @@
   },
   {
     "id": "DK9992",
-    "name": "16.01.01-1.5  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại kép) (Knc=0,7)",
+    "name": "16.01.01-1.5  - Sứ đỉnh đỡ thẳng, đỡ góc (loại kép)",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4052,7 +4052,7 @@
   },
   {
     "id": "DK1192",
-    "name": "16.01.01-1.6  - Nếu thay 1 cách điện pha ngoài cùng (Kvl=0,7, Knc=0,7, Kmtc=0,5)",
+    "name": "16.01.01-1.6  - 1 cách điện pha ngoài cùng",
     "volt": "22kV",
     "kvlp": 0.7,
     "kvlhl": 0.7,
@@ -4061,7 +4061,7 @@
   },
   {
     "id": "DK2888",
-    "name": "16.01.01-1.7  - Nếu thay 1 cách điện pha giữa (Knc=0,9, Kmtc=0,7)",
+    "name": "16.01.01-1.7  - 1 cách điện pha giữa",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4070,7 +4070,7 @@
   },
   {
     "id": "DK8896",
-    "name": "16.01.01-1.9  - Nếu thay 2 cách điện trên đường dây (Knc=0,9, Kmtc=0,9)",
+    "name": "16.01.01-1.9  - 2 cách điện",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4079,7 +4079,7 @@
   },
   {
     "id": "DK0432",
-    "name": "16.01.01-1.10  - Nếu thay 3 cách điện trên đường dây (Knc=1,0, Kmtc=1,0)",
+    "name": "16.01.01-1.10  - 3 cách điện",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4088,7 +4088,7 @@
   },
   {
     "id": "DK6624",
-    "name": "16.01.01-1.11  - Nếu thay 1 Uclevis + sứ ống chỉ trên đường dây 3 pha (để treo dây chống sét) (Knc=0,5, Kmtc=0,5)",
+    "name": "16.01.01-1.11  - Uclevis + sứ ống chỉ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4097,7 +4097,7 @@
   },
   {
     "id": "DK2208",
-    "name": "16.01.01-1.12  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "name": "16.01.01-1.12  - Nếu bọc cả 2 mạch",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4106,7 +4106,7 @@
   },
   {
     "id": "DK8128",
-    "name": "16.01.01-1.13  - Nếu phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "name": "16.01.01-1.13  - Nếu bọc cả 3 mạch",
     "volt": "22kV",
     "kvlp": 1.5,
     "kvlhl": 1.5,
@@ -4115,7 +4115,7 @@
   },
   {
     "id": "DK5520",
-    "name": "16.01.01-1.14  - Nếu chỉ lắp mới (Knc=0,8)",
+    "name": "16.01.01-1.14  - Lắp mới",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4124,7 +4124,7 @@
   },
   {
     "id": "DK4184",
-    "name": "16.01.01-1.15  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "name": "16.01.01-1.15  - Tháo gỡ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4133,7 +4133,7 @@
   },
   {
     "id": "DK3472",
-    "name": "16.01.01-2.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "name": "16.01.01-2.1  - Có thiết bị bảo vệ",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4142,7 +4142,7 @@
   },
   {
     "id": "DK6312",
-    "name": "16.01.01-2.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "name": "16.01.01-2.2  - Có máy biến áp",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4151,7 +4151,7 @@
   },
   {
     "id": "DK3568",
-    "name": "16.01.01-2.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "name": "16.01.01-2.3  - Có nhánh rẽ hoặc góc < 15˚",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4160,7 +4160,7 @@
   },
   {
     "id": "DK5481",
-    "name": "16.01.01-2.5 - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại kép) (Knc=0,7)",
+    "name": "16.01.01-2.5 - Sứ đỉnh đỡ thẳng, đỡ góc (loại kép)",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4169,7 +4169,7 @@
   },
   {
     "id": "DK7968",
-    "name": "16.01.01-2.4  - Nếu lắp chân sứ đỉnh đỡ thẳng, đỡ góc (loại đơn) (Knc=0,5)",
+    "name": "16.01.01-2.4  - Sứ đỉnh đỡ thẳng, đỡ góc (loại đơn)",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4178,7 +4178,7 @@
   },
   {
     "id": "DK9936",
-    "name": "16.01.01-2.6  - Nếu chỉ thay 1 cách điện (Kvl=0,4, Knc=0,7)",
+    "name": "16.01.01-2.6  - 1 cách điện",
     "volt": "12,7kV",
     "kvlp": 0.4,
     "kvlhl": 0.4,
@@ -4187,7 +4187,7 @@
   },
   {
     "id": "DK2576",
-    "name": "16.01.01-2.7  - Nếu thay 2 cách điện (Knc=0,9, Kmtc=0,9)",
+    "name": "16.01.01-2.7  - 2 cách điện",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4196,7 +4196,7 @@
   },
   {
     "id": "DK7264",
-    "name": "16.01.01-2.8  - Nếu thay 3 cách điện (Knc=1,0, Kmtc=1,0)",
+    "name": "16.01.01-2.8  - 3 cách điện",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4205,7 +4205,7 @@
   },
   {
     "id": "DK0056",
-    "name": "16.01.01-2.9  - Nếu chỉ lắp mới (Knc=0,8)",
+    "name": "16.01.01-2.9  - Lắp mới",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4214,7 +4214,7 @@
   },
   {
     "id": "DK5504",
-    "name": "16.01.01-2.10  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "name": "16.01.01-2.10  - Tháo gỡ",
     "volt": "12,7kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4223,7 +4223,7 @@
   },
   {
     "id": "DK7664",
-    "name": "16.01.02-1.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "name": "16.01.02-1.1  - Có thiết bị bảo vệ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4232,7 +4232,7 @@
   },
   {
     "id": "DK9912",
-    "name": "16.01.02-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "name": "16.01.02-1.2  - Có máy biến áp",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4241,7 +4241,7 @@
   },
   {
     "id": "DK9880",
-    "name": "16.01.02-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "name": "16.01.02-1.3  - Có nhánh rẽ hoặc góc < 15˚",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4250,7 +4250,7 @@
   },
   {
     "id": "DK1776",
-    "name": "16.01.02-1.4  - Nếu thay chuỗi cách điện néo dây chống sét (Knc=1,1)",
+    "name": "16.01.02-1.4  - Chuỗi cách điện néo dây chống sét",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4259,7 +4259,7 @@
   },
   {
     "id": "DK5000",
-    "name": "16.01.02-1.5  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "name": "16.01.02-1.5  - Nếu bọc cả 2 mạch",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4268,7 +4268,7 @@
   },
   {
     "id": "DK3097",
-    "name": "16.01.02-1.6  - Nếu phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "name": "16.01.02-1.6  - Nếu bọc cả 3 mạch",
     "volt": "22kV",
     "kvlp": 1.5,
     "kvlhl": 1.5,
@@ -4277,7 +4277,7 @@
   },
   {
     "id": "DK2233",
-    "name": "16.01.02-1.7  - Nếu chỉ lắp mới (Knc=0,8)",
+    "name": "16.01.02-1.7  - Lắp mới",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4286,7 +4286,7 @@
   },
   {
     "id": "DK9496",
-    "name": "16.01.02-1.8  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "name": "16.01.02-1.8  - Tháo gỡ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4295,7 +4295,7 @@
   },
   {
     "id": "DK5849",
-    "name": "16.02.01-1.1  - Nếu trên trụ có thiết bị bảo vệ đường dây (Knc=1,3)",
+    "name": "16.02.01-1.1  - Có thiết bị bảo vệ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4304,7 +4304,7 @@
   },
   {
     "id": "DK0801",
-    "name": "16.02.01-1.2  - Nếu trên trụ có máy biến áp (Knc=1,4)",
+    "name": "16.02.01-1.2  - Có máy biến áp",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4313,7 +4313,7 @@
   },
   {
     "id": "DK1825",
-    "name": "16.02.01-1.3  - Nếu trên trụ có nhánh rẽ hoặc góc < 15˚ (Knc=1,2)",
+    "name": "16.02.01-1.3  - Có nhánh rẽ hoặc góc < 15˚",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4322,7 +4322,7 @@
   },
   {
     "id": "DK0137",
-    "name": "16.02.01-1.4  - Nếu thay giáp buộc 1 cách điện pha ngoài cùng (Kvl=0,7, Knc=0,7, Kmtc=0,5)",
+    "name": "16.02.01-1.4  - 1 giáp buộc pha ngoài cùng",
     "volt": "22kV",
     "kvlp": 0.7,
     "kvlhl": 0.7,
@@ -4331,7 +4331,7 @@
   },
   {
     "id": "DK8153",
-    "name": "16.02.01-1.5  - Nếu thay giáp buộc 1 cách điện pha giữa (Knc=0,9, Kmtc=0,7)",
+    "name": "16.02.01-1.5  - 1 giáp buộc cách điện pha giữa",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4340,7 +4340,7 @@
   },
   {
     "id": "DK8753",
-    "name": "16.02.01-1.6  - Nếu thay giáp buộc 1 cách điện pha trong cùng (Knc=0,8, Kmtc=0,6)",
+    "name": "16.02.01-1.6  - 1 giáp buộc cách điện pha trong cùng",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4349,7 +4349,7 @@
   },
   {
     "id": "DK9569",
-    "name": "16.02.01-1.7  - Nếu thay giáp buộc 2 cách điện cùng vị trí trụ (Knc=0,9, Kmtc=0,9)",
+    "name": "16.02.01-1.7  - 2 giáp buộc cách điện cùng vị trí trụ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4358,7 +4358,7 @@
   },
   {
     "id": "DK4122",
-    "name": "16.02.01-1.8  - Nếu thay giáp buộc 3 cách điện cùng vị trí trụ (Knc=1,0, Kmtc=1,0)",
+    "name": "16.02.01-1.8  - 3 giáp buộc cách điện cùng vị trí trụ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4367,7 +4367,7 @@
   },
   {
     "id": "DK8937",
-    "name": "16.02.01-1.9  - Nếu phải thực hiện bọc cả 2 mạch (Knc=1,5)",
+    "name": "16.02.01-1.9  - Nếu bọc cả 2 mạch",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4376,7 +4376,7 @@
   },
   {
     "id": "DK8794",
-    "name": "16.02.01-1.10  - Nếu đường dây nhiều mạch, phải thực hiện bọc cả 3 mạch (Kvl=1,5, Knc=1,9, Kmtc=1,1)",
+    "name": "16.02.01-1.10  - Nếu bọc cả 3 mạch",
     "volt": "22kV",
     "kvlp": 1.5,
     "kvlhl": 1.5,
@@ -4385,7 +4385,7 @@
   },
   {
     "id": "DK2282",
-    "name": "16.02.01-1.11  - Nếu buộc cách điện bằng dây nhôm (Knc=0,7, Kmtc=0,5)",
+    "name": "16.02.01-1.11  - Nếu buộc bằng dây nhôm",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4394,7 +4394,7 @@
   },
   {
     "id": "DK7746",
-    "name": "16.02.01-1.12  - Nếu chỉ lắp mới (Knc=0,8)",
+    "name": "16.02.01-1.12  - Lắp mới",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
@@ -4403,12 +4403,2514 @@
   },
   {
     "id": "DK7649",
-    "name": "16.02.01-1.13  - Nếu tháo gỡ không lắp lại (Knc=0,45, Kmtc=0,45)",
+    "name": "16.02.01-1.13  - Tháo gỡ",
     "volt": "22kV",
     "kvlp": 1,
     "kvlhl": 1,
     "knc": 0.45,
     "kmtc": 0.45
+  },
+  {
+    "id": "DK7143",
+    "name": "16.02.01-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4639",
+    "name": "16.02.01-2.2 - Có máy biến áp",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5583",
+    "name": "16.02.01-2.3 - Có nhánh rẽ hoặc góc < 15˚",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6814",
+    "name": "16.02.01-2.4 - 2 giáp buộc cách điện",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 0.9
+  },
+  {
+    "id": "DK7415",
+    "name": "16.02.01-2.5 - 1 cách điện",
+    "volt": "12,7kV",
+    "kvlp": 0.4,
+    "kvlhl": 0.4,
+    "knc": 0.7,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK4615",
+    "name": "16.02.01-2.6 - 3 giáp buộc",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6751",
+    "name": "16.02.01-2.7 - Buộc bằng dây nhôm",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 0.5
+  },
+  {
+    "id": "DK1927",
+    "name": "16.02.01-2.8 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9832",
+    "name": "16.02.01-2.9 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK2360",
+    "name": "16.02.02-1.1 - 1 bộ cho ĐZ 1 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9727",
+    "name": "16.02.02-1.2 - 2 bộ",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.5,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK9934",
+    "name": "16.02.02-1.3 - 3 bộ",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 2,
+    "kmtc": 1.3
+  },
+  {
+    "id": "DK7087",
+    "name": "16.02.04-1.1 - Khoảng 40m~45m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 0.8
+  },
+  {
+    "id": "DK6479",
+    "name": "16.02.04-1.2 - Khoảng 55m~60m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK7031",
+    "name": "16.02.04-1.3 - Khoảng 65m~70m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1.4
+  },
+  {
+    "id": "DK4823",
+    "name": "16.02.04-1.4 - Khu đông dân",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.15,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0999",
+    "name": "16.02.04-1.5 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7527",
+    "name": "16.02.04-1.6 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK7662",
+    "name": "16.03.01-1.1 - Có thiết bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7758",
+    "name": "16.03.01-1.2 - Có máy biến áp",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3471",
+    "name": "16.03.01-1.3 - Có nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8431",
+    "name": "16.03.01-1.4 - Sứ treo kép",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.98,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK6543",
+    "name": "16.03.01-1.5 - 2 bộ",
+    "volt": "22kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.5,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK8711",
+    "name": "16.03.01-1.6 - 3 bộ",
+    "volt": "22kV",
+    "kvlp": 1.03,
+    "kvlhl": 1.3,
+    "knc": 2,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK9319",
+    "name": "16.03.01-1.7 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6647",
+    "name": "16.03.01-1.8 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK7671",
+    "name": "16.03.01-1.9 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3208",
+    "name": "16.03.01-1.10 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK7711",
+    "name": "16.03.01-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3735",
+    "name": "16.03.01-2.2 - Có máy biến áp",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0022",
+    "name": "16.03.01-2.3 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8071",
+    "name": "16.03.01-2.4 - Thay 2 bộ",
+    "volt": "12,7kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.5,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK1343",
+    "name": "16.03.01-2.5 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7902",
+    "name": "16.03.01-2.6 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK4927",
+    "name": "16.03.02-1.1 - Có thiết bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9359",
+    "name": "16.03.02-1.2 - Có máy biến áp",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1510",
+    "name": "16.03.02-1.3 - Có nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6190",
+    "name": "16.03.02-1.4 - Trục chuyển sang nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2623",
+    "name": "16.03.02-1.5 - 2 bộ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4783",
+    "name": "16.03.02-1.6 - 3 bộ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2759",
+    "name": "16.03.02-1.7 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9455",
+    "name": "16.03.02-1.8 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK9871",
+    "name": "16.03.02-1.9 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3895",
+    "name": "16.03.02-1.10 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3903",
+    "name": "16.03.02-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7567",
+    "name": "16.03.02-2.2 - Có máy biến áp",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3630",
+    "name": "16.03.02-2.3 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1343",
+    "name": "16.03.02-2.4 - Trục chính chuyển sang nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5399",
+    "name": "16.03.02-2.5 - Thực hiện trên ĐZ 1 pha",
+    "volt": "12,7kV",
+    "kvlp": 0.4,
+    "kvlhl": 0.4,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8391",
+    "name": "16.03.02-2.6 - 2 bộ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0527",
+    "name": "16.03.02-2.7 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5423",
+    "name": "16.03.02-2.8 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3751",
+    "name": "16.04.01-1.1 - Có thiết bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4495",
+    "name": "16.04.01-1.2 - Có máy biến áp",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3911",
+    "name": "16.04.01-1.3 - Có nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4615",
+    "name": "16.04.01-1.4 - 2 cò lèo",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5520",
+    "name": "16.04.01-1.5 - 3 cò lèo",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5847",
+    "name": "16.04.01-1.6 - Chỉ tháo và lắp lại",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8375",
+    "name": "16.04.01-1.7 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4599",
+    "name": "16.04.01-1.8 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK7041",
+    "name": "16.04.01-1.9 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0927",
+    "name": "16.04.01-1.10 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3655",
+    "name": "16.04.01-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7567",
+    "name": "16.04.01-2.2 - Có máy biến áp",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4952",
+    "name": "16.04.01-2.3 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9063",
+    "name": "16.04.01-2.4 - 2 cò lèo",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1880",
+    "name": "16.04.01-2.5 - Chỉ tháo và lắp lại",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9455",
+    "name": "16.04.01-2.6 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3703",
+    "name": "16.04.01-2.7 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3936",
+    "name": "16.05.01-1.1 - Có nhánh rẽ/ Vertical",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2119",
+    "name": "16.05.01-1.2 - Cò lèo của FCO, LBFCO, LA",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4855",
+    "name": "16.05.01-1.3 - Cò lèo của DS, LBS, OS, REC, MBA, đầu hộp cáp",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9031",
+    "name": "16.05.01-1.4 - 2 mối nối",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9960",
+    "name": "16.05.01-1.5 - 3 mối nối",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9664",
+    "name": "16.05.01-1.6 - 6 mối nối",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5272",
+    "name": "16.05.01-1.7 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4944",
+    "name": "16.05.01-1.8 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.7,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK5295",
+    "name": "16.05.01-1.9 - Chiều dài mối nối >30cm",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0728",
+    "name": "16.05.01-2.1 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6351",
+    "name": "16.05.01-2.2 - Cò lèo của FCO, LBFCO, LA",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0615",
+    "name": "16.05.01-2.3 - Cò lèo của DS, LBS, OS, REC, MBA, đầu hộp nối",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3968",
+    "name": "16.05.01-2.4 - 2 mối nối",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3832",
+    "name": "16.05.01-2.5 - Chiều dài mối nối >30cm",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3895",
+    "name": "16.05.02-1.1 - Có nhánh rẽ/ Vertical",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9751",
+    "name": "16.05.02-1.2 - 2 cái",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9432",
+    "name": "16.05.02-1.3 - 3 cái",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4520",
+    "name": "16.05.02-1.4 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6911",
+    "name": "16.05.02-1.5 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.7,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK1399",
+    "name": "16.05.02-1.6 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6464",
+    "name": "16.05.02-1.7 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK5847",
+    "name": "16.05.02-2.1 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1695",
+    "name": "16.05.02-2.2 - 2 cái",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3337",
+    "name": "16.05.02-2.3 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0279",
+    "name": "16.05.02-2.4 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK0640",
+    "name": "16.06.01-1.1 - Có thiết bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5576",
+    "name": "16.06.01-1.2 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3496",
+    "name": "16.06.01-1.3 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.7,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK6232",
+    "name": "16.06.01-1.4 - Xử lý và thay Uclevis + sứ ống chỉ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3233",
+    "name": "16.06.01-1.5 - Chỉ thay Uclevis + sứ ống chỉ",
+    "volt": "22kV",
+    "kvlp": 0.3,
+    "kvlhl": 0.3,
+    "knc": 0.5,
+    "kmtc": 0.4
+  },
+  {
+    "id": "DK6424",
+    "name": "16.06.01-1.6 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2088",
+    "name": "16.06.01-1.7 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK5904",
+    "name": "16.06.01-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1279",
+    "name": "16.06.01-2.2 - Đường dây 1 pha",
+    "volt": "12,7kV",
+    "kvlp": 0.4,
+    "kvlhl": 0.4,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1456",
+    "name": "16.06.01-2.3 - Chỉ thay Uclevis + sứ ống chỉ",
+    "volt": "12,7kV",
+    "kvlp": 0.3,
+    "kvlhl": 0.3,
+    "knc": 0.5,
+    "kmtc": 0.4
+  },
+  {
+    "id": "DK5872",
+    "name": "16.06.01-2.4 - Xử lý và thay Uclevis + sứ ống chỉ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0752",
+    "name": "16.06.01-2.5 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8079",
+    "name": "16.06.02-1.1 - Có thế bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9440",
+    "name": "16.06.02-1.2 - 2 bộ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5216",
+    "name": "16.06.02-1.3 - 3 bộ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.6,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK2704",
+    "name": "16.06.02-1.4 - 4 bộ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.8,
+    "kmtc": 1.3
+  },
+  {
+    "id": "DK2856",
+    "name": "16.06.02-1.5 - Dây kép (CXX)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5767",
+    "name": "16.06.02-1.6 - Nếu bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5808",
+    "name": "16.06.02-1.7 - Nếu bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.7,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK6200",
+    "name": "16.06.02-1.8 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9736",
+    "name": "16.06.02-1.9 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK6239",
+    "name": "16.06.02-2.1 - Có thiế bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2468",
+    "name": "16.06.02-2.2 - 2 bộ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9108",
+    "name": "16.06.02-2.3 - 3 bộ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.6,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK8188",
+    "name": "16.06.02-2.4 - Dây chằng kép (CXX)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2988",
+    "name": "16.06.02-2.5 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6588",
+    "name": "16.06.02-2.6 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK0634",
+    "name": "16.06.03-1.1 - Có thiết bị bảo vệ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5442",
+    "name": "16.06.03-1.2 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5778",
+    "name": "16.06.03-1.3 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.7,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK8178",
+    "name": "16.06.03-1.4 - Chiều cao tiếp địa >10m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1474",
+    "name": "16.06.03-1.5 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3859",
+    "name": "16.06.03-2.1 - Có thiết bị bảo vệ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6049",
+    "name": "16.06.03-2.2 - Chiều cao tiếp địa >10m",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9442",
+    "name": "16.06.03-2.3 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2994",
+    "name": "16.06.11-1.1 - Khoảng cột <=45m",
+    "volt": "22kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK1914",
+    "name": "16.06.11-1.2 - Khoảng cột 46m~54m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3570",
+    "name": "16.06.11-1.3 - Khoảng cột 55m~60m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4706",
+    "name": "16.06.11-1.4 - Khoảng cột 61m~70m",
+    "volt": "22kV",
+    "kvlp": 0.9,
+    "kvlhl": 0.9,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7051",
+    "name": "16.06.11-1.5 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8642",
+    "name": "16.06.11-1.6 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK0778",
+    "name": "16.06.11-1.7 - Khu vực đông dân cư",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.15,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0794",
+    "name": "16.06.11-1.8 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7259",
+    "name": "16.06.11-1.9 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK2122",
+    "name": "16.06.11-2.1 - Khoảng cột <=45m",
+    "volt": "12,7kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK9370",
+    "name": "16.06.11-2.2 - Khoảng cột 46m~54m",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8218",
+    "name": "16.06.11-2.3 - Khoảng cột 55m~60m",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6906",
+    "name": "16.06.11-2.4 - Khoảng cột 61m~70m",
+    "volt": "12,7kV",
+    "kvlp": 0.9,
+    "kvlhl": 0.9,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2314",
+    "name": "16.06.11-2.5 - Khu vực đông dân cư",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.15,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6460",
+    "name": "16.06.11-2.6 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1251",
+    "name": "16.06.11-2.7 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK9155",
+    "name": "16.06.12-1.1 - Trên trụ hiện hữu có DS,TU,TI, REC, MBA, nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9586",
+    "name": "16.06.12-1.2 - Khoảng cột 40m~ <=45m",
+    "volt": "22kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK7403",
+    "name": "16.06.12-1.3 - Khoảng cột 46m~54m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6066",
+    "name": "16.06.12-1.4 - Khoảng cột 55m~60m",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7555",
+    "name": "16.06.12-1.5 - Khoảng cột 61m~70m",
+    "volt": "22kV",
+    "kvlp": 0.9,
+    "kvlhl": 0.9,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1515",
+    "name": "16.06.12-1.6 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9635",
+    "name": "16.06.12-1.7 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK5347",
+    "name": "16.06.12-1.8 - Tiết diện dây <=70mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8203",
+    "name": "16.06.12-1.9 - Tiết diện dây <= 95mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.36,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5163",
+    "name": "16.06.12-1.10 - Tiết diện dây <= 120mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.53,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3251",
+    "name": "16.06.12-1.11 - Tiết diện dây <= 150mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.85,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3955",
+    "name": "16.06.12-1.12 - Tiết diện dây <= 185mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2.19,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1138",
+    "name": "16.06.12-1.13 - Tiết diện dây <= 240mm2",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4010",
+    "name": "16.06.12-1.14 - Khu vực đông dân cư",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.15,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6155",
+    "name": "16.06.12-1.15 - Dây trần",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8251",
+    "name": "16.06.12-1.16 - Dây bọc",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7970",
+    "name": "16.06.12-1.17 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2108",
+    "name": "16.06.12-1.18 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK1875",
+    "name": "16.06.12-3.1 - Nếu trụ hiện hữu có DS, TU, TI, MBA, REC, nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1179",
+    "name": "16.06.12-3.2 - Khoảng cột 40m~<= 45m",
+    "volt": "12,7kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK1955",
+    "name": "16.06.12-3.3 - Khoảng cột 46m~54m",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1163",
+    "name": "16.06.12-3.4 - Khoảng cột 55m~60m",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8116",
+    "name": "16.06.12-3.5 - Khoảng cột 61m~70m",
+    "volt": "12,7kV",
+    "kvlp": 0.9,
+    "kvlhl": 0.9,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1996",
+    "name": "16.06.12-3.6 - Tiết diện dây <= 70mm2",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0900",
+    "name": "16.06.12-3.7 - Tiết diện dây <= 95mm2",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.36,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0595",
+    "name": "16.06.12-3.8 - Khu vực đông dân cư",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.15,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2763",
+    "name": "16.06.12-3.9 - Dây trần",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0396",
+    "name": "16.06.12-3.10 - Dây bọc",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3516",
+    "name": "16.06.12-3.11 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7611",
+    "name": "16.06.12-3.12 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK8916",
+    "name": "16.07.01-1.1 - LTD",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8492",
+    "name": "16.07.01-1.2 - Nhánh rẽ/ Vertical",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6644",
+    "name": "16.07.01-1.3 - Thay thiết bị và cò lèo thiết bị",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3980",
+    "name": "16.07.01-1.4 - Thay thiết bị kèm tháo lắp cò lèo (không thay)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.04,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7564",
+    "name": "16.07.01-1.5 - 2 thiết bị",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1981",
+    "name": "16.07.01-1.6 - 3 thiết bị",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5533",
+    "name": "16.07.01-1.7 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3268",
+    "name": "16.07.01-1.8 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.8,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK4629",
+    "name": "16.07.01-1.9 - Thay sứ tăng cường kèm thay thiết bị",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1685",
+    "name": "16.07.01-1.10 - Thay sứ tăng cường kèm tháo lắp thiết bị (không thay)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK7580",
+    "name": "16.07.01-1.11 - Thay thiết bị và giá đỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4149",
+    "name": "16.07.01-1.12 - Thay giá đỡ và lắp thiết bị (không thay)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK6045",
+    "name": "16.07.01-1.13 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1733",
+    "name": "16.07.01-1.14 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK2477",
+    "name": "16.07.01-2.1 - LTD",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6557",
+    "name": "16.07.01-2.2 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7869",
+    "name": "16.07.01-2.3 - Thay thiết bị và cò lèo",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9805",
+    "name": "16.07.01-2.4 - Thay thiết bị kèm tháo lắp cò lèo (không thay)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2342",
+    "name": "16.07.01-2.5 - 2 thiết bị",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4870",
+    "name": "16.07.01-2.6 - Thay sứ tăng cường và thiết bị",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5326",
+    "name": "16.07.01-2.7 - Thay sứ tăng cường và tháo lắp thiết bị (không thay)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK1950",
+    "name": "16.07.01-2.8 - Thay giá đỡ và thiết bị",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.1,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8982",
+    "name": "16.07.01-2.9 - Thay giá đỡ và tháo lắp thiết bị (không thay)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK2390",
+    "name": "16.07.01-2.10 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7318",
+    "name": "16.07.01-2.11 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK0638",
+    "name": "16.08.01-1.1 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8902",
+    "name": "16.08.01-1.2 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.8,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK0758",
+    "name": "16.08.01-1.3 - 1 trong bộ 3 thiết bị (DS, TU, TI) , MBA cấp nguồn",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6359",
+    "name": "16.08.01-1.4 - 1 MBA 1 pha",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0367",
+    "name": "16.08.01-1.5 - 2 MBA 1 pha",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6279",
+    "name": "16.08.01-1.6 - 2 thiết bị trong bộ 3 pha (DS, TU, TI, tụ bù)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.85,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7311",
+    "name": "16.08.01-1.7 - OS tụ bù",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2439",
+    "name": "16.08.01-1.8 - Trụ dừng 2 mạch vuông góc",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2863",
+    "name": "16.08.01-1.9 - Có nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4504",
+    "name": "16.08.01-1.10 - Có MBA",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1247",
+    "name": "16.08.01-1.11 - Thay thiết bị kèm giá đỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK4255",
+    "name": "16.08.01-1.12 - Thay giá đỡ và tháo lắp thiết bị (không thay)",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK4944",
+    "name": "16.08.01-1.13 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8823",
+    "name": "16.08.01-1.14 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK2927",
+    "name": "16.08.01-2.1 - Trụ dừng 2 mạch vuông góc",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4207",
+    "name": "16.08.01-2.2 - Có nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6168",
+    "name": "16.08.01-2.3 - Có MBA",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2751",
+    "name": "16.08.01-2.4 - Thay thiết bị kèm giá đỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK5263",
+    "name": "16.08.01-2.5 - Thay giá đỡ và tháo lắp thiết bị (không thay)",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.3,
+    "kmtc": 1.2
+  },
+  {
+    "id": "DK8991",
+    "name": "16.08.01-2.6 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5015",
+    "name": "16.08.01-2.7 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK9872",
+    "name": "16.09.01-1.1 - Có MBA/ nhanh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3191",
+    "name": "16.09.01-1.2 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9976",
+    "name": "16.09.01-1.3 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK0736",
+    "name": "16.09.01-1.4 - 2 xà lưới 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 2,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK8368",
+    "name": "16.09.01-1.5 - 2 xà lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 2.5,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK0152",
+    "name": "16.09.01-1.6 - 3 xà lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 3,
+    "kmtc": 2
+  },
+  {
+    "id": "DK0808",
+    "name": "16.09.01-1.7 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5864",
+    "name": "16.09.01-1.8 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3465",
+    "name": "16.09.01-2.1 - Có MBA/ nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4528",
+    "name": "16.09.01-2.2 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8848",
+    "name": "16.09.01-2.3 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK1694",
+    "name": "16.10.01-1.1 - Có MBA/ nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8748",
+    "name": "16.10.01-1.2 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK7180",
+    "name": "16.10.01-1.3 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK8340",
+    "name": "16.10.01-1.4 - 2 xà của lưới 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 2,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK0332",
+    "name": "16.10.01-1.5 - 2 xà của lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 2.5,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK6404",
+    "name": "16.10.01-1.6 - 3 xà của lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 3,
+    "kmtc": 2
+  },
+  {
+    "id": "DK6764",
+    "name": "16.10.01-1.7 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3900",
+    "name": "16.10.01-1.8 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK8901",
+    "name": "16.10.01-2.1 - Có MBA/ nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3835",
+    "name": "16.10.01-2.2 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK2403",
+    "name": "16.10.01-2.3 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK8851",
+    "name": "16.11.01-1.1 - Có MBA/ nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK4467",
+    "name": "16.11.01-1.2 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK5571",
+    "name": "16.11.01-1.3 - Bọc 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK9268",
+    "name": "16.11.01-1.4 - 2 xà của lưới 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 2,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK1788",
+    "name": "16.11.01-1.5 - 2 xà lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 2.5,
+    "kmtc": 1.5
+  },
+  {
+    "id": "DK9284",
+    "name": "16.11.01-1.6 - 3 xà của lưới 3 mạch",
+    "volt": "22kV",
+    "kvlp": 2,
+    "kvlhl": 2,
+    "knc": 3,
+    "kmtc": 2
+  },
+  {
+    "id": "DK0276",
+    "name": "16.11.01-1.7 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3436",
+    "name": "16.11.01-1.8 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3004",
+    "name": "16.11.01-2.1 - CÓ MBA/ nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3668",
+    "name": "16.11.01-2.2 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0084",
+    "name": "16.11.01-2.3 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK3276",
+    "name": "16.12.01-1.1 - Có MBA/ nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9332",
+    "name": "16.12.01-1.2 - Bọc 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6460",
+    "name": "16.12.01-1.3 - Thay 1 xà trên cùng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1844",
+    "name": "16.12.01-1.4 - Thay 1 xà giữa",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6412",
+    "name": "16.12.01-1.5 - Thay 1 xà dưới cùng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9852",
+    "name": "16.12.01-1.6 - Thay 2 xà",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.95,
+    "kmtc": 1
+  },
+  {
+    "id": "DK3388",
+    "name": "16.12.01-1.7 - Lắp mới",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9108",
+    "name": "16.12.01-1.8 - Tháo gỡ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK2603",
+    "name": "16.12.01-2.1 - Có MBA/ nhánh rẽ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK0219",
+    "name": "16.12.01-2.2 - 2 xà",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.95,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8188",
+    "name": "16.12.01-2.3 - 1 xà",
+    "volt": "12,7kV",
+    "kvlp": 0.5,
+    "kvlhl": 0.5,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK8971",
+    "name": "16.12.01-2.4 - Lắp mới",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6774",
+    "name": "16.12.01-2.5 - Tháo gỡ",
+    "volt": "12,7kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.45,
+    "kmtc": 0.45
+  },
+  {
+    "id": "DK7208",
+    "name": "16.12.02-1.1 - Có MBA/ nhánh rẽ",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.4,
+    "kmtc": 1
+  },
+  {
+    "id": "DK9147",
+    "name": "16.12.02-1.2 - Thanh chống mạch trên của ĐD 2 mạch",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.5,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1205",
+    "name": "16.12.02-1.3 - Thanh chống mạch giữa/ mạch trên cùng của ĐD 3 mạch",
+    "volt": "22kV",
+    "kvlp": 1.5,
+    "kvlhl": 1.5,
+    "knc": 1.9,
+    "kmtc": 1.1
+  },
+  {
+    "id": "DK2777",
+    "name": "16.12.02-1.4 - 1 thanh chống gần gàu",
+    "volt": "22kV",
+    "kvlp": 0.7,
+    "kvlhl": 0.7,
+    "knc": 0.4,
+    "kmtc": 0.4
+  },
+  {
+    "id": "DK5556",
+    "name": "16.12.02-1.5 - 1 thanh chống phía xa gàu",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.7,
+    "kmtc": 0.7
+  },
+  {
+    "id": "DK8689",
+    "name": "16.12.02-1.6 - Thanh chống xà lệch",
+    "volt": "22kV",
+    "kvlp": 0.7,
+    "kvlhl": 0.7,
+    "knc": 0.5,
+    "kmtc": 0.4
+  },
+  {
+    "id": "DK4528",
+    "name": "16.12.02-1.7 - Thanh chống xà 3 tầng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 1.2,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6284",
+    "name": "16.12.02-1.8 - Thanh dưới cùng của xà 3 tầng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.6,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6141",
+    "name": "16.12.02-1.9 - 1 Thanh giữa của xà 3 tầng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.8,
+    "kmtc": 1
+  },
+  {
+    "id": "DK1252",
+    "name": "16.12.02-1.10 - 1 thanh chống trên cùng của xà 3 tầng",
+    "volt": "22kV",
+    "kvlp": 1,
+    "kvlhl": 1,
+    "knc": 0.9,
+    "kmtc": 1
+  },
+  {
+    "id": "DK6373",
+    "name": "16.12.02-1.11 - Thanh chống xà kép",
+    "volt": "22kV",
+    "kvlp": 1.2,
+    "kvlhl": 1.2,
+    "knc": 1.5,
+    "kmtc": 1.5
   }
 ];
 
@@ -4440,16 +6942,6 @@
     "id": "L02",
     "title": "Thợ Hotline Bậc 4/7",
     "wage": 394809
-  },
-  {
-    "id": "L03",
-    "title": "Thợ Hotline Bậc 5/7",
-    "wage": 650000
-  },
-  {
-    "id": "L04",
-    "title": "Chỉ huy trực tiếp Hotline",
-    "wage": 750000
   }
 ];
 
@@ -4482,32 +6974,24 @@
   {
     "id": 1,
     "title": "Vị trí 1",
-    "address": "Ấp Ninh Trung, Xã Ninh Sơn, TP Tây Ninh",
+    "address": "",
     "checkedIn": false,
     "gps": "",
-    "distanceKm": 15,
+    "distanceKm": 3,
     "tasks": [
       {
-        "taskId": "CV3592",
-        "condIds": [
-          "DK01"
-        ],
-        "qty": 1
-      },
-      {
-        "taskId": "CV3592",
-        "condIds": [
-          "DK7184"
-        ],
+        "taskId": "CV4824",
+        "condIds": [],
         "qty": 1
       }
     ],
     "factors": [
-      1.0,
-      1.0,
-      1.0,
-      1.0
+      1,
+      1,
+      1,
+      1
     ],
+    "isCustomFactors": false,
     "similarCount": 1
   }
 ];
@@ -5304,7 +7788,7 @@
       }
 
       // Lấy khoảng cách km mặc định hiện có của Điểm xuất phát (do Admin cài đặt, không ghi đè giá trị Admin)
-      const adminDepotKm1 = parseFloat(document.getElementById('depotKm1')?.value) || 15;
+      const adminDepotKm1 = parseFloat(document.getElementById('depotKm1')?.value) || 3;
       const initialKm = Math.round(adminDepotKm1);
 
       // 1. Phụ lục 1 & 2: Đưa danh sách vị trí về 1 vị trí ban đầu (Vị trí 1, 1 công tác mẫu, chưa tick điều kiện nào)
@@ -6783,8 +9267,15 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
+    const APP_CONFIG_VERSION = "20261026_03";
     function loadSavedAdminData() {
       try {
+        const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
+        if (currentStoredVersion !== APP_CONFIG_VERSION) {
+          // Tự động đồng bộ cấu hình mới nhất từ máy chủ cho mọi thiết bị (kể cả máy đã có cache cũ)
+          localStorage.removeItem('evn_hotline_admin_saved');
+          localStorage.setItem('evn_hotline_config_version', APP_CONFIG_VERSION);
+        }
         const raw = localStorage.getItem('evn_hotline_admin_saved');
         if (!raw) return;
         const d = JSON.parse(raw);
@@ -6806,12 +9297,12 @@
         if (d.depotAddr2 && document.getElementById('depotAddr2') && !d.depotAddr2.includes('Trạm phụ trợ') && !d.depotAddr2.includes('Admin điền')) {
           document.getElementById('depotAddr2').value = d.depotAddr2;
         } else if (document.getElementById('depotAddr2')) {
-          document.getElementById('depotAddr2').value = "Phường Long An, tỉnh Tây Ninh";
+          document.getElementById('depotAddr2').value = "Tỉnh lộ 833, ấp Bình Trung 1, phường Tân An, tỉnh Tây Ninh";
         }
         if (d.depotKm2 && document.getElementById('depotKm2') && parseInt(d.depotKm2, 10) !== 25) {
           document.getElementById('depotKm2').value = d.depotKm2;
         } else if (document.getElementById('depotKm2')) {
-          document.getElementById('depotKm2').value = "38";
+          document.getElementById('depotKm2').value = "119";
         }
         if (d.depotChoice === 2) {
           if (document.getElementById('depotRadio2')) document.getElementById('depotRadio2').checked = true;
@@ -6889,21 +9380,21 @@
       LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
       COST_RATES = { otherDirectRate: 0.025, generalCostRate: 0.055, vatRate: 0.08 };
 
-      if (document.getElementById('badgeBlock1')) document.getElementById('badgeBlock1').innerText = '1';
-      if (document.getElementById('badgeBlock2')) document.getElementById('badgeBlock2').innerText = '2';
-      if (document.getElementById('badgeBlock3')) document.getElementById('badgeBlock3').innerText = '3';
-      if (document.getElementById('badgeBlock4')) document.getElementById('badgeBlock4').innerText = '4';
-      if (document.getElementById('badgeBlock5')) document.getElementById('badgeBlock5').innerText = '5';
-      if (document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = '21500';
+      if (document.getElementById('badgeBlock1')) document.getElementById('badgeBlock1').innerText = 'DỰ LIỆU ĐƠN GIÁ VÀ CÁC ĐỊNH MỨC';
+      if (document.getElementById('badgeBlock2')) document.getElementById('badgeBlock2').innerText = 'CẤP ĐIỆN ÁP';
+      if (document.getElementById('badgeBlock3')) document.getElementById('badgeBlock3').innerText = 'PHỤ LỤC 1; PHỤ LỤC 2';
+      if (document.getElementById('badgeBlock4')) document.getElementById('badgeBlock4').innerText = 'PHỤ LỤC 4-5-6';
+      if (document.getElementById('badgeBlock5')) document.getElementById('badgeBlock5').innerText = 'TỔNG QUAN';
+      if (document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = '30650';
       if (document.getElementById('fuelTax')) document.getElementById('fuelTax').value = '0';
       if (document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = '1';
-      if (document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = '1250000';
+      if (document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = '8732839';
       if (document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = '1';
       if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '0.5';
       if (document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh";
-      if (document.getElementById('depotKm1')) document.getElementById('depotKm1').value = "15";
-      if (document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = "Phường Long An, tỉnh Tây Ninh";
-      if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = "38";
+      if (document.getElementById('depotKm1')) document.getElementById('depotKm1').value = "3";
+      if (document.getElementById('depotAddr2')) document.getElementById('depotAddr2').value = "Tỉnh lộ 833, ấp Bình Trung 1, phường Tân An, tỉnh Tây Ninh";
+      if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = "119";
       if (document.getElementById('depotRadio1')) document.getElementById('depotRadio1').checked = true;
       updateDepotRowStyles(1);
       const countInpReset = document.getElementById('machineShiftCount');
@@ -6919,11 +9410,11 @@
       document.getElementById('lblCat3').innerHTML = 'Bảng định mức<br>nhiên liệu';
       document.getElementById('lblCat4').innerHTML = 'Bảng định mức<br>nhân công';
       document.getElementById('lblVoltageTitle').innerText = '⚡ Cấp điện áp:';
-      document.getElementById('lblAppx4Title').innerText = 'Phụ lục 4: Bảng tính vận chuyển hotline';
-      document.getElementById('lblAppx5Title').innerText = 'Phụ lục 5: Bảng tính lập rào chắn và cảnh giới giao thông';
-      document.getElementById('lblAppx6Title').innerText = 'Phụ lục 6: Bảng tính chi phí khảo sát';
-      document.getElementById('lblSummaryTitle').innerText = 'BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE';
-      document.getElementById('lblSummarySub').innerText = 'BẢNG TÍNH THEO CÔNG THỨC CHI TIẾT THEO QUY ĐỊNH EVN';
+      document.getElementById('lblAppx4Title').innerText = 'PHỤ LỤC 4: BẢNG TÍNH VẬN CHUYỂN HOTLINE';
+      document.getElementById('lblAppx5Title').innerText = 'PHỤ LỤC 5: BẢNG TÍNH LẬP RÀO CHẮN VÀ CẢNH GIỚI GIAO THÔNG';
+      document.getElementById('lblAppx6Title').innerText = 'PHỤ LỤC 6: BẢNG TÍNH CHI PHÍ KHẢO SÁT';
+      document.getElementById('lblSummaryTitle').innerText = 'BẢNG TỔNG HỢP';
+      document.getElementById('lblSummarySub').innerText = 'DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE';
 
       setProjectType('lap_moi', true);
       updateSummaryVat(8, true);
@@ -7131,7 +9622,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261026_v4').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261026_v5').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
