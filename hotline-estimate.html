@@ -2631,10 +2631,10 @@
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
               <!-- CỘT 1 (MÀU ĐỎ): TRỤ SỞ CHÍNH -->
-              <div style="background:#ffffff; border:1.5px solid #ef4444; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(239,68,68,0.08);">
+              <div id="transportCardDepot1" style="background:#ffffff; border:1.5px solid #ef4444; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(239,68,68,0.08); transition:all 0.25s;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed #fca5a5; padding-bottom:6px;">
                   <span style="font-size:12px; font-weight:800; color:#dc2626; display:flex; align-items:center; gap:5px;">
-                    🏢 Trụ sở chính
+                    🏢 Trụ sở chính <span id="depotActiveBadge1" style="font-size:9.5px; font-weight:700; padding:1px 6px; border-radius:10px; background:#fef2f2; color:#dc2626; border:1px solid #f87171; display:none;">✓ Xuất phát</span>
                   </span>
                   <span style="font-size:11px; font-weight:700; color:#64748b;" id="lblTransportKm1">0 km</span>
                 </div>
@@ -2644,10 +2644,10 @@
               </div>
 
               <!-- CỘT 2 (MÀU XANH): CƠ SỞ 2 -->
-              <div style="background:#ffffff; border:1.5px solid #0284c7; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(2,132,199,0.08);">
+              <div id="transportCardDepot2" style="background:#ffffff; border:1.5px solid #0284c7; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(2,132,199,0.08); transition:all 0.25s;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed #bae6fd; padding-bottom:6px;">
                   <span style="font-size:12px; font-weight:800; color:#0284c7; display:flex; align-items:center; gap:5px;">
-                    🏭 Cơ sở 2
+                    🏭 Cơ sở 2 <span id="depotActiveBadge2" style="font-size:9.5px; font-weight:700; padding:1px 6px; border-radius:10px; background:#f0f9ff; color:#0284c7; border:1px solid #38bdf8; display:none;">✓ Xuất phát</span>
                   </span>
                   <span style="font-size:11px; font-weight:700; color:#64748b;" id="lblTransportKm2">0 km</span>
                 </div>
@@ -8559,6 +8559,30 @@
       }
     }
 
+    function switchTransportVehiclesToDepot(choice) {
+      FUEL_NORMS.forEach(f => {
+        const fDepot = f.depot || 1;
+        if (!transportVehiclesConfig[f.id]) {
+          transportVehiclesConfig[f.id] = { selected: false, count: 1 };
+        }
+        if (fDepot === choice) {
+          // Mặc định chọn xe bán tải & xe gàu của điểm xuất phát này
+          const isDefaultVehicle = (f.name || '').toLowerCase().includes('bán tải') || 
+                                   (f.name || '').toLowerCase().includes('gàu') ||
+                                   (choice === 1 && (f.id === 'F01' || f.id === 'F02')) ||
+                                   (choice === 2 && (f.id === 'F04' || f.id === 'F05'));
+          transportVehiclesConfig[f.id].selected = isDefaultVehicle;
+          if (!transportVehiclesConfig[f.id].count) {
+            transportVehiclesConfig[f.id].count = 1;
+          }
+        } else {
+          // Bỏ chọn tất cả xe của điểm xuất phát còn lại
+          transportVehiclesConfig[f.id].selected = false;
+        }
+      });
+      hasCalculatedResult = false;
+    }
+
     function onSelectDepot(choice) {
       const radio1 = document.getElementById('depotRadio1');
       const radio2 = document.getElementById('depotRadio2');
@@ -8567,17 +8591,25 @@
 
       updateDepotRowStyles(choice);
 
-      const targetKm = (choice === 1) ? 
-        (parseInt(document.getElementById('depotKm1')?.value, 10) || 15) : 
-        (parseInt(document.getElementById('depotKm2')?.value, 10) || 25);
+      // Tự động chuyển chọn xe ở Phụ lục 4-5-6 theo nơi xuất phát tương ứng
+      switchTransportVehiclesToDepot(choice);
+
+      let targetKm = 0;
+      if (positions[0] && positions[0].checkedIn) {
+        targetKm = (choice === 1) ? (positions[0].kmToMain || 0) : (positions[0].kmToBranch || 0);
+      }
+      if (!targetKm) {
+        const kmInp = document.getElementById('depotKm' + choice);
+        targetKm = kmInp ? (parseFloat(kmInp.value) || 0) : (choice === 1 ? 15 : 25);
+      }
       const depotName = (choice === 1) ? "Trụ sở chính" : "Cơ sở 2";
 
       // Áp dụng số km của điểm xuất phát đã chọn cho Vị trí 1 (Phụ lục 4 & 6)
       if (positions[0]) {
         positions[0].distanceKm = targetKm;
-        showToast(`🏢 Đã chọn điểm xuất phát [${depotName}]: Áp dụng ${targetKm} km cho Phụ lục 4 & 6.`);
-        renderAll();
       }
+      showToast(`🏢 Đã chọn điểm xuất phát [${depotName}]: Tự động chuyển xe & áp dụng ${targetKm} km cho Phụ lục 4-5-6.`);
+      renderAll();
       saveAllAdminData();
     }
 
@@ -9579,6 +9611,49 @@
       const container2 = document.getElementById('transportVehiclesDepot2');
       if (!container1 || !container2) return;
 
+      const isChoice2 = document.getElementById('depotRadio2')?.checked ?? false;
+      const card1 = document.getElementById('transportCardDepot1');
+      const card2 = document.getElementById('transportCardDepot2');
+      const badge1 = document.getElementById('depotActiveBadge1');
+      const badge2 = document.getElementById('depotActiveBadge2');
+
+      if (badge1) {
+        badge1.innerText = !isChoice2 ? '✓ Xuất phát' : '';
+        badge1.style.display = !isChoice2 ? 'inline-block' : 'none';
+      }
+      if (badge2) {
+        badge2.innerText = isChoice2 ? '✓ Xuất phát' : '';
+        badge2.style.display = isChoice2 ? 'inline-block' : 'none';
+      }
+
+      if (card1) {
+        if (!isChoice2) {
+          card1.style.borderColor = '#ef4444';
+          card1.style.borderWidth = '2px';
+          card1.style.boxShadow = '0 3px 10px rgba(239, 68, 68, 0.18)';
+          card1.style.opacity = '1';
+        } else {
+          card1.style.borderColor = '#e2e8f0';
+          card1.style.borderWidth = '1.5px';
+          card1.style.boxShadow = 'none';
+          card1.style.opacity = '0.78';
+        }
+      }
+
+      if (card2) {
+        if (isChoice2) {
+          card2.style.borderColor = '#0284c7';
+          card2.style.borderWidth = '2px';
+          card2.style.boxShadow = '0 3px 10px rgba(2, 132, 199, 0.18)';
+          card2.style.opacity = '1';
+        } else {
+          card2.style.borderColor = '#e2e8f0';
+          card2.style.borderWidth = '1.5px';
+          card2.style.boxShadow = 'none';
+          card2.style.opacity = '0.78';
+        }
+      }
+
       const renderItem = (f) => {
         const cfg = transportVehiclesConfig[f.id] || { selected: false, count: 1 };
         const isChecked = !!cfg.selected;
@@ -9776,9 +9851,13 @@
       const surveyLaborRate = surveyLabor ? surveyLabor.wage : 394809;
       const costSurveyLabor = evnRound(surveyWorkDays * surveyLaborRate);
 
-      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải x km ở vị trí 1 x giá dầu (không làm tròn lên)
-      const pickupTruck = FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) || FUEL_NORMS[0];
+      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải theo điểm xuất phát x km ở vị trí 1 x giá dầu (không làm tròn lên)
+      const currentDepotChoice = document.getElementById('depotRadio2')?.checked ? 2 : 1;
+      const pickupTruck = FUEL_NORMS.find(f => (f.depot === currentDepotChoice) && (f.name || '').toLowerCase().includes('bán tải')) 
+                       || FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) 
+                       || FUEL_NORMS[0];
       const pickupRate = pickupTruck ? pickupTruck.rate : 12.5;
+      const pickupDepotName = (pickupTruck && pickupTruck.depot === 2) ? 'Cơ sở 2' : 'Trụ sở chính';
       const costSurveyTransport = evnRound((pickupRate / 100) * pos1Km * effectiveFuelPrice);
 
       const totalSurveyCost = costSurveyLabor + costSurveyTransport;
@@ -9791,7 +9870,7 @@
           <td class="num">${formatMoney(costSurveyLabor)}</td>
         </tr>
         <tr>
-          <td><strong>Vận chuyển phục vụ khảo sát</strong> (Xe bán tải ${pickupRate} L/100km)</td>
+          <td><strong>Vận chuyển phục vụ khảo sát</strong> (Xe bán tải ${pickupRate} L/100km - ${pickupDepotName})</td>
           <td style="text-align:center;">km</td>
           <td style="text-align:center; font-weight:700;">${Math.round(pos1Km)}</td>
           <td class="num">${formatMoney(costSurveyTransport)}</td>
@@ -10568,7 +10647,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261027_02";
+    const APP_CONFIG_VERSION = "20261027_03";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10676,6 +10755,8 @@
         }
         if (d.transportVehiclesConfig && typeof d.transportVehiclesConfig === 'object') {
           transportVehiclesConfig = Object.assign({}, transportVehiclesConfig, d.transportVehiclesConfig);
+        } else {
+          switchTransportVehiclesToDepot(d.depotChoice || 1);
         }
         if (Array.isArray(d.labors)) LABOR_NORMS = d.labors;
         if (d.costRates) COST_RATES = Object.assign(COST_RATES, d.costRates);
@@ -10695,8 +10776,8 @@
         'F01': { selected: true, count: 1 },
         'F02': { selected: true, count: 1 },
         'F03': { selected: false, count: 1 },
-        'F04': { selected: true, count: 1 },
-        'F05': { selected: true, count: 1 },
+        'F04': { selected: false, count: 1 },
+        'F05': { selected: false, count: 1 },
         'F06': { selected: false, count: 1 }
       };
       LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
@@ -10944,7 +11025,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261027_v12').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261027_v13').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
