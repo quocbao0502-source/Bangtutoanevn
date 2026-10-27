@@ -19,13 +19,19 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="evn-logo.svg">
   <style>
-    /* Reset & Base Styles */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Reset & Base Styles - Toàn bộ ứng dụng sử dụng chuẩn font Helvetica */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+    }
     html {
       scroll-behavior: smooth;
+      font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
       background: #f1f5f9;
       color: #1e293b;
       min-height: 100vh;
@@ -36,6 +42,9 @@
       padding: 0;
       -webkit-font-smoothing: antialiased;
       transition: background 0.3s ease;
+    }
+    input, button, select, textarea, optgroup, option {
+      font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
     }
 
     /* Top switcher bar */
@@ -10647,7 +10656,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261027_03";
+    const APP_CONFIG_VERSION = "20261027_04";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11025,7 +11034,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261027_v13').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261027_v14').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -11233,7 +11242,7 @@
             }
             *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
             body {
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
               color: #0f172a;
               background: #ffffff;
               padding: 0;
@@ -11273,7 +11282,7 @@
         overlay.id = 'pdfGeneratingOverlay';
         overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.5); backdrop-filter:blur(2px); z-index:999999; display:flex; align-items:center; justify-content:center;';
         overlay.innerHTML = `
-          <div style="background:#ffffff; color:#0f172a; padding:18px 24px; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,0.25); text-align:center; font-family:sans-serif;">
+          <div style="background:#ffffff; color:#0f172a; padding:18px 24px; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,0.25); text-align:center; font-family:'Helvetica', 'Helvetica Neue', Arial, sans-serif;">
             <div style="font-size:26px; margin-bottom:6px;">📄</div>
             <div style="font-size:14px; font-weight:800; color:#005baa;">Đang xuất tệp PDF Bảng tổng hợp...</div>
             <div style="font-size:11px; color:#64748b; margin-top:4px;">Đang căn chỉnh trang A4 chuẩn xác, vui lòng đợi...</div>
@@ -11284,7 +11293,7 @@
         // Tạo thẻ div render chuẩn xác không bị tràn lề
         const exportCard = document.createElement('div');
         exportCard.id = 'pdfExportCard';
-        exportCard.style.cssText = 'position:absolute; top:0; left:0; width:740px; background:#ffffff; box-sizing:border-box; padding:12px 14px; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color:#0f172a; border:1.5px solid #005baa; border-radius:8px; z-index:999990;';
+        exportCard.style.cssText = 'position:absolute; top:0; left:0; width:740px; background:#ffffff; box-sizing:border-box; padding:12px 14px; font-family:"Helvetica", "Helvetica Neue", Arial, sans-serif; color:#0f172a; border:1.5px solid #005baa; border-radius:8px; z-index:999990;';
         exportCard.innerHTML = innerContentHtml;
         document.body.appendChild(exportCard);
 
@@ -11391,7 +11400,7 @@
           </xml>
           <![endif]-->
           <style>
-            body { font-family: Arial, sans-serif; font-size: 11pt; }
+            body { font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif; font-size: 11pt; }
             table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
             th, td { border: 1px solid #94a3b8; padding: 6px 8px; }
             .th-header { background-color: #005baa; color: #ffffff; font-weight: bold; text-align: center; }
