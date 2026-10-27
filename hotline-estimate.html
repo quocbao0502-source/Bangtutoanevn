@@ -2546,9 +2546,20 @@
 
           <!-- KHUNG ĐIỂM XUẤT PHÁT (TRỤ SỞ CHÍNH & CƠ SỞ 2) -->
           <div class="depot-config-card" id="depotConfigCard" style="margin-bottom:14px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
               <div style="font-size:12px; font-weight:800; color:#005baa; display:flex; align-items:center; gap:6px;">
                 🏢 <span>Điểm xuất phát:</span>
+              </div>
+              <!-- DỜI TỪ PHỤ LỤC 4 LÊN ĐÂY THEO YÊU CẦU (HÌNH 1) -->
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <div style="display:inline-flex; align-items:center; gap:6px; background:#ffffff; border:1.5px solid #005DBB; border-radius:6px; padding:4px 8px;">
+                  <label for="fuelPrice" style="font-size:11px; font-weight:700; color:#334155; white-space:nowrap; cursor:pointer;">Giá dầu (VNĐ/lít):</label>
+                  <input type="number" class="fuel-price-input" style="width:75px; font-weight:800; font-size:12px; text-align:center; padding:2px 4px; border:none; color:#005DBB; background:transparent;" id="fuelPrice" value="30650" step="500" onchange="onFuelOrTripChange()">
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:6px; background:#ffffff; border:1.5px solid #005DBB; border-radius:6px; padding:4px 8px;">
+                  <label for="fuelTax" style="font-size:11px; font-weight:700; color:#334155; white-space:nowrap; cursor:pointer;">Thuế dầu (%):</label>
+                  <input type="number" class="fuel-price-input" style="width:45px; font-weight:800; font-size:12px; text-align:center; padding:2px 4px; border:none; color:#005DBB; background:transparent;" id="fuelTax" value="0" min="0" max="100" step="1" placeholder="0" onchange="onFuelOrTripChange()">
+                </div>
               </div>
             </div>
 
@@ -2607,19 +2618,9 @@
 
           <!-- Phụ lục 4: Bảng tính vận chuyển hotline -->
           <div class="appendix-title editable-field" id="lblAppx4Title" onclick="adminQuickEdit('lblAppx4Title', 'Tiêu đề Phụ lục 4:')">PHỤ LỤC 4: BẢNG TÍNH VẬN CHUYỂN HOTLINE</div>
-          <div class="fuel-params-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Giá dầu (VNĐ/lít):</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="fuelPrice" value="30650" step="500" onchange="renderAll()">
-            </div>
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thuế dầu (%):</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="fuelTax" value="0" min="0" max="100" step="1" placeholder="0" onchange="renderAll()">
-            </div>
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số chuyến di chuyển:</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="fuelTrips" value="1" min="1" step="1" onchange="renderAll()">
-            </div>
+          <div class="fuel-params-grid" style="display:flex; align-items:center; gap:10px; margin-bottom:12px; background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid #e2e8f0;">
+            <label for="fuelTrips" style="font-size:11px; font-weight:700; color:#334155; white-space:nowrap; cursor:pointer;">Số chuyến di chuyển:</label>
+            <input type="number" class="fuel-price-input" style="width:70px; font-weight:800; font-size:12px; text-align:center; padding:3px 6px; border:1.5px solid #005DBB; border-radius:4px; color:#005DBB;" id="fuelTrips" value="1" min="1" step="1" onchange="onFuelOrTripChange()">
           </div>
 
           <div class="vehicle-picker-box">
@@ -2740,37 +2741,44 @@
           </div>
         </div>
 
+        <!-- Ô LOẠI HÌNH CÔNG TRÌNH & THUẾ SUẤT GTGT (DỜI LÊN ĐÂY THEO HÌNH 2) -->
+        <div class="summary-config-box" style="margin-bottom:10px; padding:10px 12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center;">
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Loại hình công trình (Gpa2):</label>
+            <div style="display:inline-flex; border:1.5px solid #cbd5e1; border-radius:6px; overflow:hidden; background:#fff;">
+              <button type="button" id="btnTypeNew" onclick="setProjectType('lap_moi')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#005baa; color:#fff; transition:all 0.2s;">
+                🏗️ Lắp mới (k=1)
+              </button>
+              <button type="button" id="btnTypeUpgrade" onclick="setProjectType('cai_tao')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#f8fafc; color:#334155; transition:all 0.2s;">
+                🔧 Cải tạo / Nâng cấp (k=1.2)
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thuế suất GTGT (%):</label>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <input type="number" id="summaryVatRate" class="fuel-price-input" style="width:60px; padding:5px 6px; font-weight:700; text-align:center;" value="8" min="0" max="100" step="1" onchange="updateSummaryVat(this.value)">
+              <button type="button" onclick="updateSummaryVat(0)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;" title="Miễn thuế 0%">0%</button>
+              <button type="button" onclick="updateSummaryVat(8)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">8%</button>
+              <button type="button" onclick="updateSummaryVat(10)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">10%</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NÚT NHẤN "KẾT QUẢ" BÊN TRÊN CHỮ TỔNG QUAN THEO HÌNH 2 -->
+        <div style="margin-bottom:12px;">
+          <button type="button" id="btnCalculateResult" onclick="onCalculateResultClick()" class="btn-calculate-result" style="width:100%; padding:12px 18px; background:linear-gradient(135deg, #005baa 0%, #0284c7 100%); color:#ffffff; font-size:14px; font-weight:900; letter-spacing:0.8px; border:none; border-radius:8px; cursor:pointer; box-shadow:0 4px 14px rgba(0,91,170,0.3); display:flex; align-items:center; justify-content:center; gap:8px; text-transform:uppercase; transition:all 0.2s;" title="Nhấn để tính toán bảng dự toán và lưu vào Lịch sử (History)">
+            ⚡ KẾT QUẢ
+          </button>
+        </div>
+
         <!-- BỐ CỤC 5: BẢNG TỔNG HỢP DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE -->
         <section class="summary-card" id="summarySection">
           <div class="block-badge-num editable-field" id="badgeBlock5" onclick="editBlockBadge('badgeBlock5', 5)" title="Bấm vào để đổi tên đề mục 5">TỔNG QUAN</div>
           <div class="summary-header">
             <h2 class="editable-field" id="lblSummaryTitle" onclick="adminQuickEdit('lblSummaryTitle', 'Tiêu đề Bảng tổng hợp:')">BẢNG TỔNG HỢP</h2>
             <p class="editable-field" id="lblSummarySub" onclick="adminQuickEdit('lblSummarySub', 'Ghi chú công thức:')">DỰ TOÁN CHI PHÍ THI CÔNG HOTLINE</p>
-          </div>
-
-          <!-- Thanh điều khiển: Loại công trình (Gpa2) & Thuế GTGT -->
-          <div class="summary-config-box" style="margin-bottom:12px; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center;">
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Loại hình công trình (Gpa2):</label>
-              <div style="display:inline-flex; border:1.5px solid #cbd5e1; border-radius:6px; overflow:hidden; background:#fff;">
-                <button type="button" id="btnTypeNew" onclick="setProjectType('lap_moi')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#005baa; color:#fff; transition:all 0.2s;">
-                  🏗️ Lắp mới (k=1)
-                </button>
-                <button type="button" id="btnTypeUpgrade" onclick="setProjectType('cai_tao')" style="padding:6px 12px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#f8fafc; color:#334155; transition:all 0.2s;">
-                  🔧 Cải tạo / Nâng cấp (k=1.2)
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Thuế suất GTGT (%):</label>
-              <div style="display:flex; align-items:center; gap:4px;">
-                <input type="number" id="summaryVatRate" class="fuel-price-input" style="width:65px; padding:5px 6px; font-weight:700; text-align:center;" value="8" min="0" max="100" step="1" onchange="updateSummaryVat(this.value)">
-                <button type="button" onclick="updateSummaryVat(0)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;" title="Miễn thuế 0%">0%</button>
-                <button type="button" onclick="updateSummaryVat(8)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">8%</button>
-                <button type="button" onclick="updateSummaryVat(10)" style="padding:4px 6px; font-size:10px; font-weight:700; border:1px solid #cbd5e1; border-radius:4px; background:#fff; cursor:pointer;">10%</button>
-              </div>
-            </div>
           </div>
 
           <div class="table-responsive-wrapper">
@@ -2821,6 +2829,22 @@
             <button type="button" onclick="showCoverPortal()" style="background:transparent; border:1px solid #cbd5e1; color:#64748b; font-size:11px; font-weight:600; padding:6px 14px; border-radius:6px; cursor:pointer;" title="Đổi vai trò hoặc đăng nhập Quản trị viên">
               🚪 Đổi vai trò / Đăng nhập Quản trị viên
             </button>
+          </div>
+        </section>
+
+        <!-- MỤC LỊCH SỬ DỰ TOÁN (HISTORY) THEO HÌNH 3 -->
+        <section class="history-card" id="historySection" style="margin-top:16px; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1.5px solid #f1f5f9; padding-bottom:8px;">
+            <div style="font-size:13px; font-weight:800; color:#005baa; display:flex; align-items:center; gap:6px;">
+              📜 <span>LỊCH SỬ DỰ TOÁN (HISTORY)</span>
+              <span id="historyBadgeCount" style="background:#0284c7; color:#fff; font-size:10px; padding:2px 7px; border-radius:10px; font-weight:800;">0</span>
+            </div>
+            <button type="button" onclick="clearAllHistory()" style="background:transparent; border:1px solid #fecaca; color:#dc2626; font-size:10.5px; font-weight:700; cursor:pointer; padding:3px 8px; border-radius:6px; transition:all 0.2s;" title="Xóa toàn bộ lịch sử">
+              🗑️ Xóa hết
+            </button>
+          </div>
+          <div id="historyListContainer" style="display:flex; flex-direction:column; gap:8px; max-height:420px; overflow-y:auto; padding-right:2px;">
+            <!-- History items rendered here -->
           </div>
         </section>
 
@@ -9717,11 +9741,48 @@
       };
     }
 
+    let hasCalculatedResult = false;
+
+    function onCalculateResultClick() {
+      hasCalculatedResult = true;
+      renderPositions();
+      renderAppendix();
+      renderSummary();
+      const data = getSummaryCalculationData();
+      addHistoryRecord(data);
+      showToast("🎉 Đã tính toán kết quả dự toán và lưu vào Lịch sử (History)!");
+      const summarySec = document.getElementById('summarySection');
+      if (summarySec) {
+        summarySec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function onFuelOrTripChange() {
+      hasCalculatedResult = false;
+      renderAppendix();
+      renderSummary();
+      saveAllAdminData();
+    }
+
     function renderSummary() {
       const data = getSummaryCalculationData();
       const summaryRows = data.summaryRows;
-      const Gdt = data.Gdt;
-      const words = data.words;
+      const Gdt = hasCalculatedResult ? data.Gdt : 0;
+      const words = hasCalculatedResult ? data.words : 'Không đồng.';
+
+      // Cập nhật nút KẾT QUẢ
+      const btnCalc = document.getElementById('btnCalculateResult');
+      if (btnCalc) {
+        if (hasCalculatedResult) {
+          btnCalc.innerHTML = '⚡ KẾT QUẢ (ĐÃ CẬP NHẬT)';
+          btnCalc.style.background = 'linear-gradient(135deg, #16a34a 0%, #059669 100%)';
+          btnCalc.style.boxShadow = '0 4px 14px rgba(22, 163, 74, 0.35)';
+        } else {
+          btnCalc.innerHTML = '⚡ KẾT QUẢ';
+          btnCalc.style.background = 'linear-gradient(135deg, #005baa 0%, #0284c7 100%)';
+          btnCalc.style.boxShadow = '0 4px 14px rgba(0, 91, 170, 0.35)';
+        }
+      }
 
       document.getElementById('summaryTableBody').innerHTML = summaryRows.map(r => {
         let rowStyle = '';
@@ -9730,13 +9791,15 @@
         if (r.isGrand) rowStyle += 'font-size:12px; border-top:2px solid #005baa; border-bottom:2px solid #005baa;';
         let colorStyle = r.color ? `color:${r.color};` : '';
 
+        const displayVal = hasCalculatedResult ? r.val : 0;
+
         return `
           <tr style="${rowStyle}">
             <td style="text-align:center; font-weight:700; ${colorStyle}">${r.stt}</td>
             <td style="${r.isGrand ? 'font-weight:800;' : ''} ${colorStyle}">${r.name.replace(/  /g, '&nbsp;&nbsp;')}</td>
             <td style="text-align:center; font-weight:700; color:#475569;">${r.code}</td>
             <td style="text-align:center; font-size:10px; color:#334155; white-space:nowrap; padding:5px 2px;">${r.formula}</td>
-            <td class="val" style="${colorStyle}">${formatMoney(r.val)}</td>
+            <td class="val" style="${colorStyle}">${formatMoney(displayVal)}</td>
           </tr>
         `;
       }).join('');
@@ -9772,8 +9835,9 @@
 
       const elStatShift = document.getElementById('statMachineShifts');
       if (elStatShift) {
-        const shifts = document.getElementById('machineShiftCount') ? document.getElementById('machineShiftCount').value : 1;
-        elStatShift.innerText = shifts + ' ca';
+        const totalT = positions.reduce((acc, p) => acc + (p.tasks ? p.tasks.length : 0), 0);
+        const shifts = document.getElementById('machineShiftCount') ? document.getElementById('machineShiftCount').value : 0;
+        elStatShift.innerText = (totalT === 0 ? '0.0' : parseFloat(shifts).toFixed(1)) + ' ca';
       }
     }
 
@@ -10317,7 +10381,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261026_08";
+    const APP_CONFIG_VERSION = "20261027_01";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10672,7 +10736,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261026_v10').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261027_v11').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -10762,6 +10826,10 @@
 
     // --- 19. EXPORT PDF (BẢNG TỔNG HỢP DỰ TOÁN - KHÔNG HIỆN Ô MÀU ĐEN, VỪA VẶN 1 TRANG A4) ---
     function exportToPDF() {
+      if (!hasCalculatedResult) {
+        hasCalculatedResult = true;
+        renderSummary();
+      }
       const data = getSummaryCalculationData();
       const words = data.words;
       const today = new Date();
@@ -11144,6 +11212,167 @@
       showToast("Đã xuất tệp Excel thành công!");
     }
 
+    // --- 19c. QUẢN LÝ LỊCH SỬ DỰ TOÁN (HISTORY) ---
+    let calcHistory = [];
+
+    function loadHistoryFromStorage() {
+      try {
+        const raw = localStorage.getItem('evn_hotline_calc_history');
+        if (raw) {
+          calcHistory = JSON.parse(raw);
+          if (!Array.isArray(calcHistory)) calcHistory = [];
+        }
+      } catch (e) {
+        console.warn("Error loading history:", e);
+        calcHistory = [];
+      }
+      renderHistoryList();
+    }
+
+    function saveHistoryToStorage() {
+      try {
+        localStorage.setItem('evn_hotline_calc_history', JSON.stringify(calcHistory.slice(0, 50)));
+      } catch (e) {
+        console.warn("Error saving history:", e);
+      }
+    }
+
+    function addHistoryRecord(data) {
+      if (!data) data = getSummaryCalculationData();
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+      
+      const totalT = positions.reduce((acc, p) => acc + (p.tasks ? p.tasks.length : 0), 0);
+      const projTypeLbl = (currentProjectType === 'cai_tao') ? 'Cải tạo (k=1.2)' : 'Lắp mới (k=1.0)';
+
+      const record = {
+        id: 'hist_' + Date.now(),
+        timestamp: now.toISOString(),
+        timeStr: timeStr,
+        posCount: positions.length,
+        taskCount: totalT,
+        projectType: currentProjectType,
+        projectTypeLabel: projTypeLbl,
+        vatRate: currentVatRate,
+        grandTotal: data.Gdt,
+        grandTotalStr: formatMoney(data.Gdt) + ' đ',
+        words: data.words,
+        snapshot: {
+          positions: JSON.parse(JSON.stringify(positions)),
+          currentProjectType,
+          currentVatRate,
+          fuelPrice: parseFloat(document.getElementById('fuelPrice')?.value) || 30650,
+          fuelTax: parseFloat(document.getElementById('fuelTax')?.value) || 0,
+          fuelTrips: parseFloat(document.getElementById('fuelTrips')?.value) || 1
+        }
+      };
+
+      calcHistory.unshift(record);
+      saveHistoryToStorage();
+      renderHistoryList();
+    }
+
+    function renderHistoryList() {
+      const container = document.getElementById('historyListContainer');
+      const badge = document.getElementById('historyBadgeCount');
+      if (badge) badge.innerText = calcHistory.length;
+      if (!container) return;
+
+      if (calcHistory.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:18px 10px; color:#94a3b8; font-size:11.5px; font-style:italic; line-height:1.5;">
+            Chưa có lịch sử dự toán nào.<br>
+            Bấm nút <strong style="color:#005baa;">⚡ KẾT QUẢ</strong> ở trên để tính toán và lưu dự toán vào đây.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = calcHistory.map((item) => `
+        <div class="history-item-card" style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #005baa; border-radius:8px; padding:9px 11px; transition:all 0.2s;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px; gap:6px;">
+            <div style="font-size:11px; color:#64748b; font-weight:600; display:flex; align-items:center; gap:4px;">
+              <span>🕒</span> <span>${item.timeStr}</span>
+            </div>
+            <div style="font-size:13.5px; font-weight:900; color:#005baa; white-space:nowrap;">
+              ${item.grandTotalStr}
+            </div>
+          </div>
+          <div style="font-size:11px; color:#334155; margin-bottom:6px; line-height:1.3;">
+            <span style="font-weight:700; color:#0f172a;">${item.posCount} Vị trí</span> • <span style="font-weight:700; color:#0f172a;">${item.taskCount} Hạng mục</span> • <span style="color:#0284c7; font-weight:600;">${item.projectTypeLabel}</span> • <span style="color:#475569;">Thuế ${item.vatRate}%</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #cbd5e1; pt:5px; margin-top:5px; padding-top:5px;">
+            <span style="font-size:9.5px; color:#64748b; font-style:italic; max-width:170px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${item.words}">
+              ${item.words}
+            </span>
+            <div style="display:flex; gap:5px;">
+              <button type="button" onclick="loadHistoryItem('${item.id}')" style="background:#eff6ff; border:1px solid #bfdbfe; color:#0284c7; font-size:10px; font-weight:700; padding:3px 7px; border-radius:4px; cursor:pointer;" title="Nạp lại dự toán này">
+                👁️ Tải lại
+              </button>
+              <button type="button" onclick="deleteHistoryItem('${item.id}')" style="background:#ffffff; border:1px solid #cbd5e1; color:#ef4444; font-size:10px; font-weight:700; padding:3px 6px; border-radius:4px; cursor:pointer;" title="Xóa bản ghi này">
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadHistoryItem(id) {
+      const item = calcHistory.find(h => h.id === id);
+      if (!item || !item.snapshot) return;
+
+      if (confirm(`Cưng có muốn nạp lại dự toán lúc ${item.timeStr} (Tổng: ${item.grandTotalStr}) không?`)) {
+        if (item.snapshot.positions) {
+          positions = JSON.parse(JSON.stringify(item.snapshot.positions));
+        }
+        if (item.snapshot.currentProjectType) {
+          setProjectType(item.snapshot.currentProjectType);
+        }
+        if (item.snapshot.currentVatRate !== undefined) {
+          updateSummaryVat(item.snapshot.currentVatRate, true);
+        }
+        if (item.snapshot.fuelPrice && document.getElementById('fuelPrice')) {
+          document.getElementById('fuelPrice').value = item.snapshot.fuelPrice;
+        }
+        if (item.snapshot.fuelTax !== undefined && document.getElementById('fuelTax')) {
+          document.getElementById('fuelTax').value = item.snapshot.fuelTax;
+        }
+        if (item.snapshot.fuelTrips && document.getElementById('fuelTrips')) {
+          document.getElementById('fuelTrips').value = item.snapshot.fuelTrips;
+        }
+
+        hasCalculatedResult = true;
+        renderAll();
+        showToast(`📋 Đã nạp lại dự toán lúc ${item.timeStr} (${item.grandTotalStr})!`);
+        
+        const summarySec = document.getElementById('summarySection');
+        if (summarySec) {
+          summarySec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function deleteHistoryItem(id) {
+      calcHistory = calcHistory.filter(h => h.id !== id);
+      saveHistoryToStorage();
+      renderHistoryList();
+      showToast("🗑️ Đã xóa 1 bản ghi lịch sử.");
+    }
+
+    function clearAllHistory() {
+      if (calcHistory.length === 0) {
+        showToast("Lịch sử đang trống!");
+        return;
+      }
+      if (confirm("Cưng có chắc chắn muốn xóa TOÀN BỘ lịch sử dự toán không?")) {
+        calcHistory = [];
+        saveHistoryToStorage();
+        renderHistoryList();
+        showToast("🗑️ Đã xóa sạch toàn bộ lịch sử dự toán.");
+      }
+    }
+
     // --- 20. INITIALIZATION ---
     function renderAll() {
       renderPositions();
@@ -11164,6 +11393,7 @@
       checkUrlSyncConfig();
       loadSavedAdminData();
       populateModals();
+      loadHistoryFromStorage();
       renderAll();
       const savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
       setAppViewMode(savedMode);
