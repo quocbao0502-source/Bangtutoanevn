@@ -2623,15 +2623,38 @@
             <input type="number" class="fuel-price-input" style="width:70px; font-weight:800; font-size:12px; text-align:center; padding:3px 6px; border:1.5px solid #005DBB; border-radius:4px; color:#005DBB;" id="fuelTrips" value="1" min="1" step="1" onchange="onFuelOrTripChange()">
           </div>
 
-          <div class="vehicle-picker-box">
-            <div class="vehicle-picker-title">Chọn xe di chuyển bằng cách bấm vô tick chọn xe bên dưới:</div>
-            <div class="vehicle-options-row">
-              <label class="veh-pill active locked" title="Mặc định luôn có trong đội hotline">
-                <input type="checkbox" checked disabled> Xe bán tải & Xe gàu (mặc định)
-              </label>
-              <label class="veh-pill" id="pillCrane" onclick="toggleCraneVehicle()">
-                <input type="checkbox" id="chkCrane" onchange="toggleCraneVehicle()"> Xe cẩu
-              </label>
+          <!-- KHUNG CHỌN XE & SỐ LƯỢNG CHO TRỤ SỞ CHÍNH (ĐỎ) VÀ CƠ SỞ 2 (XANH) THEO HÌNH 1 -->
+          <div class="vehicle-picker-box" style="margin-bottom:12px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px;">
+            <div style="font-size:12px; font-weight:800; color:#005baa; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+              🚚 <span>Chọn xe di chuyển & Số lượng xe cho từng điểm xuất phát:</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+              <!-- CỘT 1 (MÀU ĐỎ): TRỤ SỞ CHÍNH -->
+              <div style="background:#ffffff; border:1.5px solid #ef4444; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(239,68,68,0.08);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed #fca5a5; padding-bottom:6px;">
+                  <span style="font-size:12px; font-weight:800; color:#dc2626; display:flex; align-items:center; gap:5px;">
+                    🏢 Trụ sở chính
+                  </span>
+                  <span style="font-size:11px; font-weight:700; color:#64748b;" id="lblTransportKm1">0 km</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px;" id="transportVehiclesDepot1">
+                  <!-- Rendered by JS -->
+                </div>
+              </div>
+
+              <!-- CỘT 2 (MÀU XANH): CƠ SỞ 2 -->
+              <div style="background:#ffffff; border:1.5px solid #0284c7; border-radius:8px; padding:10px 12px; box-shadow:0 1px 4px rgba(2,132,199,0.08);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px dashed #bae6fd; padding-bottom:6px;">
+                  <span style="font-size:12px; font-weight:800; color:#0284c7; display:flex; align-items:center; gap:5px;">
+                    🏭 Cơ sở 2
+                  </span>
+                  <span style="font-size:11px; font-weight:700; color:#64748b;" id="lblTransportKm2">0 km</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px;" id="transportVehiclesDepot2">
+                  <!-- Rendered by JS -->
+                </div>
+              </div>
             </div>
           </div>
 
@@ -2639,10 +2662,11 @@
             <table class="appendix-table">
               <thead>
                 <tr>
-                  <th>Loại xe</th>
-                  <th>Định mức (L/100km)</th>
-                  <th>Tổng km</th>
-                  <th>Thành tiền (đ)</th>
+                  <th style="text-align:left;">Loại xe & Điểm xuất phát</th>
+                  <th style="width:65px; text-align:center;">Số lượng</th>
+                  <th style="width:120px; text-align:center;">Định mức</th>
+                  <th style="width:90px; text-align:center;">Tổng km</th>
+                  <th style="width:120px; text-align:right;">Thành tiền (đ)</th>
                 </tr>
               </thead>
               <tbody id="transportTableBody">
@@ -3178,31 +3202,59 @@
     </div>
   </div>
 
-  <!-- MODAL 3: BẢNG ĐỊNH MỨC NHIÊN LIỆU -->
+  <!-- MODAL 3: BẢNG ĐỊNH MỨC NHIÊN LIỆU (CHIA 2 PHẦN TRỤ SỞ CHÍNH & CƠ SỞ 2 THEO HÌNH 2) -->
   <div class="modal-overlay" id="modalNhienLieu">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 650px;">
       <div class="modal-header">
         <h3>⛽ Bảng định mức nhiên liệu xe Hotline</h3>
         <button class="modal-close" onclick="closeModal('modalNhienLieu')">&times;</button>
       </div>
-      <div class="modal-body">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <p style="color:#64748b; font-size:11px;">Định mức tiêu hao nhiên liệu cơ giới EVN:</p>
-          <button class="admin-pill-btn" style="background:#0284c7;" onclick="openAddNewFuelModal()">➕ Thêm phương tiện mới</button>
+      <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+        <!-- PHẦN 1: TRỤ SỞ CHÍNH -->
+        <div style="margin-bottom: 18px; background: #ffffff; border: 1.5px solid #fca5a5; border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 4px rgba(239,68,68,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1.5px solid #fee2e2; padding-bottom: 8px;">
+            <div style="font-size: 13px; font-weight: 800; color: #dc2626; display: flex; align-items: center; gap: 6px;">
+              🏢 <span>TRỤ SỞ CHÍNH: ĐỊNH MỨC XE</span>
+            </div>
+            <button class="admin-pill-btn" style="background: #dc2626;" onclick="openAddNewFuelModal(1)">➕ Thêm xe Trụ sở chính</button>
+          </div>
+          <table class="appendix-table" style="margin-bottom: 0;">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Phương tiện</th>
+                <th style="width: 140px; text-align: center;">Định mức di chuyển</th>
+                <th style="width: 130px; text-align: center;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="fuelNormTableBody1">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
         </div>
-        <table class="appendix-table">
-          <thead>
-            <tr>
-              <th style="text-align:left;">Phương tiện</th>
-              <th style="width:140px; text-align:center;">Định mức di chuyển</th>
-              <th style="width:130px; text-align:center;">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody id="fuelNormTableBody">
-            <!-- Rendered by JS -->
-          </tbody>
-        </table>
-        <p style="font-size:11px; color:#64748b; font-style:italic; margin-top:8px;">* Áp dụng theo định mức tiêu hao nhiên liệu cơ giới EVN (tự động cập nhật vào Phụ lục 4).</p>
+
+        <!-- PHẦN 2: CƠ SỞ 2 -->
+        <div style="background: #ffffff; border: 1.5px solid #93c5fd; border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 4px rgba(2,132,199,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1.5px solid #e0f2fe; padding-bottom: 8px;">
+            <div style="font-size: 13px; font-weight: 800; color: #0284c7; display: flex; align-items: center; gap: 6px;">
+              🏭 <span>CƠ SỞ 2: ĐỊNH MỨC XE</span>
+            </div>
+            <button class="admin-pill-btn" style="background: #0284c7;" onclick="openAddNewFuelModal(2)">➕ Thêm xe Cơ sở 2</button>
+          </div>
+          <table class="appendix-table" style="margin-bottom: 0;">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Phương tiện</th>
+                <th style="width: 140px; text-align: center;">Định mức di chuyển</th>
+                <th style="width: 130px; text-align: center;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="fuelNormTableBody2">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size: 11px; color: #64748b; font-style: italic; margin-top: 10px;">* Áp dụng theo định mức tiêu hao nhiên liệu cơ giới EVN (tự động phân loại và cập nhật vào Phụ lục 4).</p>
       </div>
       <div class="modal-footer">
         <button class="btn-pos-action" onclick="closeModal('modalNhienLieu')">Đóng</button>
@@ -3283,6 +3335,16 @@
           Tên phương tiện / dòng xe:
         </label>
         <input type="text" class="quick-edit-input" id="inpFuelName" placeholder="Ví dụ: Xe bán tải phục vụ, Xe gàu Hotline...">
+      </div>
+
+      <div>
+        <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
+          Thuộc cơ sở / Điểm xuất phát:
+        </label>
+        <select class="quick-edit-input" id="inpFuelDepot" style="cursor:pointer; font-weight:700;">
+          <option value="1">🏢 Trụ sở chính (Số 441 đường 30/4)</option>
+          <option value="2">🏭 Cơ sở 2 (Tỉnh lộ 833, Tân An)</option>
+        </select>
       </div>
 
       <div>
@@ -7895,41 +7957,36 @@
 ];
 
     const DEFAULT_FUEL_NORMS = [
-  {
-    "id": "F01",
-    "name": "Xe bán tải phục vụ",
-    "rate": 12.5
-  },
-  {
-    "id": "F02",
-    "name": "Xe gàu cách điện Hotline",
-    "rate": 16
-  },
-  {
-    "id": "F03",
-    "name": "Xe cẩu chuyên dùng",
-    "rate": 25
-  }
-];
+      // Trụ sở chính (depot: 1)
+      { id: "F01", depot: 1, name: "Xe bán tải phục vụ", rate: 12.5 },
+      { id: "F02", depot: 1, name: "Xe gàu cách điện Hotline", rate: 16 },
+      { id: "F03", depot: 1, name: "Xe cẩu chuyên dùng", rate: 25 },
+      // Cơ sở 2 (depot: 2)
+      { id: "F04", depot: 2, name: "Xe bán tải phục vụ", rate: 12.5 },
+      { id: "F05", depot: 2, name: "Xe gàu cách điện Hotline", rate: 16 },
+      { id: "F06", depot: 2, name: "Xe cẩu chuyên dùng", rate: 25 }
+    ];
 
     const DEFAULT_LABOR_NORMS = [
-  {
-    "id": "L01",
-    "title": "Thợ Hotline Bậc 3/7",
-    "wage": 298431
-  },
-  {
-    "id": "L02",
-    "title": "Thợ Hotline Bậc 4/7",
-    "wage": 394809
-  }
-];
+      { id: "L01", title: "Thợ Hotline Bậc 3/7", wage: 298431 },
+      { id: "L02", title: "Thợ Hotline Bậc 4/7", wage: 394809 }
+    ];
 
     // Khởi tạo các biến dữ liệu
     let MASTER_TASKS = JSON.parse(JSON.stringify(DEFAULT_MASTER_TASKS));
     let MASTER_CONDITIONS = JSON.parse(JSON.stringify(DEFAULT_MASTER_CONDITIONS));
     let FUEL_NORMS = JSON.parse(JSON.stringify(DEFAULT_FUEL_NORMS));
     let LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
+
+    // Cấu hình chọn xe và số lượng xe di chuyển (Trụ sở chính & Cơ sở 2)
+    let transportVehiclesConfig = {
+      F01: { selected: true, count: 1 },
+      F02: { selected: true, count: 1 },
+      F03: { selected: false, count: 1 },
+      F04: { selected: false, count: 1 },
+      F05: { selected: false, count: 1 },
+      F06: { selected: false, count: 1 }
+    };
 
     // Bộ lọc cấp điện áp trong modal điều kiện
     let condFilterVolt = 'All';
@@ -9493,6 +9550,65 @@
       }).join('');
     }
 
+    // --- 10B. CHỌN XE & SỐ LƯỢNG XE DI CHUYỂN (TRỤ SỞ CHÍNH & CƠ SỞ 2) ---
+    function toggleVehicleSelected(fuelId) {
+      if (!transportVehiclesConfig[fuelId]) {
+        transportVehiclesConfig[fuelId] = { selected: false, count: 1 };
+      }
+      transportVehiclesConfig[fuelId].selected = !transportVehiclesConfig[fuelId].selected;
+      hasCalculatedResult = false;
+      renderAppendix();
+      renderSummary();
+      saveAllAdminData();
+    }
+
+    function changeVehicleCount(fuelId, val) {
+      const count = Math.max(1, parseInt(val, 10) || 1);
+      if (!transportVehiclesConfig[fuelId]) {
+        transportVehiclesConfig[fuelId] = { selected: true, count: 1 };
+      }
+      transportVehiclesConfig[fuelId].count = count;
+      hasCalculatedResult = false;
+      renderAppendix();
+      renderSummary();
+      saveAllAdminData();
+    }
+
+    function renderTransportVehiclesPickers() {
+      const container1 = document.getElementById('transportVehiclesDepot1');
+      const container2 = document.getElementById('transportVehiclesDepot2');
+      if (!container1 || !container2) return;
+
+      const renderItem = (f) => {
+        const cfg = transportVehiclesConfig[f.id] || { selected: false, count: 1 };
+        const isChecked = !!cfg.selected;
+        const count = cfg.count || 1;
+
+        return `
+          <div style="display:flex; align-items:center; justify-content:space-between; background:${isChecked ? '#f0fdf4' : '#ffffff'}; border:1px solid ${isChecked ? '#86efac' : '#cbd5e1'}; border-radius:6px; padding:6px 10px; transition:all 0.2s; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1; margin:0;">
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleVehicleSelected('${f.id}')" style="cursor:pointer; width:16px; height:16px; accent-color:#005baa;">
+              <div>
+                <div style="font-size:11.5px; font-weight:700; color:#1e293b;">${f.name}</div>
+                <div style="font-size:10px; color:#64748b;">Định mức: <strong>${f.rate}</strong> L/100km</div>
+              </div>
+            </label>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-size:10px; font-weight:700; color:#475569;">SL:</span>
+              <input type="number" min="1" max="10" step="1" value="${count}" onchange="changeVehicleCount('${f.id}', this.value)" style="width:44px; text-align:center; font-weight:800; font-size:11.5px; padding:3px 4px; border:1.5px solid ${isChecked ? '#16a34a' : '#cbd5e1'}; border-radius:4px; color:${isChecked ? '#16a34a' : '#005baa'}; background:#ffffff;">
+              <span style="font-size:10.5px; color:#64748b;">xe</span>
+            </div>
+          </div>
+        `;
+      };
+
+      const fuelsDepot1 = FUEL_NORMS.filter(f => (f.depot || 1) === 1);
+      const fuelsDepot2 = FUEL_NORMS.filter(f => f.depot === 2);
+
+      container1.innerHTML = fuelsDepot1.map(renderItem).join('') || `<div style="font-size:11px; color:#94a3b8; font-style:italic;">Chưa có xe Trụ sở chính</div>`;
+      container2.innerHTML = fuelsDepot2.map(renderItem).join('') || `<div style="font-size:11px; color:#94a3b8; font-style:italic;">Chưa có xe Cơ sở 2</div>`;
+    }
+
     // --- 11. RENDER CÁC PHỤ LỤC (BLOCK 4) ---
     function renderAppendix() {
       const fuelPrice = parseFloat(document.getElementById('fuelPrice')?.value) || 21500;
@@ -9501,39 +9617,89 @@
       const machineShiftPrice = parseFloat(document.getElementById('machineShiftPrice')?.value) || 1250000;
       const machineShiftCount = parseInt(document.getElementById('machineShiftCount')?.value, 10) || 1;
 
-      // km di chuyển lấy chính từ Vị trí 1 (chọn hoặc định vị)
+      // km di chuyển Trụ sở chính và Cơ sở 2 đến Vị trí 1
+      const depotKm1Val = parseFloat(document.getElementById('depotKm1')?.value) || 0;
+      const depotKm2Val = parseFloat(document.getElementById('depotKm2')?.value) || 0;
       const pos1Km = positions[0] ? (parseFloat(positions[0].distanceKm) || 0) : 0;
+
+      const km1 = depotKm1Val > 0 ? depotKm1Val : pos1Km;
+      const km2 = depotKm2Val > 0 ? depotKm2Val : pos1Km;
+
+      if (document.getElementById('lblTransportKm1')) document.getElementById('lblTransportKm1').innerText = `${km1} km`;
+      if (document.getElementById('lblTransportKm2')) document.getElementById('lblTransportKm2').innerText = `${km2} km`;
+
+      renderTransportVehiclesPickers();
 
       // Giá dầu thực tính: nếu thuế 0% thì x thẳng giá dầu, nếu có thuế thì chia cho (1 + thuế/100)
       const effectiveFuelPrice = fuelTax > 0 ? (fuelPrice / (1 + fuelTax / 100)) : fuelPrice;
 
-      // Tổng km di chuyển mỗi xe = km Vị trí 1 * 2 * Số chuyến
-      const totalKmPerVeh = pos1Km * 2 * fuelTrips;
-
       // Phụ lục 4: Vận chuyển
       let totalTransportCost = 0;
-      const transportHtml = FUEL_NORMS.map(r => {
-        // Nếu tên chứa 'cẩu' hoặc id là F03 thì kiểm tra hasCrane, các xe khác luôn áp dụng
-        const isCrane = (r.name || '').toLowerCase().includes('cẩu') || r.id === 'F03';
-        let isAct = isCrane ? hasCrane : true;
-        if (!isAct) return '';
-        // Công thức: Định mức xe (r.rate / 100) * km Vị trí 1 * 2 * số chuyến * giá dầu thực tính (lấy phần nguyên, không làm tròn lên)
-        const cost = evnRound((r.rate / 100) * totalKmPerVeh * effectiveFuelPrice);
-        totalTransportCost += cost;
-        return `
-          <tr>
-            <td><strong>${r.name}</strong></td>
-            <td style="text-align:center; font-weight:700;">${r.rate} lít / 100km</td>
-            <td style="text-align:center;">${Math.round(totalKmPerVeh)} km</td>
-            <td class="num">${formatMoney(cost)}</td>
+      let transportRowsHtml = '';
+
+      const fuelsDepot1 = FUEL_NORMS.filter(f => (f.depot || 1) === 1 && transportVehiclesConfig[f.id]?.selected);
+      const fuelsDepot2 = FUEL_NORMS.filter(f => f.depot === 2 && transportVehiclesConfig[f.id]?.selected);
+
+      if (fuelsDepot1.length > 0) {
+        transportRowsHtml += `
+          <tr style="background:#fef2f2; font-weight:800; color:#dc2626;">
+            <td colspan="5" style="padding:6px 8px; font-size:11px;">🏢 TRỤ SỞ CHÍNH (Cự ly: ${km1} km • ${fuelTrips} chuyến)</td>
           </tr>
         `;
-      }).join('');
+        fuelsDepot1.forEach(f => {
+          const cfg = transportVehiclesConfig[f.id] || { count: 1 };
+          const count = cfg.count || 1;
+          const totalKm = km1 * 2 * fuelTrips * count;
+          const cost = evnRound((f.rate / 100) * totalKm * effectiveFuelPrice);
+          totalTransportCost += cost;
+          transportRowsHtml += `
+            <tr>
+              <td><strong>${f.name}</strong></td>
+              <td style="text-align:center; font-weight:700;">${count} xe</td>
+              <td style="text-align:center;">${f.rate} lít / 100km</td>
+              <td style="text-align:center;">${Math.round(totalKm)} km</td>
+              <td class="num">${formatMoney(cost)}</td>
+            </tr>
+          `;
+        });
+      }
 
-      document.getElementById('transportTableBody').innerHTML = transportHtml + `
-        <tr style="background:#eff6ff; font-weight:700;">
-          <td colspan="3">Tổng cộng</td>
-          <td class="num" style="color:#005baa;">${formatMoney(totalTransportCost)} đ</td>
+      if (fuelsDepot2.length > 0) {
+        transportRowsHtml += `
+          <tr style="background:#f0f9ff; font-weight:800; color:#0284c7;">
+            <td colspan="5" style="padding:6px 8px; font-size:11px;">🏭 CƠ SỞ 2 (Cự ly: ${km2} km • ${fuelTrips} chuyến)</td>
+          </tr>
+        `;
+        fuelsDepot2.forEach(f => {
+          const cfg = transportVehiclesConfig[f.id] || { count: 1 };
+          const count = cfg.count || 1;
+          const totalKm = km2 * 2 * fuelTrips * count;
+          const cost = evnRound((f.rate / 100) * totalKm * effectiveFuelPrice);
+          totalTransportCost += cost;
+          transportRowsHtml += `
+            <tr>
+              <td><strong>${f.name}</strong></td>
+              <td style="text-align:center; font-weight:700;">${count} xe</td>
+              <td style="text-align:center;">${f.rate} lít / 100km</td>
+              <td style="text-align:center;">${Math.round(totalKm)} km</td>
+              <td class="num">${formatMoney(cost)}</td>
+            </tr>
+          `;
+        });
+      }
+
+      if (fuelsDepot1.length === 0 && fuelsDepot2.length === 0) {
+        transportRowsHtml = `
+          <tr>
+            <td colspan="5" style="text-align:center; color:#94a3b8; font-style:italic; padding:12px;">Chưa chọn xe di chuyển nào ở trên</td>
+          </tr>
+        `;
+      }
+
+      document.getElementById('transportTableBody').innerHTML = transportRowsHtml + `
+        <tr style="background:#eff6ff; font-weight:800;">
+          <td colspan="4">Tổng cộng Phụ lục 4</td>
+          <td class="num" style="color:#005baa; font-size:12px;">${formatMoney(totalTransportCost)} đ</td>
         </tr>
       `;
 
@@ -10118,12 +10284,15 @@
       saveAllAdminData();
     }
 
-    // --- 14b. QUẢN LÝ ĐỊNH MỨC NHIÊN LIỆU XE HOTLINE ---
-    function openAddNewFuelModal() {
-      document.getElementById('fuelModalTitle').innerText = '➕ Thêm phương tiện mới';
+    // --- 14b. QUẢN LÝ ĐỊNH MỨC NHIÊN LIỆU XE HOTLINE (TRỤ SỞ CHÍNH & CƠ SỞ 2) ---
+    function openAddNewFuelModal(depotId = 1) {
+      document.getElementById('fuelModalTitle').innerText = depotId === 2 ? '➕ Thêm xe Cơ sở 2' : '➕ Thêm xe Trụ sở chính';
       document.getElementById('editingFuelId').value = '';
       document.getElementById('inpFuelName').value = '';
       document.getElementById('inpFuelRate').value = '15.0';
+      if (document.getElementById('inpFuelDepot')) {
+        document.getElementById('inpFuelDepot').value = depotId;
+      }
       document.getElementById('fuelDetailModal').classList.add('active');
     }
 
@@ -10134,6 +10303,9 @@
       document.getElementById('editingFuelId').value = f.id;
       document.getElementById('inpFuelName').value = f.name || '';
       document.getElementById('inpFuelRate').value = f.rate || 0;
+      if (document.getElementById('inpFuelDepot')) {
+        document.getElementById('inpFuelDepot').value = f.depot || 1;
+      }
       document.getElementById('fuelDetailModal').classList.add('active');
     }
 
@@ -10145,6 +10317,7 @@
       const fuelId = document.getElementById('editingFuelId').value;
       const name = document.getElementById('inpFuelName').value.trim();
       const rate = parseFloat(document.getElementById('inpFuelRate').value);
+      const depot = parseInt(document.getElementById('inpFuelDepot')?.value, 10) || 1;
 
       if (!name) {
         alert("Vui lòng nhập tên phương tiện!");
@@ -10160,11 +10333,13 @@
         if (f) {
           f.name = name;
           f.rate = rate;
+          f.depot = depot;
           showToast(`Đã lưu định mức cho ${name}!`);
         }
       } else {
         const newId = 'F' + String(Date.now()).slice(-4);
-        FUEL_NORMS.push({ id: newId, name: name, rate: rate });
+        FUEL_NORMS.push({ id: newId, depot: depot, name: name, rate: rate });
+        transportVehiclesConfig[newId] = { selected: true, count: 1 };
         showToast(`Đã thêm phương tiện: ${name}!`);
       }
 
@@ -10184,6 +10359,7 @@
       const name = f ? f.name : fuelId;
       if (!confirm(`Bạn có chắc chắn muốn xóa phương tiện:\n"${name}" khỏi bảng định mức nhiên liệu?`)) return;
       FUEL_NORMS = FUEL_NORMS.filter(x => x.id !== fuelId);
+      delete transportVehiclesConfig[fuelId];
       showToast(`Đã xóa phương tiện ${name}!`);
       populateModals();
       renderAppendix();
@@ -10305,8 +10481,11 @@
       // 2. Master Conditions
       renderConditionListModal();
 
-      // 3. Fuel Norms (Đầy đủ Sửa & Xóa)
-      document.getElementById('fuelNormTableBody').innerHTML = FUEL_NORMS.map(f => `
+      // 3. Fuel Norms (Chia 2 phần Trụ sở chính & Cơ sở 2 theo Hình 2)
+      const fuelsDepot1 = FUEL_NORMS.filter(f => (f.depot || 1) === 1);
+      const fuelsDepot2 = FUEL_NORMS.filter(f => f.depot === 2);
+
+      const renderFuelRow = (f) => `
         <tr>
           <td><strong>${f.name}</strong></td>
           <td style="text-align:center; font-weight:700; color:#0f172a;">${f.rate} lít / 100km</td>
@@ -10317,7 +10496,14 @@
             </div>
           </td>
         </tr>
-      `).join('');
+      `;
+
+      if (document.getElementById('fuelNormTableBody1')) {
+        document.getElementById('fuelNormTableBody1').innerHTML = fuelsDepot1.map(renderFuelRow).join('') || `<tr><td colspan="3" style="text-align:center; color:#94a3b8; font-style:italic;">Chưa có xe Trụ sở chính</td></tr>`;
+      }
+      if (document.getElementById('fuelNormTableBody2')) {
+        document.getElementById('fuelNormTableBody2').innerHTML = fuelsDepot2.map(renderFuelRow).join('') || `<tr><td colspan="3" style="text-align:center; color:#94a3b8; font-style:italic;">Chưa có xe Cơ sở 2</td></tr>`;
+      }
 
       // 4. Labor Norms (Đầy đủ Sửa & Xóa)
       document.getElementById('laborNormTableBody').innerHTML = LABOR_NORMS.map(l => `
@@ -10373,6 +10559,7 @@
         tasks: MASTER_TASKS,
         conditions: MASTER_CONDITIONS,
         fuels: FUEL_NORMS,
+        transportVehiclesConfig: transportVehiclesConfig,
         labors: LABOR_NORMS,
         costRates: COST_RATES,
         positions: positions
@@ -10381,7 +10568,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261027_01";
+    const APP_CONFIG_VERSION = "20261027_02";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10476,7 +10663,20 @@
           });
           MASTER_CONDITIONS = d.conditions;
         }
-        if (Array.isArray(d.fuels)) FUEL_NORMS = d.fuels;
+        if (Array.isArray(d.fuels)) {
+          d.fuels.forEach(f => {
+            if (!f.depot) f.depot = 1;
+          });
+          DEFAULT_FUEL_NORMS.forEach(df => {
+            if (!d.fuels.some(f => f.id === df.id)) {
+              d.fuels.push(JSON.parse(JSON.stringify(df)));
+            }
+          });
+          FUEL_NORMS = d.fuels;
+        }
+        if (d.transportVehiclesConfig && typeof d.transportVehiclesConfig === 'object') {
+          transportVehiclesConfig = Object.assign({}, transportVehiclesConfig, d.transportVehiclesConfig);
+        }
         if (Array.isArray(d.labors)) LABOR_NORMS = d.labors;
         if (d.costRates) COST_RATES = Object.assign(COST_RATES, d.costRates);
         if (Array.isArray(d.positions) && d.positions.length > 0) positions = d.positions;
@@ -10491,6 +10691,14 @@
       MASTER_TASKS = JSON.parse(JSON.stringify(DEFAULT_MASTER_TASKS));
       MASTER_CONDITIONS = JSON.parse(JSON.stringify(DEFAULT_MASTER_CONDITIONS));
       FUEL_NORMS = JSON.parse(JSON.stringify(DEFAULT_FUEL_NORMS));
+      transportVehiclesConfig = {
+        'F01': { selected: true, count: 1 },
+        'F02': { selected: true, count: 1 },
+        'F03': { selected: false, count: 1 },
+        'F04': { selected: true, count: 1 },
+        'F05': { selected: true, count: 1 },
+        'F06': { selected: false, count: 1 }
+      };
       LABOR_NORMS = JSON.parse(JSON.stringify(DEFAULT_LABOR_NORMS));
       COST_RATES = { otherDirectRate: 0.025, generalCostRate: 0.055, vatRate: 0.08 };
 
@@ -10736,7 +10944,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261027_v11').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261027_v12').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
