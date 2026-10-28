@@ -9047,6 +9047,7 @@
             ${pos.tasks.map((it, tIdx) => {
               const task = MASTER_TASKS.find(t => t.id === it.taskId) || MASTER_TASKS[0];
               const condIdList = it.condIds || (it.condId ? [it.condId] : []);
+              const q = parseInt(it.qty, 10) || 1;
               
               let pKvlp = 1.0, pKvlhl = 1.0, pKnc = 1.0, pKmtc = 1.0;
               const condNames = [];
@@ -9061,13 +9062,20 @@
                 }
               });
 
+              // Tính tiền 4 thành phần sau khi nhân hệ số điều chỉnh (Kđc) và SL công tác (không làm tròn lên)
+              const itemSubMat = evnRound((task.matSub || 0) * q * pKvlp);
+              const itemHotMat = evnRound((task.matHotline || 0) * q * pKvlhl);
+              const itemLabor = evnRound((task.labor || 0) * q * pKnc);
+              const itemMachine = evnRound((task.machine || 0) * q * pKmtc);
+              const itemTotal = itemSubMat + itemHotMat + itemLabor + itemMachine;
+
               const isCurrentActive = (pos.activeTaskIndex === tIdx);
 
               return `
                 <tr style="${isCurrentActive ? 'background:#f0f9ff;' : ''}">
                   <td style="text-align:left;">
                     <div style="cursor:pointer;" onclick="selectTaskToEdit(${pos.id}, ${tIdx})" title="Nhấp vào để xem hoặc chỉnh sửa điều kiện của công tác này">
-                      <strong>${task.name}</strong>
+                      <strong style="color:#0f172a; font-size:12px;">${task.name}</strong>
                       ${condNames.length > 0 ? `
                         <div style="font-size:10px; color:#475569; margin-top:2px; line-height:1.35;">
                           ${condNames.map(cn => `• ${cn}`).join('<br>')}
@@ -9079,13 +9087,34 @@
                           <span class="k-pill k-mtc" title="Hệ số Máy thi công">Kmtc=${pKmtc.toFixed(2)}</span>
                         </div>
                       ` : '<div style="font-size:10px; color:#94a3b8; font-style:italic; margin-top:2px;">(Tiêu chuẩn, không điều chỉnh)</div>'}
+
+                      <!-- THÀNH TIỀN 4 CHI PHÍ CỦA HẠNG MỤC NÀY SAU KHI NHÂN HỆ SỐ ĐIỀU CHỈNH (KĐC) -->
+                      <div style="margin-top:5px; padding-top:4px; border-top:1px dashed #cbd5e1;">
+                        <div style="display:flex; flex-wrap:wrap; gap:4px 6px; font-size:10.5px; align-items:center;">
+                          <span style="background:#faf5ff; border:1px solid #e9d5ff; color:#7e22ce; padding:2px 6px; border-radius:4px; font-weight:600;" title="Tiền Vật liệu phụ = Đơn giá x SL x Kvlp">
+                            VL phụ: <strong>${formatMoney(itemSubMat)}</strong> đ
+                          </span>
+                          <span style="background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:600;" title="Tiền Vật liệu Hotline = Đơn giá x SL x Kvlhl">
+                            VLHL: <strong>${formatMoney(itemHotMat)}</strong> đ
+                          </span>
+                          <span style="background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:2px 6px; border-radius:4px; font-weight:600;" title="Tiền Nhân công = Đơn giá x SL x Knc">
+                            Nhân công: <strong>${formatMoney(itemLabor)}</strong> đ
+                          </span>
+                          <span style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-weight:600;" title="Tiền Máy thi công = Đơn giá x SL x Kmtc">
+                            Máy TC: <strong>${formatMoney(itemMachine)}</strong> đ
+                          </span>
+                          <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; padding:2px 6px; border-radius:4px; font-weight:800;" title="Tổng cộng 4 chi phí của hạng mục này">
+                            Tổng: <strong>${formatMoney(itemTotal)}</strong> đ
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </td>
-                  <td style="text-align:center;">
+                  <td style="text-align:center; vertical-align:middle;">
                     <input type="number" value="${it.qty || 1}" min="1" max="99" style="width:48px; text-align:center; padding:3px; border:1.5px solid #cbd5e1; border-radius:4px; font-weight:700;"
                            onchange="updateTaskQty(${pos.id}, ${tIdx}, this.value)">
                   </td>
-                  <td style="text-align:center;">
+                  <td style="text-align:center; vertical-align:middle;">
                     <button style="border:none; background:none; color:#ef4444; font-size:14px; cursor:pointer;" onclick="removeTaskFromPos(${pos.id}, ${tIdx})" title="Xóa công tác này">✕</button>
                   </td>
                 </tr>
@@ -10706,7 +10735,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_03";
+    const APP_CONFIG_VERSION = "20261028_04";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11084,7 +11113,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261028_v17').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v18').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
