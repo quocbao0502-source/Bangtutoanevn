@@ -2708,11 +2708,11 @@
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">
                 Số ca máy max: <span id="lblMachineShiftMaxRef" style="font-weight:normal; color:#64748b; font-size:10px;"></span>
               </label>
-              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.0" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
+              <input type="text" class="fuel-price-input" style="width:100%; background:#eff6ff; color:#0284c7; font-weight:700;" id="machineShiftMax" value="0.00" readonly title="Số ca máy max = Thành tiền máy thi công các vị trí / Giá ca máy">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Số ca máy chọn:</label>
-              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="0.5" step="0.1" min="0" oninput="this.dataset.userEdited='true'; renderAll();" title="Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn 0.5">
+              <input type="number" class="fuel-price-input" style="width:100%" id="machineShiftCount" value="0.5" step="0.01" min="0" oninput="this.dataset.userEdited='true'; renderAll();" title="Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn 0.5">
             </div>
             <div>
               <label style="display:block; font-size:11px; font-weight:700; color:#334155; margin-bottom:4px;">Tổng số lần thực hiện:</label>
@@ -9074,7 +9074,7 @@
                 }
               });
 
-              // Tính tiền 4 thành phần sau khi nhân hệ số điều chỉnh (Kđc) và SL công tác (không làm tròn lên)
+              // Tính tiền 4 thành phần sau khi nhân hệ số điều chỉnh (Kđc) và SL công tác (làm tròn bình thường)
               const itemSubMat = evnRound((task.matSub || 0) * q * pKvlp);
               const itemHotMat = evnRound((task.matHotline || 0) * q * pKvlhl);
               const itemLabor = evnRound((task.labor || 0) * q * pKnc);
@@ -9405,10 +9405,10 @@
       }
     }
 
-    // Hàm làm tròn chuẩn quy định EVN: Tất cả các công thức nhân, chia lấy phần nguyên, sau dấu phẩy kể cả từ số 5 trở lên cũng không làm tròn lên (tương đương ROUNDDOWN(x, 0) trong Excel)
+    // Hàm làm tròn chuẩn quy định EVN: Tất cả các công thức nhân, chia làm tròn bình thường (sau dấu phẩy >= 5 làm tròn lên 1 đơn vị, =< 4 thì không làm tròn lên, giữ nguyên số)
     function evnRound(val) {
       if (val === undefined || val === null || isNaN(val)) return 0;
-      return Math.trunc(Number(val));
+      return Math.round(Number(val));
     }
 
     // --- 9. TÍNH TOÁN CHI PHÍ (CÔNG THỨC NHÂN TÍCH CÁC HỆ SỐ ĐIỀU CHỈNH & HỆ SỐ ĐỒNG THỜI) ---
@@ -9452,14 +9452,14 @@
           }
         });
 
-        // Nhân với đơn giá gốc và số lượng công tác (dùng hàm evnRound không làm tròn lên)
+        // Nhân với đơn giá gốc và số lượng công tác (dùng hàm evnRound làm tròn bình thường)
         subMat += evnRound((task.matSub || 0) * q * totalKvlp);
         hotMat += evnRound((task.matHotline || 0) * q * totalKvlhl);
         labor += evnRound((task.labor || 0) * q * totalKnc);
         machine += evnRound((task.machine || 0) * q * totalKmtc);
       });
 
-      // Áp dụng 4 Hệ số đồng thời và số lượng vị trí tương tự (dùng hàm evnRound không làm tròn lên)
+      // Áp dụng 4 Hệ số đồng thời và số lượng vị trí tương tự (dùng hàm evnRound làm tròn bình thường)
       const similarMultiplier = pos.similarCount || 1;
       const finalSubMat = evnRound(subMat * fSubMat * similarMultiplier);
       const finalHotMat = evnRound(hotMat * fHotMat * similarMultiplier);
@@ -9861,11 +9861,11 @@
 
       // 2. Tính số ca máy max = Thành tiền tổng các vị trí của Máy thi công / Giá ca máy
       const maxMachineShifts = machineShiftPrice > 0 ? (totalMachineAllPos / machineShiftPrice) : 0;
-      // Lấy 1 chữ số thập phân sau dấu phẩy (không làm tròn lên, ví dụ: 0.334 -> 0.3)
-      const maxMachineShifts1Dec = Math.floor(maxMachineShifts * 10) / 10;
+      // Lấy 2 chữ số thập phân sau dấu phẩy (giữ nguyên quy tắc như hiện tại, ví dụ: 0.334 -> 0.33)
+      const maxMachineShifts2Dec = Math.floor((maxMachineShifts + 1e-9) * 100) / 100;
       const shiftMaxInp = document.getElementById('machineShiftMax');
       if (shiftMaxInp) {
-        shiftMaxInp.value = maxMachineShifts1Dec.toFixed(1);
+        shiftMaxInp.value = maxMachineShifts2Dec.toFixed(2);
         shiftMaxInp.title = `Số ca máy max = ${formatMoney(totalMachineAllPos)} đ (máy thi công) / ${formatMoney(machineShiftPrice)} đ (giá ca máy) = ${maxMachineShifts.toFixed(3)}`;
       }
       const lblMaxRef = document.getElementById('lblMachineShiftMaxRef');
@@ -9873,13 +9873,13 @@
         lblMaxRef.innerText = `(${formatMoney(machineShiftPrice)} đ/ca)`;
       }
 
-      // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5 (lấy 1 chữ số thập phân)
-      const autoShiftCount = (maxMachineShifts1Dec <= 0.5) ? maxMachineShifts1Dec : 0.5;
+      // 3. Tính số ca máy chọn: Nếu max <= 0.5 thì chọn số đó, nếu max > 0.5 thì chọn là 0.5 (giữ nguyên quy tắc như hiện tại)
+      const autoShiftCount = (maxMachineShifts2Dec <= 0.5) ? maxMachineShifts2Dec : 0.5;
       const countInp = document.getElementById('machineShiftCount');
       let selectedShifts = autoShiftCount;
       if (countInp) {
         if (countInp.dataset && !countInp.dataset.userEdited) {
-          countInp.value = autoShiftCount.toFixed(1);
+          countInp.value = (autoShiftCount === 0.5) ? '0.5' : (autoShiftCount > 0 ? parseFloat(autoShiftCount.toFixed(2)).toString() : '0.0');
           selectedShifts = autoShiftCount;
         } else {
           selectedShifts = parseFloat(countInp.value);
@@ -9894,7 +9894,7 @@
       const guardLabor = LABOR_NORMS.find(l => (l.title || '').includes('3/7')) || LABOR_NORMS[0];
       const guardLaborRate = guardLabor ? guardLabor.wage : 298431;
 
-      // 6. Cách tính: Tổng số ca máy x đơn giá nhân công bậc 3/7 x tổng số lần thực hiện (không làm tròn lên)
+      // 6. Cách tính: Tổng số ca máy x đơn giá nhân công bậc 3/7 x tổng số lần thực hiện (làm tròn bình thường)
       const totalBarrierCost = evnRound(selectedShifts * guardLaborRate * barrierTimes);
 
       document.getElementById('barrierTableBody').innerHTML = `
@@ -9919,12 +9919,12 @@
       const surveyKmInp = document.getElementById('surveyKmText');
       if (surveyKmInp) surveyKmInp.value = `${Math.round(pos1Km)} km`;
 
-      // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7) (không làm tròn lên)
+      // Hàng 1: Nhân công thực hiện = số công x đơn giá nhân công (thợ hotline bậc 4/7) (làm tròn bình thường)
       const surveyLabor = LABOR_NORMS.find(l => (l.title || '').includes('4/7')) || LABOR_NORMS[1] || LABOR_NORMS[0];
       const surveyLaborRate = surveyLabor ? surveyLabor.wage : 394809;
       const costSurveyLabor = evnRound(surveyWorkDays * surveyLaborRate);
 
-      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải theo điểm xuất phát x (km ở vị trí 1 x 2 chiều) x giá dầu (không làm tròn lên)
+      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải theo điểm xuất phát x (km ở vị trí 1 x 2 chiều) x giá dầu (làm tròn bình thường)
       const currentDepotChoice = document.getElementById('depotRadio2')?.checked ? 2 : 1;
       const pickupTruck = FUEL_NORMS.find(f => (f.depot === currentDepotChoice) && (f.name || '').toLowerCase().includes('bán tải')) 
                        || FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) 
@@ -9980,11 +9980,11 @@
       const totalMat = totalSubMat + totalHotMat;
       const totalDirectCost = totalMat + totalLabor + totalMachine;
 
-      // II. CHI PHÍ GIÁN TIẾP: C = 65% x NC (lấy phần nguyên, không làm tròn lên)
+      // II. CHI PHÍ GIÁN TIẾP: C = 65% x NC (làm tròn bình thường)
       const generalCost = evnRound(totalLabor * 0.65);
       const totalIndirectCost = generalCost;
 
-      // III. THU NHẬP CHỊU THUẾ TÍNH TRƯỚC: TL = 6% x (T + GT) (lấy phần nguyên, không làm tròn lên)
+      // III. THU NHẬP CHỊU THUẾ TÍNH TRƯỚC: TL = 6% x (T + GT) (làm tròn bình thường)
       const taxableIncome = evnRound((totalDirectCost + totalIndirectCost) * 0.06);
 
       // IV. VẬN CHUYỂN & V. KHÁC (RÀO CHẮN) & B1. KHẢO SÁT
@@ -10006,7 +10006,7 @@
       // C. TỔNG DỰ TOÁN (trước thuế GTGT): Gtt = Gxd + Gpa
       const Gtt = Gxd + Gpa;
 
-      // D. THUẾ GIÁ TRỊ GIA TĂNG: GTGT = Gtt x vatRate% (lấy phần nguyên, không làm tròn lên)
+      // D. THUẾ GIÁ TRỊ GIA TĂNG: GTGT = Gtt x vatRate% (làm tròn bình thường)
       const vatAmount = evnRound(Gtt * (currentVatRate / 100));
 
       // E. TỔNG DỰ TOÁN (sau thuế GTGT): Gdt = Gtt + GTGT
@@ -10156,7 +10156,8 @@
       if (elStatShift) {
         const totalT = positions.reduce((acc, p) => acc + (p.tasks ? p.tasks.length : 0), 0);
         const shifts = document.getElementById('machineShiftCount') ? document.getElementById('machineShiftCount').value : 0;
-        elStatShift.innerText = (totalT === 0 ? '0.0' : parseFloat(shifts).toFixed(1)) + ' ca';
+        const shiftVal = parseFloat(shifts) || 0;
+        elStatShift.innerText = (totalT === 0 ? '0.0' : (shiftVal % 1 === 0 ? shiftVal.toFixed(1) : shiftVal.toString())) + ' ca';
       }
     }
 
@@ -10747,7 +10748,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_05";
+    const APP_CONFIG_VERSION = "20261028_06";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11125,7 +11126,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261028_v19').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v20').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {

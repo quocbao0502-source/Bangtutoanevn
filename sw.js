@@ -1,5 +1,5 @@
 // Service Worker for EVN Hotline PWA
-const CACHE_NAME = 'evn-hotline-pwa-v19';
+const CACHE_NAME = 'evn-hotline-pwa-v20';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
