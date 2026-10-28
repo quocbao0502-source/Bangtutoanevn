@@ -1727,7 +1727,7 @@
       justify-content: center;
       padding: 16px;
     }
-    .quick-edit-modal.open { display: flex; }
+    .quick-edit-modal.open, .quick-edit-modal.active { display: flex !important; }
     .quick-edit-card {
       background: #ffffff;
       width: 100%;
@@ -3401,14 +3401,14 @@
         <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
           Tên cấp bậc thợ / Chức danh nhân công:
         </label>
-        <input type="text" class="quick-edit-input" id="inpLaborTitle" placeholder="Ví dụ: Thợ Hotline Bậc 3/7, Bậc 4/7...">
+        <input type="text" class="quick-edit-input" id="inpLaborTitle" placeholder="Ví dụ: Thợ Hotline Bậc 3/7, Bậc 4/7..." onkeydown="if(event.key==='Enter') saveLaborDetail()">
       </div>
 
       <div>
         <label style="font-size:11px; font-weight:700; color:#334155; display:block; margin-bottom:3px;">
           Đơn giá ngày công (VNĐ / ngày công):
         </label>
-        <input type="number" step="1000" class="quick-edit-input" id="inpLaborWage" placeholder="Ví dụ: 394809" value="394809">
+        <input type="number" step="1000" class="quick-edit-input" id="inpLaborWage" placeholder="Ví dụ: 394809" value="394809" onkeydown="if(event.key==='Enter') saveLaborDetail()">
       </div>
 
       <input type="hidden" id="editingLaborId" value="">
@@ -10306,7 +10306,8 @@
       document.getElementById('inpTaskLabor').value = task.labor || 0;
       document.getElementById('inpTaskMachine').value = task.machine || 0;
       updateTaskPrefixPreview();
-      document.getElementById('taskDetailModal').classList.add('active');
+      const m = document.getElementById('taskDetailModal');
+      if (m) { m.classList.add('open'); m.classList.add('active'); }
     }
 
     function openAddNewTaskModal() {
@@ -10320,11 +10321,13 @@
       document.getElementById('inpTaskLabor').value = 400000;
       document.getElementById('inpTaskMachine').value = 200000;
       updateTaskPrefixPreview();
-      document.getElementById('taskDetailModal').classList.add('active');
+      const m = document.getElementById('taskDetailModal');
+      if (m) { m.classList.add('open'); m.classList.add('active'); }
     }
 
     function closeTaskDetailModal() {
-      document.getElementById('taskDetailModal').classList.remove('active');
+      const m = document.getElementById('taskDetailModal');
+      if (m) { m.classList.remove('open'); m.classList.remove('active'); }
     }
 
     function saveTaskDetail() {
@@ -10405,7 +10408,8 @@
       if (document.getElementById('inpFuelDepot')) {
         document.getElementById('inpFuelDepot').value = depotId;
       }
-      document.getElementById('fuelDetailModal').classList.add('active');
+      const m = document.getElementById('fuelDetailModal');
+      if (m) { m.classList.add('open'); m.classList.add('active'); }
     }
 
     function openEditFuelModal(fuelId) {
@@ -10418,11 +10422,13 @@
       if (document.getElementById('inpFuelDepot')) {
         document.getElementById('inpFuelDepot').value = f.depot || 1;
       }
-      document.getElementById('fuelDetailModal').classList.add('active');
+      const m = document.getElementById('fuelDetailModal');
+      if (m) { m.classList.add('open'); m.classList.add('active'); }
     }
 
     function closeFuelDetailModal() {
-      document.getElementById('fuelDetailModal').classList.remove('active');
+      const m = document.getElementById('fuelDetailModal');
+      if (m) { m.classList.remove('open'); m.classList.remove('active'); }
     }
 
     function saveFuelDetail() {
@@ -10485,11 +10491,16 @@
 
     // --- 14c. QUẢN LÝ ĐỊNH MỨC ĐƠN GIÁ NHÂN CÔNG HOTLINE ---
     function openAddNewLaborModal() {
-      document.getElementById('laborModalTitle').innerText = '➕ Thêm cấp bậc thợ mới';
+      document.getElementById('laborModalTitle').innerText = '➕ Thêm cấp bậc thợ Hotline mới';
       document.getElementById('editingLaborId').value = '';
       document.getElementById('inpLaborTitle').value = '';
       document.getElementById('inpLaborWage').value = '450000';
-      document.getElementById('laborDetailModal').classList.add('active');
+      const m = document.getElementById('laborDetailModal');
+      if (m) {
+        m.classList.add('open');
+        m.classList.add('active');
+      }
+      setTimeout(() => document.getElementById('inpLaborTitle')?.focus(), 50);
     }
 
     function openEditLaborModal(laborId) {
@@ -10499,11 +10510,26 @@
       document.getElementById('editingLaborId').value = l.id;
       document.getElementById('inpLaborTitle').value = l.title || '';
       document.getElementById('inpLaborWage').value = l.wage || 0;
-      document.getElementById('laborDetailModal').classList.add('active');
+      const m = document.getElementById('laborDetailModal');
+      if (m) {
+        m.classList.add('open');
+        m.classList.add('active');
+      }
+      setTimeout(() => {
+        const inp = document.getElementById('inpLaborWage');
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }, 50);
     }
 
     function closeLaborDetailModal() {
-      document.getElementById('laborDetailModal').classList.remove('active');
+      const m = document.getElementById('laborDetailModal');
+      if (m) {
+        m.classList.remove('open');
+        m.classList.remove('active');
+      }
     }
 
     function saveLaborDetail() {
@@ -10619,13 +10645,13 @@
 
       // 4. Labor Norms (Đầy đủ Sửa & Xóa)
       document.getElementById('laborNormTableBody').innerHTML = LABOR_NORMS.map(l => `
-        <tr>
+        <tr style="cursor:pointer;" onclick="if(!event.target.closest('button')) openEditLaborModal('${l.id}')" title="Bấm vào để sửa đơn giá ngày công">
           <td><strong>${l.title}</strong></td>
-          <td class="num" style="font-weight:700; color:#0f172a;">${formatMoney(l.wage)}</td>
+          <td class="num" style="font-weight:700; color:#0284c7; text-decoration:underline dashed; text-underline-offset:3px;">${formatMoney(l.wage)}</td>
           <td style="text-align:center;">
             <div style="display:flex; gap:4px; justify-content:center;">
-              <button class="admin-edit-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:2px;" onclick="openEditLaborModal('${l.id}')">✏️ Sửa</button>
-              <button class="admin-delete-btn" style="background:#ef4444; color:#fff; border:none; padding:4px 7px; border-radius:4px; font-size:11px; cursor:pointer;" onclick="deleteLaborNorm('${l.id}')" title="Xóa cấp bậc">🗑</button>
+              <button type="button" class="admin-edit-btn" style="background:#0284c7; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:2px;" onclick="openEditLaborModal('${l.id}')">✏️ Sửa</button>
+              <button type="button" class="admin-delete-btn" style="background:#ef4444; color:#fff; border:none; padding:4px 7px; border-radius:4px; font-size:11px; cursor:pointer;" onclick="deleteLaborNorm('${l.id}')" title="Xóa cấp bậc">🗑</button>
             </div>
           </td>
         </tr>
@@ -10680,7 +10706,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_02";
+    const APP_CONFIG_VERSION = "20261028_03";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11058,7 +11084,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261028_v16').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v17').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -11074,6 +11100,10 @@
     window.onclick = function(e) {
       if (e.target.classList.contains('modal-overlay')) {
         e.target.classList.remove('open');
+      }
+      if (e.target.classList.contains('quick-edit-modal')) {
+        e.target.classList.remove('open');
+        e.target.classList.remove('active');
       }
     };
 
