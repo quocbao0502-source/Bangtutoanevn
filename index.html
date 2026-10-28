@@ -9860,14 +9860,15 @@
       const surveyLaborRate = surveyLabor ? surveyLabor.wage : 394809;
       const costSurveyLabor = evnRound(surveyWorkDays * surveyLaborRate);
 
-      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải theo điểm xuất phát x km ở vị trí 1 x giá dầu (không làm tròn lên)
+      // Hàng 2: Vận chuyển phục vụ khảo sát = Định mức xe bán tải theo điểm xuất phát x (km ở vị trí 1 x 2 chiều) x giá dầu (không làm tròn lên)
       const currentDepotChoice = document.getElementById('depotRadio2')?.checked ? 2 : 1;
       const pickupTruck = FUEL_NORMS.find(f => (f.depot === currentDepotChoice) && (f.name || '').toLowerCase().includes('bán tải')) 
                        || FUEL_NORMS.find(f => (f.name || '').toLowerCase().includes('bán tải')) 
                        || FUEL_NORMS[0];
       const pickupRate = pickupTruck ? pickupTruck.rate : 12.5;
       const pickupDepotName = (pickupTruck && pickupTruck.depot === 2) ? 'Cơ sở 2' : 'Trụ sở chính';
-      const costSurveyTransport = evnRound((pickupRate / 100) * pos1Km * effectiveFuelPrice);
+      const surveyTransportKm = pos1Km * 2;
+      const costSurveyTransport = evnRound((pickupRate / 100) * surveyTransportKm * effectiveFuelPrice);
 
       const totalSurveyCost = costSurveyLabor + costSurveyTransport;
 
@@ -9881,7 +9882,7 @@
         <tr>
           <td><strong>Vận chuyển phục vụ khảo sát</strong> (Xe bán tải ${pickupRate} L/100km - ${pickupDepotName})</td>
           <td style="text-align:center;">km</td>
-          <td style="text-align:center; font-weight:700;">${Math.round(pos1Km)}</td>
+          <td style="text-align:center; font-weight:700;" title="${Math.round(pos1Km)} km x 2 chiều = ${Math.round(surveyTransportKm)} km">${Math.round(surveyTransportKm)}</td>
           <td class="num">${formatMoney(costSurveyTransport)}</td>
         </tr>
         <tr style="background:#eff6ff; font-weight:700;">
@@ -10656,7 +10657,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261027_04";
+    const APP_CONFIG_VERSION = "20261028_01";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11034,7 +11035,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261027_v14').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v15').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
