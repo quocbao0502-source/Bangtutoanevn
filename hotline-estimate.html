@@ -8056,6 +8056,18 @@
       return str.trim().slice(0, 10).toLowerCase();
     }
 
+    // Hàm lấy nội dung chính của điều kiện (sau dấu '-' thứ 2) để hiển thị gọn gàng, ẩn mã phía trước
+    function getConditionDisplayName(name) {
+      if (!name) return '';
+      const parts = name.split('-');
+      if (parts.length >= 3) {
+        return parts.slice(2).join('-').trim();
+      } else if (parts.length === 2) {
+        return parts[1].trim();
+      }
+      return name.trim();
+    }
+
     // --- 3. ĐIỀU HƯỚNG QUYỀN TRANG BÌA, ADMIN / MOD & NGƯỜI DÙNG ---
     function applyUserRole(role) {
       currentUserRole = role;
@@ -9078,7 +9090,7 @@
                       <strong style="color:#0f172a; font-size:12px;">${task.name}</strong>
                       ${condNames.length > 0 ? `
                         <div style="font-size:10px; color:#475569; margin-top:2px; line-height:1.35;">
-                          ${condNames.map(cn => `• ${cn}`).join('<br>')}
+                          ${condNames.map(cn => `<span title="${cn}">• ${getConditionDisplayName(cn)}</span>`).join('<br>')}
                         </div>
                         <div class="k-pills" style="margin-top:3px;">
                           <span class="k-pill k-vlp" title="Hệ số Vật liệu phụ">Kvlp=${pKvlp.toFixed(2)}</span>
@@ -9161,11 +9173,11 @@
       condPickerArea.innerHTML = matched.map(c => {
         const isChecked = selectedCondIds.includes(c.id);
         return `
-          <label class="cond-check-item ${isChecked ? 'selected' : ''}">
+          <label class="cond-check-item ${isChecked ? 'selected' : ''}" title="${c.name}">
             <input type="checkbox" name="condChk_${posId}" value="${c.id}" ${isChecked ? 'checked' : ''}
                    onchange="toggleConditionForPos(${posId}, '${c.id}', this.checked, this)">
             <span class="cond-check-mark">✓</span>
-            <span class="cond-tag-text">${c.name}</span>
+            <span class="cond-tag-text">${getConditionDisplayName(c.name)}</span>
             <span class="k-pills" style="margin-top:0;">
               ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
               ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
@@ -9557,11 +9569,11 @@
                   return matched.map(c => {
                     const isChecked = selectedCondIds.includes(c.id);
                     return `
-                      <label class="cond-check-item ${isChecked ? 'selected' : ''}">
+                      <label class="cond-check-item ${isChecked ? 'selected' : ''}" title="${c.name}">
                         <input type="checkbox" name="condChk_${pos.id}" value="${c.id}" ${isChecked ? 'checked' : ''}
                                onchange="toggleConditionForPos(${pos.id}, '${c.id}', this.checked, this)">
                         <span class="cond-check-mark">✓</span>
-                        <span class="cond-tag-text">${c.name}</span>
+                        <span class="cond-tag-text">${getConditionDisplayName(c.name)}</span>
                         <span class="k-pills" style="margin-top:0;">
                           ${c.kvlp !== 1.0 ? `<span class="k-pill k-vlp">Kvlp=${c.kvlp}</span>` : ''}
                           ${c.kvlhl !== 1.0 ? `<span class="k-pill k-vlhl">Kvlhl=${c.kvlhl}</span>` : ''}
@@ -10735,7 +10747,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_04";
+    const APP_CONFIG_VERSION = "20261028_05";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11113,7 +11125,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261028_v18').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v19').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
