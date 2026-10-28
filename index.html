@@ -180,7 +180,7 @@
       transition: all 0.3s ease;
     }
 
-    /* Mode 1: Responsive (Default cho toàn bộ thiết bị) */
+    /* Mode 1: Responsive (Mặc định cho toàn bộ thiết bị màn hình lớn) */
     body.mode-responsive .app-container, body.mode-responsive .phone-container {
       max-width: 1400px;
       margin: 12px auto 24px;
@@ -189,17 +189,19 @@
       overflow: hidden;
     }
 
-    /* Mode 2: Mockup khung điện thoại (390px) */
-    body.mode-mockup {
-      background: #0b1329;
-      padding: 0 0 40px 0;
-    }
-    body.mode-mockup .app-container, body.mode-mockup .phone-container {
-      max-width: 430px;
-      margin: 20px auto;
-      border-radius: 36px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b;
-      overflow: hidden;
+    /* Mode 2: Mockup khung điện thoại (390px) - CHỈ hiển thị dạng khung mô phỏng trên màn hình Desktop lớn */
+    @media (min-width: 821px) {
+      body.mode-mockup {
+        background: #0b1329;
+        padding: 0 0 40px 0;
+      }
+      body.mode-mockup .app-container, body.mode-mockup .phone-container {
+        max-width: 430px;
+        margin: 20px auto;
+        border-radius: 36px;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 10px #1e293b;
+        overflow: hidden;
+      }
     }
 
     /* Mode 3: Tràn toàn màn hình */
@@ -210,16 +212,31 @@
       box-shadow: none;
     }
 
-    /* Trên điện thoại thật (< 768px): Tự động full tràn viền đẹp mắt */
-    @media (max-width: 767px) {
-      body {
-        padding: 0;
-        background: #f8fafc;
+    /* Trên điện thoại di động & Tablet (<= 820px): MẶC ĐỊNH LUÔN TRÀN ĐẦY 100% TOÀN MÀN HÌNH */
+    @media (max-width: 820px) {
+      html, body {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #f1f5f9 !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        overflow-x: hidden !important;
       }
-      body:not(.mode-mockup) .app-container, body:not(.mode-mockup) .phone-container {
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
+      .app-container, .phone-container,
+      body .app-container, body .phone-container,
+      body.mode-mockup .app-container, body.mode-mockup .phone-container,
+      body.mode-responsive .app-container, body.mode-responsive .phone-container,
+      body.mode-full .app-container, body.mode-full .phone-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      #btnModeMockup {
+        display: none !important; /* Ẩn nút giả lập khung điện thoại khi đã mở trên điện thoại thật */
       }
     }
 
@@ -8246,6 +8263,12 @@
     }
 
     function setAppViewMode(mode) {
+      const isMobile = window.innerWidth <= 820 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      // Trên điện thoại thật, luôn luôn dùng chế độ đầy màn hình (responsive / full)
+      if (isMobile && (mode === 'mockup' || mode === 'phone')) {
+        mode = 'responsive';
+      }
+
       const body = document.body;
       body.classList.remove('mode-responsive', 'mode-mockup', 'mode-full');
       
@@ -8256,10 +8279,10 @@
       if (btnMock) btnMock.classList.remove('active');
       if (btnFull) btnFull.classList.remove('active');
 
-      if (mode === 'mockup' || mode === 'phone') {
+      if (!isMobile && (mode === 'mockup' || mode === 'phone')) {
         body.classList.add('mode-mockup');
         if (btnMock) btnMock.classList.add('active');
-        showToast("📱 Chế độ giả lập khung điện thoại!");
+        showToast("📱 Chế độ giả lập khung điện thoại (Desktop)!");
       } else if (mode === 'full') {
         body.classList.add('mode-full');
         if (btnFull) btnFull.classList.add('active');
@@ -8267,7 +8290,7 @@
       } else {
         body.classList.add('mode-responsive');
         if (btnResp) btnResp.classList.add('active');
-        showToast("🌐 Chế độ tự động thích ứng mọi thiết bị!");
+        if (!isMobile) showToast("🌐 Chế độ tự động thích ứng mọi thiết bị!");
       }
       try { localStorage.setItem('evn_view_mode', mode); } catch (e) {}
     }
@@ -10657,7 +10680,7 @@
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_01";
+    const APP_CONFIG_VERSION = "20261028_02";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -11035,7 +11058,7 @@
     // Đăng ký Service Worker với cơ chế tự động cập nhật phiên bản mới nhất
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=20261028_v15').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=20261028_v16').then((reg) => {
           reg.update();
           let refreshing = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -11694,7 +11717,12 @@
       populateModals();
       loadHistoryFromStorage();
       renderAll();
-      const savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
+      const isMobile = window.innerWidth <= 820 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      let savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
+      if (isMobile) {
+        savedMode = 'responsive';
+        try { localStorage.setItem('evn_view_mode', 'responsive'); } catch (e) {}
+      }
       setAppViewMode(savedMode);
 
       // Khởi tạo vai trò Người dùng / Quản trị viên
