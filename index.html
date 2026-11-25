@@ -8032,23 +8032,28 @@
     let currentProjectType = 'lap_moi'; // 'lap_moi' | 'cai_tao'
     let currentVatRate = 8; // % Thuế GTGT
 
+    // Hàm tạo danh sách vị trí mặc định ban đầu (chưa chọn định mức nào)
+    function getDefaultPositions() {
+      return [
+        {
+          id: 1,
+          title: "Vị trí 1",
+          address: "",
+          checkedIn: false,
+          gps: "",
+          distanceKm: 0,
+          tasks: [],
+          activeTaskId: null,
+          activeTaskIndex: -1,
+          factors: [1.0, 1.0, 1.0, 1.0],
+          isCustomFactors: false,
+          similarCount: 1
+        }
+      ];
+    }
+
     // Danh sách vị trí
-    let positions = [
-      {
-        id: 1,
-        title: "Vị trí 1",
-        address: "",
-        checkedIn: false,
-        gps: "",
-        distanceKm: 0,
-        tasks: [],
-        activeTaskId: null,
-        activeTaskIndex: -1,
-        factors: [1.0, 1.0, 1.0, 1.0],
-        isCustomFactors: false,
-        similarCount: 1
-      }
-    ];
+    let positions = getDefaultPositions();
 
     // Hàm lấy 10 ký tự đầu tiên tính từ trái qua
     function get10Prefix(str) {
@@ -8886,35 +8891,12 @@
       }
     }
 
-    // --- LÀM MỚI DỰ TOÁN (NEW / REFRESH DỰ ÁN CHO NGƯỜI DÙNG & QUẢN TRỊ VIÊN) ---
-    function resetProjectToNew() {
-      if (!confirm("Bắt đầu lập dự toán mới (Làm mới dữ liệu)?\n\nToàn bộ công tác đã chọn, các vị trí thi công, kết quả check-in và số liệu người dùng điền tại các Phụ lục (1, 2, 4, 5, 6) sẽ được làm mới về ban đầu.\n\n(Lưu ý: Toàn bộ đơn giá, định mức và địa chỉ do Quản trị viên cài đặt vẫn được giữ nguyên hoàn toàn).")) {
-        return;
-      }
+    // Đặt lại các thông số người dùng điền về mặc định ban đầu (các định mức chưa được chọn)
+    function resetEstimateInputsToDefault() {
+      positions = getDefaultPositions();
 
-      // 1. Màu xanh: các con số chỗ này auto về mặc định là 0
       if (document.getElementById('depotKm1')) document.getElementById('depotKm1').value = '0';
       if (document.getElementById('depotKm2')) document.getElementById('depotKm2').value = '0';
-
-      // 2 & 3: Đưa danh sách vị trí về 1 vị trí ban đầu (0 km, tasks: [] trống trơn hoàn toàn)
-      positions = [
-        {
-          id: 1,
-          title: 'Vị trí 1',
-          address: '',
-          checkedIn: false,
-          gps: '',
-          distanceKm: 0,
-          tasks: [],
-          activeTaskId: null,
-          activeTaskIndex: -1,
-          factors: [1.0, 1.0, 1.0, 1.0],
-          isCustomFactors: false,
-          similarCount: 1
-        }
-      ];
-
-      // Làm mới các thông số người dùng điền ở các Phụ lục khác
       if (document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = '1';
       if (document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = '1';
       if (document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = '0.5';
@@ -8922,8 +8904,18 @@
       const countInpReset = document.getElementById('machineShiftCount');
       if (countInpReset && countInpReset.dataset) delete countInpReset.dataset.userEdited;
 
+      hasCalculatedResult = false;
+    }
+
+    // --- LÀM MỚI DỰ TOÁN (NEW / REFRESH DỰ ÁN CHO NGƯỜI DÙNG & QUẢN TRỊ VIÊN) ---
+    function resetProjectToNew() {
+      if (!confirm("Bắt đầu lập dự toán mới (Làm mới dữ liệu)?\n\nToàn bộ công tác đã chọn, các vị trí thi công, kết quả check-in và số liệu người dùng điền tại các Phụ lục (1, 2, 4, 5, 6) sẽ được làm mới về ban đầu.\n\n(Lưu ý: Toàn bộ đơn giá, định mức và địa chỉ do Quản trị viên cài đặt vẫn được giữ nguyên hoàn toàn).")) {
+        return;
+      }
+
+      resetEstimateInputsToDefault();
+
       renderAll();
-      saveAllAdminData();
       showToast("✨ Đã làm mới dự toán thành công! Sẵn sàng lập dự toán mới.");
     }
 
@@ -10719,15 +10711,10 @@
         badgeBlock5: document.getElementById('badgeBlock5') ? document.getElementById('badgeBlock5').innerText : '5',
         fuelPrice: document.getElementById('fuelPrice') ? document.getElementById('fuelPrice').value : '21500',
         fuelTax: document.getElementById('fuelTax') ? document.getElementById('fuelTax').value : '0',
-        fuelTrips: document.getElementById('fuelTrips') ? document.getElementById('fuelTrips').value : '1',
         machineShiftPrice: document.getElementById('machineShiftPrice') ? document.getElementById('machineShiftPrice').value : '1250000',
-        barrierTimes: document.getElementById('barrierTimes') ? document.getElementById('barrierTimes').value : '1',
-        surveyWorkDays: document.getElementById('surveyWorkDays') ? document.getElementById('surveyWorkDays').value : '0.5',
         depotChoice: document.getElementById('depotRadio2')?.checked ? 2 : 1,
         depotAddr1: document.getElementById('depotAddr1') ? document.getElementById('depotAddr1').value : "Số 441 đường 30 tháng 4, khu phố 1, phường Tân Ninh, tỉnh Tây Ninh",
-        depotKm1: document.getElementById('depotKm1') ? document.getElementById('depotKm1').value : "15",
         depotAddr2: document.getElementById('depotAddr2') ? document.getElementById('depotAddr2').value : "Phường Long An, tỉnh Tây Ninh",
-        depotKm2: document.getElementById('depotKm2') ? document.getElementById('depotKm2').value : "38",
         appLogoTitle: document.getElementById('appLogoTitle').innerText,
         appLogoSub: document.getElementById('appLogoSub').innerText,
         appBadgeText: document.getElementById('appBadgeText').innerText,
@@ -10750,14 +10737,13 @@
         fuels: FUEL_NORMS,
         transportVehiclesConfig: transportVehiclesConfig,
         labors: LABOR_NORMS,
-        costRates: COST_RATES,
-        positions: positions
+        costRates: COST_RATES
       };
       localStorage.setItem('evn_hotline_admin_saved', JSON.stringify(payload));
       showToast("💾 Đã lưu cấu hình và hệ số điều chỉnh vào bộ nhớ!");
     }
 
-    const APP_CONFIG_VERSION = "20261028_09";
+    const APP_CONFIG_VERSION = "20261028_10";
     function loadSavedAdminData() {
       try {
         const currentStoredVersion = localStorage.getItem('evn_hotline_config_version');
@@ -10777,22 +10763,13 @@
         if (d.badgeBlock5 && document.getElementById('badgeBlock5')) document.getElementById('badgeBlock5').innerText = d.badgeBlock5;
         if (d.fuelPrice && document.getElementById('fuelPrice')) document.getElementById('fuelPrice').value = d.fuelPrice;
         if (d.fuelTax !== undefined && document.getElementById('fuelTax')) document.getElementById('fuelTax').value = d.fuelTax;
-        if (d.fuelTrips && document.getElementById('fuelTrips')) document.getElementById('fuelTrips').value = d.fuelTrips;
         if (d.machineShiftPrice && document.getElementById('machineShiftPrice')) document.getElementById('machineShiftPrice').value = d.machineShiftPrice;
-        if (d.barrierTimes && document.getElementById('barrierTimes')) document.getElementById('barrierTimes').value = d.barrierTimes;
-        if (d.surveyWorkDays && document.getElementById('surveyWorkDays')) document.getElementById('surveyWorkDays').value = d.surveyWorkDays;
 
         if (d.depotAddr1 && document.getElementById('depotAddr1')) document.getElementById('depotAddr1').value = d.depotAddr1;
-        if (d.depotKm1 && document.getElementById('depotKm1')) document.getElementById('depotKm1').value = d.depotKm1;
         if (d.depotAddr2 && document.getElementById('depotAddr2') && !d.depotAddr2.includes('Trạm phụ trợ') && !d.depotAddr2.includes('Admin điền')) {
           document.getElementById('depotAddr2').value = d.depotAddr2;
         } else if (document.getElementById('depotAddr2')) {
           document.getElementById('depotAddr2').value = "Tỉnh lộ 833, ấp Bình Trung 1, phường Tân An, tỉnh Tây Ninh";
-        }
-        if (d.depotKm2 && document.getElementById('depotKm2') && parseInt(d.depotKm2, 10) !== 25) {
-          document.getElementById('depotKm2').value = d.depotKm2;
-        } else if (document.getElementById('depotKm2')) {
-          document.getElementById('depotKm2').value = "119";
         }
         if (d.depotChoice === 2) {
           if (document.getElementById('depotRadio2')) document.getElementById('depotRadio2').checked = true;
@@ -10870,7 +10847,6 @@
         }
         if (Array.isArray(d.labors)) LABOR_NORMS = d.labors;
         if (d.costRates) COST_RATES = Object.assign(COST_RATES, d.costRates);
-        if (Array.isArray(d.positions) && d.positions.length > 0) positions = d.positions;
       } catch (e) {
         console.warn("Could not parse saved admin config", e);
       }
@@ -11666,7 +11642,11 @@
           currentVatRate,
           fuelPrice: parseFloat(document.getElementById('fuelPrice')?.value) || 30650,
           fuelTax: parseFloat(document.getElementById('fuelTax')?.value) || 0,
-          fuelTrips: parseFloat(document.getElementById('fuelTrips')?.value) || 1
+          fuelTrips: parseFloat(document.getElementById('fuelTrips')?.value) || 1,
+          barrierTimes: parseFloat(document.getElementById('barrierTimes')?.value) || 1,
+          surveyWorkDays: parseFloat(document.getElementById('surveyWorkDays')?.value) || 0.5,
+          depotKm1: parseFloat(document.getElementById('depotKm1')?.value) || 0,
+          depotKm2: parseFloat(document.getElementById('depotKm2')?.value) || 0
         }
       };
 
@@ -11725,7 +11705,7 @@
       const item = calcHistory.find(h => h.id === id);
       if (!item || !item.snapshot) return;
 
-      if (confirm(`Cưng có muốn nạp lại dự toán lúc ${item.timeStr} (Tổng: ${item.grandTotalStr}) không?`)) {
+      if (confirm(`Bạn có muốn nạp lại dự toán lúc ${item.timeStr} (Tổng: ${item.grandTotalStr}) không?`)) {
         if (item.snapshot.positions) {
           positions = JSON.parse(JSON.stringify(item.snapshot.positions));
         }
@@ -11743,6 +11723,18 @@
         }
         if (item.snapshot.fuelTrips && document.getElementById('fuelTrips')) {
           document.getElementById('fuelTrips').value = item.snapshot.fuelTrips;
+        }
+        if (item.snapshot.barrierTimes && document.getElementById('barrierTimes')) {
+          document.getElementById('barrierTimes').value = item.snapshot.barrierTimes;
+        }
+        if (item.snapshot.surveyWorkDays && document.getElementById('surveyWorkDays')) {
+          document.getElementById('surveyWorkDays').value = item.snapshot.surveyWorkDays;
+        }
+        if (item.snapshot.depotKm1 !== undefined && document.getElementById('depotKm1')) {
+          document.getElementById('depotKm1').value = item.snapshot.depotKm1;
+        }
+        if (item.snapshot.depotKm2 !== undefined && document.getElementById('depotKm2')) {
+          document.getElementById('depotKm2').value = item.snapshot.depotKm2;
         }
 
         hasCalculatedResult = true;
@@ -11795,8 +11787,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       checkUrlSyncConfig();
       loadSavedAdminData();
+      resetEstimateInputsToDefault(); // Luôn tự động đưa dữ liệu dự toán về mặc định (chưa chọn định mức) khi mở ứng dụng
       populateModals();
-      loadHistoryFromStorage();
+      loadHistoryFromStorage(); // Giữ nguyên toàn bộ lịch sử các lần chạy dự toán trước đó
       renderAll();
       const isMobile = window.innerWidth <= 820 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       let savedMode = localStorage.getItem('evn_view_mode') || 'responsive';
